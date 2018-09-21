@@ -1,0 +1,133 @@
+
+/* Some common styles */
+.button,
+button,
+select,
+input[type="checkbox"] {
+  -webkit-appearance: none; /* remove default browser styling */
+  color: #555555;
+  background: white;
+  border: 1px solid #d8d8d8;
+  border-radius: 0;
+  box-sizing: border-box;
+  outline: none;
+  cursor: pointer;
+}
+
+/* On mouse-over, add a grey background color */
+button:hover,
+.button:hover,
+select:hover,
+input[type="checkbox"]:hover {
+  background: #f5f5f5;
+}
+
+/* On mouse-over, add a darker gray background color */
+button:active,
+.button:active,
+select:active,
+input[type="checkbox"]:active {
+  border-style: inset;
+  background: #f5f5f5;
+}
+
+/*********** BUTTONS ***********/
+
+button,
+.button {
+  padding: 5px 12px;
+  margin: 10px;
+  align-items: flex-start;
+  text-align: center;
+  text-rendering: auto;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  letter-spacing: normal;
+  word-spacing: normal;
+  display: inline-block;
+}
+
+/***** Group of side by side buttons *****/
+
+/* Remove whitespace between inline buttons (solution from https://stackoverflow.com/a/19038859) */
+.button-group {
+  font-size: 0;
+}
+.button-group button,
+.button-group .button {
+  font-size: 14px;
+}
+
+/* Style margins for side by side buttons */
+.button-group  button,
+.button-group .button {
+  margin-left: 0;
+  margin-right: 0;
+}
+.button-group  button:first-of-type,
+.button-group .button:first-of-type {
+  margin-left: 10px;
+}
+.button-group   button:not(:first-of-type),
+.button-group  .button:not(:first-of-type) {
+  margin-left: -1px;
+}
+.button-group  button:last-of-type,
+.button-group .button:last-of-type {
+  margin-right: 10px;
+}
+
+
+
+/********** CHECKBOXES **********/
+
+input[type="checkbox"] {
+  height: 22px;
+  width: 22px;
+  padding: 0;
+  margin: 0;
+  margin-right: 8px;
+}
+
+/* Add the checkmark indicator (removed by -webkit-appearance: none) */
+input[type="checkbox"]:after {
+  content: "";
+  position: relative;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+input[type="checkbox"]:checked:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+input[type="checkbox"]:after {
+  left: 7px;
+  top: 3px;
+  width: 4px;
+  height: 8px;
+  border: solid #c9c9c9;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/********* CUSTOM SELECTORS *********/
+
+
+select {
+  height: 22px;
+  padding-left: 4px;
+}
+
+/* Style the arrow indicator (removed by -webkit-appearance: none) */
+select,
+select:hover {
+  background-image: linear-gradient(45deg, transparent 50%, #c9c9c9 50%), linear-gradient(135deg, #c9c9c9 50%, transparent 50%);
+  background-position: calc(100% - 12px) 8px, calc(100% - 7px) 8px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}

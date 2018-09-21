@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Coda V2</title>
+    <script defer src="main.dart.js"></script>
+    <link rel="stylesheet" href="main.css"></link>
+    <link rel="stylesheet" href="buttons.css"></link>
+    <link rel="stylesheet" type="text/css" href="external/fontawesome-free-5.3.1-web/css/all.min.css"/>
+  </head>
+  <body>
+
+    <!-- Navbar -->
+    <nav>
+      <div id="navbar">
+        <a class="navbar-brand" href="#">Coda v2</a>
+        <ul class="navbar-item-list">
+
+          <li class="dropdown">
+            <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><b>Dataset</b><i class="fas fa-caret-down" style="margin-left: 2px"></i></a>
+            <ul class="dropdown-menu">
+              <li><a class="btn-file">Load new dataset from...<input id="dataset-file" type="file"/></a></li>
+              <li><a class="btn-file">Load new code scheme from...<input id="scheme-file" type="file"/></a></li>
+              <li><a id="export-dataset">Export dataset</a></li>
+              <li><a id="export-instrumentation">Export instrumentation</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button id="save-all-button" type="button" data-toggle="tooltip" data-placement="bottom" title="Save changes within Coda">
+              <i class="fas fa-save"></i>
+              Save
+            </button>
+          </li>
+
+          <li>
+            <button id="auto-code-now-button" type="button" data-toggle="tooltip" data-placement="bottom" title="Click to automatically assign codes">
+              <i class="fas fa-sync-alt"></i>
+              Auto-code now!
+            </button>
+          </li>
+
+          <li>
+            <div class="text-and-button-group">
+              Code by
+              <div class="button-group">
+                <input id="horizontal-coding" type="radio" name="code-by-group" checked>
+                <label class="button" for="horizontal-coding">scheme</label>
+
+                <input id="vertical-coding" type="radio" name="code-by-group">
+                <label class="button" for="vertical-coding">message</label>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <div class="button-group">
+              <button id="undo" type="button" data-toggle="tooltip" data-placement="bottom" title="Undo recent change">
+                <i class="fas fa-undo"></i>
+              </button>
+
+              <button id="redo" type="button" data-toggle="tooltip" data-placement="bottom" title="Redo recent change">
+                <i class="fas fa-redo"></i>
+              </button>
+            </div>
+          </li>
+
+        </ul>
+        <div id="version-label"></div>
+      </div>
+    </nav>
+
+    <!-- Main coding area -->
+    <main>
+      <table id="message-coding-table">
+        <thead>
+          <tr>
+            <th class="message-id">ID</th>
+            <th class="message-text">Message</th>
+            <th>Coding scheme 1</th>
+            <th>Coding scheme 2</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="message-id">1</td>
+            <td class="message-text">This is a message that someone has sent in.</td>
+            <td class="message-code">
+              <div class="input-group" scheme="1">
+                <input type="checkbox">
+                <select class="code-selector">
+                  <option codeid="1-01" selected>Code 1</option>
+                  <option codeid="1-02">Code 2</option>
+                  <option codeid="1-03">Code 3</option>
+                  <option codeid="1-04">Code 4</option>
+                  <option codeid="1-05">Code 5</option>
+                  </option>
+                </select>
+              </div>
+            </td>
+            <td class="message-code">
+              <div class="input-group" scheme="2">
+                <input type="checkbox">
+                <select class="code-selector">
+                  <option codeid="2-01" selected>Code 1</option>
+                  <option codeid="2-02">Code 2</option>
+                  <option codeid="2-03">Code 3</option>
+                  <option codeid="2-04">Code 4</option>
+                  <option codeid="2-05">Code 5</option>
+                  </option>
+                </select>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+              <td class="message-id">2</td>
+              <td class="message-text">This is a looooooooooooooooooooonger, much much looooooooooonger message that someone has sent in. Far to long actually to fit in a single row, so it'll have to wrap up on the other rows. Hopefully that should look quite good on the UI. </td>
+              <td class="message-code">
+                <div class="input-group" scheme="1">
+                  <input type="checkbox">
+                  <select class="code-selector">
+                    <option codeid="1-01" selected>Code 1</option>
+                    <option codeid="1-02">Code 2</option>
+                    <option codeid="1-03">Code 3</option>
+                    <option codeid="1-04">Code 4</option>
+                    <option codeid="1-05">Code 5</option>
+                    </option>
+                  </select>
+                </div>
+              </td>
+              <td class="message-code">
+                <div class="input-group" scheme="2">
+                  <input type="checkbox">
+                  <select class="code-selector">
+                    <option codeid="2-01" selected>Code 1</option>
+                    <option codeid="2-02">Code 2</option>
+                    <option codeid="2-03">Code 3</option>
+                    <option codeid="2-04">Code 4</option>
+                    <option codeid="2-05">Code 5</option>
+                    </option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>
