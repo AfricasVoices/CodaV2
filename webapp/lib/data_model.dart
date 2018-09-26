@@ -1,6 +1,7 @@
 /**
  * Represents the main data types used in Coda.
  */
+library coda.model;
 
 /// A collection of messages and code schemes.
 class Dataset {
