@@ -5,7 +5,8 @@ description: Coda V2
 environment:
   sdk: '>=2.0.0 <3.0.0'
 
-# dependencies:
+dependencies:
+  firebase: ^5.0.0
 
 dev_dependencies:
   build_runner: ^0.10.0
