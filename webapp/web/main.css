@@ -201,15 +201,14 @@ main tbody {
   vertical-align: top;
 }
 
-th {
-  text-align: left;
-}
-
-#message-coding-table th,
 #message-coding-table td {
   padding: 6px 12px;
   border: none;
   border-top: 1px solid #e7e7e7;
+  text-align: left;
+}
+#message-coding-table thead td {
+  font-weight: bold;
 }
 
 .message-id {
@@ -227,4 +226,14 @@ th {
 
 .input-group .code-selector {
   flex: 1;
+}
+
+.input-group .warning {
+  display: block;
+  margin: auto 0 auto 4px;
+  color: #ffaa00;
+}
+
+.input-group .warning.hidden {
+  visibility: hidden;
 }
