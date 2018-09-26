@@ -7,6 +7,11 @@ import 'dart:html';
 
 import 'data_model.dart';
 
+/// A typedef for the listener function to be called when a checkbox is changed.
+typedef void CheckboxChanged(bool checked);
+/// A typedef for the listener function to be called when the selected option in a selector is changed.
+typedef void SelectorChanged(String valueID);
+
 /// A ViewModel for a message, corresponding to a table row in the UI.
 class MessageViewModel {
   Message message;
@@ -44,11 +49,6 @@ class MessageViewModel {
     });
   }
 }
-
-/// A typedef for the listener function to be called when a checkbox is changed.
-typedef void CheckboxChanged(bool checked);
-/// A typedef for the listener function to be called when the selected option in a selector is changed.
-typedef void SelectorChanged(String valueID);
 
 /// A dropdown code selector used to label a message within a coding scheme.
 class CodeSelector {

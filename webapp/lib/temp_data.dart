@@ -1,63 +1,8 @@
 /**
- * The entry point of the application.
+ * A file used to store any data used when prototyping.
  */
-library coda.playground;
 
-import 'dart:html';
-
-import 'data_model.dart';
-import 'view_model.dart';
-
-Playground get playground => _playground;
-
-Playground _playground;
-
-void init() {
-  _playground = new Playground();
-}
-
-class Playground {
-  ButtonElement get saveButton => querySelector('#save-all-button');
-  TableElement get messageCodingTable => querySelector('#message-coding-table');
-
-  Dataset dataset;
-
-  Playground() {
-    // TODO: This is just for prototyping, the jsondataset will come from a server
-    loadDataset(new Dataset.fromJson(jsonDataset));
-  }
-
-  loadDataset(Dataset dataset) {
-    clear(); // Clear up the playground before loading the new dataset.
-    this.dataset = dataset;
-
-    TableSectionElement header = new Element.tag('thead');
-    TableRowElement headerRow = header.addRow();
-    headerRow.addCell()
-      ..classes.add('message-id')
-      ..text = 'ID';
-    headerRow.addCell()
-      ..classes.add('message-text')
-      ..text = 'Message';
-    dataset.codeSchemes.forEach((codeScheme) {
-      headerRow.addCell()
-        ..classes.add('message-code')
-        ..text = codeScheme.schemeID;
-    });
-    messageCodingTable.append(header);
-
-    TableSectionElement body = new Element.tag('tbody');
-    dataset.messages.forEach((message) {
-      MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
-      body.append(messageViewModel.viewElement);
-    });
-    messageCodingTable.append(body);
-  }
-
-  void clear() {
-    // TODO: Implement clearing up the table
-  }
-}
+library coda.temp.data;
 
 Map jsonDataset = {
   "Name": "Test",
