@@ -7,12 +7,12 @@ import 'dart:html';
 
 import 'data_model.dart';
 import 'view_model.dart';
-import 'temp_data.dart';
+import 'sample_data/sample_json_datasets.dart';
 
 void init() {
   CodaUI codaUI = new CodaUI();
   // TODO: This is just for prototyping, the json dataset will come from a server
-  codaUI.displayDataset(new Dataset.fromJson(jsonDataset));
+  codaUI.displayDataset(new Dataset.fromJson(jsonDatasetTwoSchemes));
 }
 
 class CodaUI {
