@@ -9,18 +9,20 @@ import 'data_model.dart';
 import 'view_model.dart';
 import 'temp_data.dart';
 
-void init() => new CodaUI();
+void init() {
+  CodaUI codaUI = new CodaUI();
+  // TODO: This is just for prototyping, the json dataset will come from a server
+  codaUI.displayDataset(new Dataset.fromJson(jsonDataset));
+}
 
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
   TableElement get messageCodingTable => querySelector('#message-coding-table');
 
   Dataset dataset;
+  List<MessageViewModel> messages = [];
 
-  CodaUI() {
-    // TODO: This is just for prototyping, the json dataset will come from a server
-    displayDataset(new Dataset.fromJson(jsonDataset));
-  }
+  CodaUI();
 
   displayDataset(Dataset dataset) {
     clearMessageCodingTable(); // Clear up the table before loading the new dataset.
@@ -31,6 +33,7 @@ class CodaUI {
     TableSectionElement body = new Element.tag('tbody');
     dataset.messages.forEach((message) {
       MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
+      messages.add(messageViewModel);
       body.append(messageViewModel.viewElement);
     });
     messageCodingTable.append(body);

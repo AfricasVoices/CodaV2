@@ -71,7 +71,7 @@ class CodeSelector {
     OptionElement option = new OptionElement();
     option
       ..attributes['schemeid'] = scheme.schemeID
-      ..attributes['codeid'] = 'unassign'
+      ..attributes['valueid'] = 'unassign'
       ..selected = true;
     codeSelector.append(option);
     scheme.codes.forEach((code) {
