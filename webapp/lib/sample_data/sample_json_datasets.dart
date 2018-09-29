@@ -1,15 +1,31 @@
-/**
- * A file used to store any data used when prototyping.
- */
+library coda.test.data;
 
-library coda.temp.data;
-
-Map jsonDataset = {
+Map jsonDatasetNoSchemes = {
   "Name": "Test",
   "Documents": [
     {
+      "MessageID": "msg 0",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+  ],
+  "CodeSchemes": []
+};
+
+
+Map jsonDatasetOneScheme = {
+  "Name": "Test",
+  "Documents": [
+    {
+      "MessageID": "msg 0",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
       "MessageID": "msg 1",
-      "Text": "first message",
+      "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
       "Labels": [
         {
@@ -22,7 +38,20 @@ Map jsonDataset = {
     },
     {
       "MessageID": "msg 2",
-      "Text": "second message",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": [
+        {
+          "SchemeID": "scheme 1",
+          "DateTimeUTC": "2018-09-23T14:12:00Z",
+          "ValueID": "code 11",
+          "LabelOrigin": "info@example.com"
+        }
+      ]
+    },
+    {
+      "MessageID": "msg 3",
+      "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
@@ -31,6 +60,63 @@ Map jsonDataset = {
           "ValueID": "code 1",
           "LabelOrigin": "info@example.com"
         },
+        {
+          "SchemeID": "scheme 1",
+          "DateTimeUTC": "2018-09-23T14:12:00Z",
+          "ValueID": "code 2",
+          "LabelOrigin": "info@example.com"
+        }
+      ]
+    }
+  ],
+  "CodeSchemes": [
+    {
+      "SchemeID": "scheme 1",
+      "Codes": [
+        {
+          "FriendlyName": "code 1",
+          "ValueID": "code 1",
+          "Colour": "#f46241",
+          "Shortcut": "1"
+        },
+        {
+          "FriendlyName": "code 2",
+          "ValueID": "code 2",
+          "Shortcut": "2"
+        }
+      ]
+    },
+  ]
+};
+
+
+Map jsonDatasetTwoSchemes = {
+  "Name": "Test",
+  "Documents": [
+    {
+      "MessageID": "msg 0",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
+      "MessageID": "msg 1",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
+      "Labels": [
+        {
+          "SchemeID": "scheme 1",
+          "DateTimeUTC": "2018-09-23T14:12:00Z",
+          "ValueID": "code 1",
+          "LabelOrigin": "info@example.com"
+        }
+      ]
+    },
+    {
+      "MessageID": "msg 2",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
+      "Labels": [
         {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
@@ -41,7 +127,7 @@ Map jsonDataset = {
     },
     {
       "MessageID": "msg 3",
-      "Text": "third message",
+      "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
@@ -53,61 +139,43 @@ Map jsonDataset = {
         {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 22",
+          "ValueID": "code 2",
           "LabelOrigin": "info@example.com"
         }
       ]
     },
     {
       "MessageID": "msg 4",
-      "Text": "fourth message",
+      "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
-          "SchemeID": "scheme 1",
+          "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
+          "ValueID": "code 1",
           "LabelOrigin": "info@example.com"
         },
         {
-          "SchemeID": "scheme 1",
+          "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 1",
+          "ValueID": "code 2",
           "LabelOrigin": "info@example.com"
         }
       ]
     },
     {
       "MessageID": "msg 5",
-      "Text": "fifth message",
+      "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
+          "ValueID": "code 22",
           "LabelOrigin": "info@example.com"
         },
-        {
-          "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 11",
-          "LabelOrigin": "info@example.com"
-        }
       ]
     },
-    {
-      "MessageID": "msg 6",
-      "Text": "sixth message",
-      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
-      "Labels": []
-    },
-    {
-      "MessageID": "msg 7",
-      "Text": "seventh message",
-      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
-      "Labels": []
-    }
   ],
   "CodeSchemes": [
     {
