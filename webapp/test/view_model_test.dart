@@ -143,6 +143,9 @@ void main() {
   });
 
   group("message coding", () {
+    TableElement table = new TableElement();
+    table.id = "message-coding-table";
+    document.body.append(table);
     Dataset dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
     coda_ui.CodaUI ui = new coda_ui.CodaUI();
     ui.displayDataset(dataset);
