@@ -9,6 +9,10 @@
     <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+
+    <!-- authentication UI -->
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
   </head>
   <body>
 
@@ -16,7 +20,7 @@
     <nav>
       <div id="navbar">
         <a class="navbar-brand" href="#">Coda v2</a>
-        <ul class="navbar-item-list">
+        <ul class="left navbar-item-list">
 
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><b>Dataset</b><i class="fas fa-caret-down" style="margin-left: 2px"></i></a>
@@ -65,6 +69,29 @@
                 <i class="fas fa-redo"></i>
               </button>
             </div>
+          </li>
+
+        </ul>
+
+        <ul class="right navbar-item-list">
+          <li>
+            <button id="sign-in" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign in">
+              Sign in
+            </button>
+          </li>
+
+          <li>
+            <button id="sign-out" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign out">
+              Sign out
+            </button>
+          </li>
+
+          <li>
+            <div id="user-name"></div>
+          </li>
+
+          <li>
+            <div id="user-pic"></div>
           </li>
 
         </ul>
