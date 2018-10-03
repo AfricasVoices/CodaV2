@@ -44,6 +44,11 @@ String getUserName() {
   return firebase.auth().currentUser.displayName;
 }
 
+/// Returns the signed-in user's email address.
+String getUserEmail() {
+  return firebase.auth().currentUser.email;
+}
+
 /// Returns true if a user is signed-in.
 bool isUserSignedIn() {
   return firebase.auth().currentUser != null;
