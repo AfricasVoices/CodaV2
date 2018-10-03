@@ -5,7 +5,11 @@ library coda.ui;
 
 import 'dart:html';
 
+import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/firestore.dart' as firestore;
+
 import 'data_model.dart';
+import 'firebase_constants.dart' as firebase_constants;
 import 'view_model.dart';
 import 'sample_data/sample_json_datasets.dart';
 
@@ -22,7 +26,22 @@ class CodaUI {
   Dataset dataset;
   List<MessageViewModel> messages = [];
 
-  CodaUI();
+  CodaUI() {
+    firebase.initializeApp(
+      apiKey: firebase_constants.apiKey,
+      authDomain: firebase_constants.authDomain,
+      databaseURL: firebase_constants.databaseURL,
+      projectId: firebase_constants.projectId,
+      storageBucket: firebase_constants.storageBucket,
+      messagingSenderId: firebase_constants.messagingSenderId);
+    firestore.Firestore firestoreInstance = firebase.firestore();
+    firestore.CollectionReference datasetsCollection = firestoreInstance.collection('datasets');
+    datasetsCollection.add({
+      "id": "msg 1",
+      "text": "this is a message text",
+      "label": "label 1",
+    });
+  }
 
   displayDataset(Dataset dataset) {
     clearMessageCodingTable(); // Clear up the table before loading the new dataset.
