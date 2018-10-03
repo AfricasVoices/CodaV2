@@ -13,6 +13,10 @@ import 'firebase_constants.dart' as firebase_constants;
 import 'view_model.dart';
 import 'sample_data/sample_json_datasets.dart';
 
+import 'authentication.dart';
+
+import 'package:firebase/firebase.dart' as firebase;
+
 void init() {
   CodaUI codaUI = new CodaUI();
   // TODO: This is just for prototyping, the json dataset will come from a server
@@ -34,6 +38,7 @@ class CodaUI {
       projectId: firebase_constants.projectId,
       storageBucket: firebase_constants.storageBucket,
       messagingSenderId: firebase_constants.messagingSenderId);
+    initFirebaseAuth();
     firestore.Firestore firestoreInstance = firebase.firestore();
     firestore.CollectionReference datasetsCollection = firestoreInstance.collection('datasets');
     datasetsCollection.add({

@@ -79,8 +79,13 @@ nav .navbar-brand {
   float: left;
 }
 
-nav .navbar-item-list li {
+nav .left.navbar-item-list li {
   float: left;
+  position: relative;
+}
+
+nav .right.navbar-item-list li {
+  float: right;
   position: relative;
 }
 
@@ -186,6 +191,26 @@ nav .dropdown-menu .btn-file>input {
   margin-left: 10px;
 }
 
+nav #user-name {
+  padding: 6px 0;
+  margin: 10px 0;
+}
+
+nav #user-pic {
+  background-size: 30px;
+  background-repeat: no-repeat;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+}
+
+nav #user-pic[hidden],
+nav #user-name[hidden],
+nav #sign-in[hidden],
+nav #sign-out[hidden] {
+  display: none;
+}
 
 /************ Main *************/
 main {
