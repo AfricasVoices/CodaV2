@@ -9,6 +9,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' as firestore;
 
 import 'data_model.dart';
+import 'firebase_constants.dart' as firebase_constants;
 import 'view_model.dart';
 import 'sample_data/sample_json_datasets.dart';
 
@@ -27,12 +28,12 @@ class CodaUI {
 
   CodaUI() {
     firebase.initializeApp(
-      apiKey: "AIzaSyAVM9wsuKG0ANdKnkJjNN6lTmmH0fD_v68",
-      authDomain: "fir-test-b0eb7.firebaseapp.com",
-      databaseURL: "https://fir-test-b0eb7.firebaseio.com",
-      projectId: "fir-test-b0eb7",
-      storageBucket: "fir-test-b0eb7.appspot.com",
-      messagingSenderId: "587699758467");
+      apiKey: firebase_constants.apiKey,
+      authDomain: firebase_constants.authDomain,
+      databaseURL: firebase_constants.databaseURL,
+      projectId: firebase_constants.projectId,
+      storageBucket: firebase_constants.storageBucket,
+      messagingSenderId: firebase_constants.messagingSenderId);
     firestore.Firestore firestoreInstance = firebase.firestore();
     firestore.CollectionReference datasetsCollection = firestoreInstance.collection('datasets');
     datasetsCollection.add({
