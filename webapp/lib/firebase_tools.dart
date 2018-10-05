@@ -1,6 +1,9 @@
 import 'package:firebase/firebase.dart' as firebase;
 // import 'package:firebase/firestore.dart' as firestore;
 import 'firebase_constants.dart' as firebase_constants;
+import 'data_model.dart';
+import 'config.dart';
+
 
 init() {
   firebase.initializeApp(
@@ -17,4 +20,10 @@ init() {
     //   "id": "msg 1",
     //   "text": "this is a message text",
     //   "label": "label 1",
+}
+
+updateMessage(Message msg) {
+  if (VERBOSE) print("Updating: $msg");
+
+  // TODO: Implement writeback
 }
