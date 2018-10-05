@@ -23,7 +23,7 @@ signOut() {
 }
 
 /// Initialise firebase authentication.
-initFirebaseAuth() {
+init() {
   firebase.auth().onAuthStateChanged.listen(authStateObserver);
 
   signInButton.onClick.listen((_) => signIn());
