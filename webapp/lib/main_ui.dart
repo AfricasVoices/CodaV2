@@ -14,8 +14,8 @@ import 'firebase_tools.dart' as fb;
 
 void init() {
   CodaUI codaUI = new CodaUI();
-  // TODO: This is just for prototyping, the json dataset will come from a server
-  codaUI.displayDataset(new Dataset.fromJson(jsonDatasetTwoSchemes));
+  String datasetName = Uri.base.queryParameters["dataset"];
+  codaUI.displayDataset(fb.loadDataset(datasetName));
 }
 
 class CodaUI {
