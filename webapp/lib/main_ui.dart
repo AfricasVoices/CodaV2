@@ -29,6 +29,10 @@ class CodaUI {
 
   Dataset dataset;
   List<MessageViewModel> messages = [];
+  
+  // Cache main elemetns of the UI
+  Element tableHead = null;
+  Element tableBody = null;
 
   CodaUI() {
     firebase.initializeApp(
@@ -55,6 +59,8 @@ class CodaUI {
     messageCodingTable.append(createTableHeader(dataset));
 
     TableSectionElement body = new Element.tag('tbody');
+    this.tableBody = body;
+
     dataset.messages.forEach((message) {
       MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
       messages.add(messageViewModel);
@@ -65,6 +71,8 @@ class CodaUI {
 
   createTableHeader(Dataset dataset) {
     TableSectionElement header = new Element.tag('thead');
+    this.tableHead = header;
+
     TableRowElement headerRow = header.addRow();
     headerRow.addCell()
       ..classes.add('message-id')
@@ -81,6 +89,7 @@ class CodaUI {
   }
 
   void clearMessageCodingTable() {
-    // TODO: Implement clearing up the table
+    this.tableHead?.remove();
+    this.tableBody?.remove();
   }
 }
