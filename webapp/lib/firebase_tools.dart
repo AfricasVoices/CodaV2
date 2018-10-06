@@ -3,6 +3,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'firebase_constants.dart' as firebase_constants;
 import 'data_model.dart';
 import 'config.dart';
+import 'sample_data/sample_json_datasets.dart';
 
 
 init() {
@@ -26,4 +27,11 @@ updateMessage(Message msg) {
   if (VERBOSE) print("Updating: $msg");
 
   // TODO: Implement writeback
+}
+
+Dataset loadDataset(String datasetName) {
+  if (VERBOSE) print("Loading dataset: $datasetName");
+
+  // Temporary code
+  return new Dataset.fromJson(jsonDatasetTwoSchemes);
 }
