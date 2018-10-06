@@ -6,6 +6,8 @@ library coda.viewmodel;
 import 'dart:html';
 
 import 'data_model.dart';
+import 'config.dart';
+import 'firebase_tools.dart' as fbt;
 
 /// A typedef for the listener function to be called when a checkbox is changed.
 typedef void CheckboxChanged(bool checked);
@@ -38,10 +40,12 @@ class MessageViewModel {
       }
 
       codeSelector.addCheckboxListener((bool checked) {
-        // TODO: do something when the checkbox is checked/unchecked
+        if (VERBOSE) print("Message checkbox: ${message.messageID} $checked");
+        fbt.updateMessage(message);
       });
       codeSelector.addCodeSelectorListener((String valueID) {
-        // TODO: do something when a new code is selected
+        if (VERBOSE) print("Message checkbox: ${message.messageID} ${scheme.schemeID} $valueID");
+        fbt.updateMessage(message);
       });
       viewElement.addCell()
         ..classes.add('message-code')

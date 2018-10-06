@@ -36,6 +36,9 @@ class Message {
     creationDateTime = DateTime.parse(jsonDocument['CreationDateTimeUTC']);
     labels = (jsonDocument['Labels'] as List).map<Label>((jsonLabel) => new Label.fromJson(jsonLabel)).toList();
   }
+
+  @override
+  String toString() => "$messageID: $text $labels";
 }
 
 /// A code/label assigned to a message.
@@ -52,6 +55,8 @@ class Label {
     valueID = jsonLabel['ValueID'];
     labelOrigin = jsonLabel['LabelOrigin'];
   }
+  @override
+  String toString() => "$schemeID: $valueID $labelOrigin";
 }
 
 /// A code scheme being used for coding/labelling messsages.
