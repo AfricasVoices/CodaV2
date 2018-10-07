@@ -34,7 +34,6 @@ class MessageViewModel {
         Label label = existingLabels.first;
         codeSelector.selectedOption = label.valueID;
       }
-
       viewElement.addCell()
         ..classes.add('message-code')
         ..append(codeSelector.viewElement);
