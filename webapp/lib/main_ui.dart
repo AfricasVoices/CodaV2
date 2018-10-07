@@ -9,12 +9,12 @@ import 'data_model.dart';
 import 'view_model.dart';
 
 import 'authentication.dart' as auth;
-import 'firebase_tools.dart' as fb;
+import 'firebase_tools.dart' as fbt;
 
 void init() {
   CodaUI codaUI = new CodaUI();
   String datasetName = Uri.base.queryParameters["dataset"];
-  codaUI.displayDataset(fb.loadDataset(datasetName));
+  codaUI.displayDataset(fbt.loadDataset(datasetName));
 }
 
 class CodaUI {
@@ -29,7 +29,7 @@ class CodaUI {
   Element tableBody = null;
 
   CodaUI() {
-    fb.init();
+    fbt.init();
     auth.init();
   }
 
