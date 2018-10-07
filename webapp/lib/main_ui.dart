@@ -60,23 +60,23 @@ class CodaUI {
 
     messageCodingTable.onChange.listen((event) {
       var target = event.target;
-      if (target is InputElement || target is SelectElement) {
-        TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
-        DivElement inputGroup = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('input-group'));
-        String messageID = row.attributes['message-id'];
-        MessageViewModel message = messageMap[messageID];
-        String schemeID = inputGroup.attributes['scheme-id'];
+      if (target is! InputElement && target is! SelectElement) return;
 
-        if (target is InputElement) { // change on checkbox element
-          message.schemeCheckChanged(dataset, schemeID, target.checked);
-        }
-        if (target is SelectElement) { // change on dropdown select element
-          CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
-          CodeSelector.activeCodeSelector = codeSelector;
-          message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
-          codeSelector.hideWarning();
-          selectNextEmptyCodeSelector(messageID, schemeID);
-        }
+      TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
+      DivElement inputGroup = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('input-group'));
+      String messageID = row.attributes['message-id'];
+      MessageViewModel message = messageMap[messageID];
+      String schemeID = inputGroup.attributes['scheme-id'];
+
+      if (target is InputElement) { // change on checkbox element
+        message.schemeCheckChanged(dataset, schemeID, target.checked);
+      }
+      if (target is SelectElement) { // change on dropdown select element
+        CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+        CodeSelector.activeCodeSelector = codeSelector;
+        message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
+        codeSelector.hideWarning();
+        selectNextEmptyCodeSelector(messageID, schemeID);
       }
     });
 
