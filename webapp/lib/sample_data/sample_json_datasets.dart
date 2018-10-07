@@ -97,13 +97,13 @@ Map jsonDatasetTwoSchemes = {
   "Id": "test_dataset_id",
   "Documents": [
     {
-      "MessageID": "msg 0",
+      "Id": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "MessageID": "msg 1",
+      "Id": "msg 1",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
       "Labels": [
@@ -116,7 +116,7 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
     {
-      "MessageID": "msg 2",
+      "Id": "msg 2",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
       "Labels": [
@@ -129,7 +129,7 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
     {
-      "MessageID": "msg 3",
+      "Id": "msg 3",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -148,7 +148,7 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
     {
-      "MessageID": "msg 4",
+      "Id": "msg 4",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -167,7 +167,7 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
     {
-      "MessageID": "msg 5",
+      "Id": "msg 5",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [

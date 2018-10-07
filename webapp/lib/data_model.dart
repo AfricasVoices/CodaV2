@@ -33,7 +33,7 @@ class Message {
     labels = [];
   }
   Message.fromJson(Map jsonDocument) {
-    id = jsonDocument['id'];
+    id = jsonDocument['Id'];
     text = jsonDocument['Text'];
     creationDateTime = DateTime.parse(jsonDocument['CreationDateTimeUTC']);
     labels = (jsonDocument['Labels'] as List).map<Label>((jsonLabel) => new Label.fromJson(jsonLabel)).toList();
