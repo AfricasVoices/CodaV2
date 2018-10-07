@@ -50,7 +50,10 @@ class MessageViewModel {
         if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueID");
 
         // Update the data-model by prepending this decision
-        message.labels.add(new Label(schemeId, new DateTime.now(), valueID, auth.getUserEmail()));
+        message.labels.add(
+          new Label(schemeId, new DateTime.now(), valueID, 
+            new Origin(auth.getUserEmail(), auth.getUserName())
+            ));
         fbt.updateMessage(dataset, message);
       });
       viewElement.addCell()

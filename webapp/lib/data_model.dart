@@ -46,8 +46,6 @@ class Message {
     "labels" : labels.map((f) => f.toSimpleMap()).toList()
   };
 
-
-
   @override
   String toString() => "$id: $text $labels";
 }
@@ -57,14 +55,16 @@ class Label {
   String schemeID;
   DateTime dateTime;
   String valueID;
-  String labelOrigin;
+  Origin labelOrigin;
+  double confidence;
+  bool checked;
 
-  Label(this.schemeID, this.dateTime, this.valueID, this.labelOrigin);
+  Label(this.schemeID, this.dateTime, this.valueID, this.labelOrigin, {this.confidence = 1.0, this.checked = true});
   Label.fromJson(Map jsonLabel) {
     schemeID = jsonLabel['SchemeID'];
     dateTime = DateTime.parse(jsonLabel['DateTimeUTC']);
     valueID = jsonLabel['ValueID'];
-    labelOrigin = jsonLabel['LabelOrigin'];
+    // labelOrigin = jsonLabel['LabelOrigin'];
   }
   @override
   String toString() => "$schemeID: $valueID $labelOrigin";
@@ -73,7 +73,8 @@ class Label {
     "schemeID" : schemeID,
     "dateTime" : dateTime,
     "valueID" : valueID,
-    "labelOrigin" : labelOrigin
+    "origin" : labelOrigin.toSimpleMap(),
+    "confidence" : confidence
   };
 }
 
@@ -101,6 +102,25 @@ class Scheme {
       codes.add(code);
     });
   }
+}
+
+class Origin {
+  String id;
+  String name;
+  String originType;
+  Map<String, String> metadata;
+
+  Origin(this.id, this.name, [this.originType = "Manual", this.metadata]);
+
+  toSimpleMap() => {
+    "id" : id,
+    "name" : name,
+    "originType" : originType,
+    "metadata" : metadata != null ? metadata : {}
+  };
+
+  @override
+    String toString() => "$originType $id";
 }
 
 /// A simple colour class for transforming between the data model colours and css colours.
