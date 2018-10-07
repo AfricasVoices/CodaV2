@@ -41,11 +41,11 @@ class MessageViewModel {
 
       codeSelector.addCheckboxListener((bool checked) {
         if (VERBOSE) print("Message checkbox: ${message.messageID} $checked");
-        fbt.updateMessage(message);
+        fbt.updateMessage(dataset, message);
       });
       codeSelector.addCodeSelectorListener((String valueID) {
         if (VERBOSE) print("Message checkbox: ${message.messageID} ${scheme.schemeID} $valueID");
-        fbt.updateMessage(message);
+        fbt.updateMessage(dataset, message);
       });
       viewElement.addCell()
         ..classes.add('message-code')

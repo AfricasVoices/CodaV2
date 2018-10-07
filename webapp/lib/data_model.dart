@@ -5,6 +5,7 @@ library coda.model;
 
 /// A collection of messages and code schemes.
 class Dataset {
+  String id;
   String name;
   List<Message> messages;
   List<Scheme> codeSchemes;
@@ -15,6 +16,7 @@ class Dataset {
   }
   Dataset.fromJson(Map jsonDataset) {
     name = jsonDataset['Name'];
+    id = jsonDataset['Id'];
     messages = (jsonDataset['Documents'] as List).map<Message>((jsonDocument) => new Message.fromJson(jsonDocument)).toList();
     codeSchemes = (jsonDataset['CodeSchemes'] as List).map<Scheme>((jsonScheme) => new Scheme.fromJson(jsonScheme)).toList();
   }
@@ -22,23 +24,32 @@ class Dataset {
 
 /// A textual message being coded.
 class Message {
-  String messageID;
+  String id;
   String text;
   DateTime creationDateTime;
   List<Label> labels;
 
-  Message(this.messageID, this.text, this.creationDateTime) {
+  Message(this.id, this.text, this.creationDateTime) {
     labels = [];
   }
   Message.fromJson(Map jsonDocument) {
-    messageID = jsonDocument['MessageID'];
+    id = jsonDocument['id'];
     text = jsonDocument['Text'];
     creationDateTime = DateTime.parse(jsonDocument['CreationDateTimeUTC']);
     labels = (jsonDocument['Labels'] as List).map<Label>((jsonLabel) => new Label.fromJson(jsonLabel)).toList();
   }
 
+  toMap() => {
+    "id" : id,
+    "text" : text,
+    "creationDateTime" : creationDateTime,
+    "labels" : labels.map((f) => f.toSimpleMap()).toList()
+  };
+
+
+
   @override
-  String toString() => "$messageID: $text $labels";
+  String toString() => "$id: $text $labels";
 }
 
 /// A code/label assigned to a message.
@@ -57,6 +68,13 @@ class Label {
   }
   @override
   String toString() => "$schemeID: $valueID $labelOrigin";
+
+  toSimpleMap() => {
+    "schemeID" : schemeID,
+    "dateTime" : dateTime,
+    "valueID" : valueID,
+    "labelOrigin" : labelOrigin
+  };
 }
 
 /// A code scheme being used for coding/labelling messsages.
