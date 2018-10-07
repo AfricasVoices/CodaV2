@@ -2,6 +2,7 @@ library coda.test.data;
 
 Map jsonDatasetNoSchemes = {
   "Name": "Test",
+  "Id": "test_dataset_id",
   "Documents": [
     {
       "MessageID": "msg 0",
@@ -16,6 +17,7 @@ Map jsonDatasetNoSchemes = {
 
 Map jsonDatasetOneScheme = {
   "Name": "Test",
+  "Id": "test_dataset_id",
   "Documents": [
     {
       "MessageID": "msg 0",
@@ -92,6 +94,7 @@ Map jsonDatasetOneScheme = {
 
 Map jsonDatasetTwoSchemes = {
   "Name": "Test",
+  "Id": "test_dataset_id",
   "Documents": [
     {
       "MessageID": "msg 0",
