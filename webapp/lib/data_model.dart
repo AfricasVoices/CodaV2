@@ -80,14 +80,14 @@ class Label {
 
 /// A code scheme being used for coding/labelling messsages.
 class Scheme {
-  String schemeID;
+  String id;
   List<Map> codes;
 
-  Scheme(this.schemeID) {
+  Scheme(this.id) {
     codes = [];
   }
   Scheme.fromJson(Map jsonScheme) {
-    schemeID = jsonScheme['SchemeID'];
+    id = jsonScheme['SchemeID'];
     codes = [];
     jsonScheme['Codes'].forEach((jsonCode) {
       var code = {

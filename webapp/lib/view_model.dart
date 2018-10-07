@@ -34,7 +34,7 @@ class MessageViewModel {
       CodeSelector codeSelector = new CodeSelector(scheme);
       codeSelectors.add(codeSelector);
       // If the message is already labelled in this scheme, select that code.
-      var existingLabels = message.labels.where((label) => label.schemeID == scheme.schemeID);
+      var existingLabels = message.labels.where((label) => label.schemeID == scheme.id);
       if (existingLabels.isNotEmpty) {
         Label label = existingLabels.first;
         codeSelector.selectedOption = label.valueID;
@@ -46,7 +46,7 @@ class MessageViewModel {
       });
       codeSelector.addCodeSelectorListener((String valueID) {
         final messageId = message.id;
-        final schemeId = scheme.schemeID;
+        final schemeId = scheme.id;
         if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueID");
 
         // Update the data-model by prepending this decision
@@ -73,7 +73,7 @@ class CodeSelector {
   CodeSelector(Scheme scheme) {
     viewElement = new DivElement();
     viewElement.classes.add('input-group');
-    viewElement.attributes['scheme'] = scheme.schemeID;
+    viewElement.attributes['scheme'] = scheme.id;
 
     checkbox = new InputElement(type: 'checkbox');
     viewElement.append(checkbox);
@@ -83,14 +83,14 @@ class CodeSelector {
     // An empty code used to unlabel the message
     OptionElement option = new OptionElement();
     option
-      ..attributes['schemeid'] = scheme.schemeID
+      ..attributes['schemeid'] = scheme.id
       ..attributes['valueid'] = 'unassign'
       ..selected = true;
     codeSelector.append(option);
     scheme.codes.forEach((code) {
       OptionElement option = new OptionElement();
       option
-        ..attributes['schemeid'] = scheme.schemeID
+        ..attributes['schemeid'] = scheme.id
         ..attributes['valueid'] = code["valueID"]
         ..text = code['name'];
       codeSelector.append(option);

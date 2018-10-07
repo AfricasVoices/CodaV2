@@ -64,7 +64,7 @@ class CodaUI {
     dataset.codeSchemes.forEach((codeScheme) {
       headerRow.addCell()
         ..classes.add('message-code')
-        ..text = codeScheme.schemeID;
+        ..text = codeScheme.id;
     });
     return header;
   }
