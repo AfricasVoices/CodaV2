@@ -7,7 +7,6 @@ import 'dart:html';
 
 import 'data_model.dart';
 import 'view_model.dart';
-import 'sample_data/sample_json_datasets.dart';
 
 import 'authentication.dart' as auth;
 import 'firebase_tools.dart' as fb;
