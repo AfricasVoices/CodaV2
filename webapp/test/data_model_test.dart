@@ -17,7 +17,7 @@ void main() {
 
     expect(dataset.messages.length, 2);
     expect(dataset.codeSchemes.length, 1);
-    expect(dataset.messages[0].messageID, "msg 1");
+    expect(dataset.messages[0].id, "msg 1");
     expect(dataset.codeSchemes[0].schemeID, "scheme 1");
     expect(dataset.codeSchemes[0].codes[0]['colour'], new Colour.hex('f46241'));
     expect(dataset.codeSchemes[0].codes[1]['colour'], new Colour());

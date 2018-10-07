@@ -24,7 +24,7 @@ class MessageViewModel {
     viewElement = new TableRowElement();
     viewElement.addCell()
       ..classes.add('message-id')
-      ..text = message.messageID;
+      ..text = message.id;
     viewElement.addCell()
       ..classes.add('message-text')
       ..text = message.text;
@@ -40,11 +40,11 @@ class MessageViewModel {
       }
 
       codeSelector.addCheckboxListener((bool checked) {
-        if (VERBOSE) print("Message checkbox: ${message.messageID} $checked");
+        if (VERBOSE) print("Message checkbox: ${message.id} $checked");
         fbt.updateMessage(dataset, message);
       });
       codeSelector.addCodeSelectorListener((String valueID) {
-        if (VERBOSE) print("Message checkbox: ${message.messageID} ${scheme.schemeID} $valueID");
+        if (VERBOSE) print("Message checkbox: ${message.id} ${scheme.schemeID} $valueID");
         fbt.updateMessage(dataset, message);
       });
       viewElement.addCell()

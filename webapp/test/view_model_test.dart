@@ -29,7 +29,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[0], dataset);
 
         expect(message.codeSelectors.length, 0);
-        expect(message.message.messageID, "msg 0");
+        expect(message.message.id, "msg 0");
       });
     });
     group("one scheme", () {
@@ -47,7 +47,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[0], dataset);
 
         expect(message.codeSelectors.length, 1);
-        expect(message.message.messageID, "msg 0");
+        expect(message.message.id, "msg 0");
         expect(message.codeSelectors[0].selectedOption, "unassign");
       });
 
@@ -55,7 +55,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[1], dataset);
 
         expect(message.codeSelectors.length, 1);
-        expect(message.message.messageID, "msg 1");
+        expect(message.message.id, "msg 1");
         expect(message.codeSelectors[0].selectedOption, "code 1");
       });
 
@@ -63,7 +63,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[2], dataset);
 
         expect(message.codeSelectors.length, 1);
-        expect(message.message.messageID, "msg 2");
+        expect(message.message.id, "msg 2");
         expect(message.codeSelectors[0].selectedOption, "unassign");
         expect(message.codeSelectors[0].warning.classes.contains('hidden'), false);
       });
@@ -72,7 +72,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[3], dataset);
 
         expect(message.codeSelectors.length, 1);
-        expect(message.message.messageID, "msg 3");
+        expect(message.message.id, "msg 3");
         expect(message.codeSelectors[0].selectedOption, "code 2");
       });
     });
@@ -91,7 +91,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[0], dataset);
 
         expect(message.codeSelectors.length, 2);
-        expect(message.message.messageID, "msg 0");
+        expect(message.message.id, "msg 0");
         expect(message.codeSelectors[0].selectedOption, "unassign");
         expect(message.codeSelectors[1].selectedOption, "unassign");
       });
@@ -100,7 +100,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[1], dataset);
 
         expect(message.codeSelectors.length, 2);
-        expect(message.message.messageID, "msg 1");
+        expect(message.message.id, "msg 1");
         expect(message.codeSelectors[0].selectedOption, "code 1");
         expect(message.codeSelectors[1].selectedOption, "unassign");
       });
@@ -109,7 +109,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[2], dataset);
 
         expect(message.codeSelectors.length, 2);
-        expect(message.message.messageID, "msg 2");
+        expect(message.message.id, "msg 2");
         expect(message.codeSelectors[0].selectedOption, "unassign");
         expect(message.codeSelectors[1].selectedOption, "code 2");
       });
@@ -118,7 +118,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[3], dataset);
 
         expect(message.codeSelectors.length, 2);
-        expect(message.message.messageID, "msg 3");
+        expect(message.message.id, "msg 3");
         expect(message.codeSelectors[0].selectedOption, "code 1");
         expect(message.codeSelectors[1].selectedOption, "code 2");
       });
@@ -127,7 +127,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[4], dataset);
 
         expect(message.codeSelectors.length, 2);
-        expect(message.message.messageID, "msg 4");
+        expect(message.message.id, "msg 4");
         expect(message.codeSelectors[0].selectedOption, "unassign");
         expect(message.codeSelectors[1].selectedOption, "code 2");
       });
@@ -136,7 +136,7 @@ void main() {
         MessageViewModel message = new MessageViewModel(dataset.messages[5], dataset);
 
         expect(message.codeSelectors.length, 2);
-        expect(message.message.messageID, "msg 5");
+        expect(message.message.id, "msg 5");
         expect(message.codeSelectors[0].selectedOption, "unassign");
         expect(message.codeSelectors[1].selectedOption, "unassign");
         expect(message.codeSelectors[1].warning.classes.contains('hidden'), false);
@@ -156,7 +156,7 @@ void main() {
       MessageViewModel message = ui.messages[0];
 
       expect(message.codeSelectors.length, 2);
-      expect(message.message.messageID, "msg 0");
+      expect(message.message.id, "msg 0");
       expect(message.codeSelectors[0].selectedOption, "unassign");
 
       TableRowElement row = querySelector('tbody').firstChild;
@@ -174,7 +174,7 @@ void main() {
       MessageViewModel message = ui.messages[5];
 
       expect(message.codeSelectors.length, 2);
-      expect(message.message.messageID, "msg 5");
+      expect(message.message.id, "msg 5");
       expect(message.codeSelectors[1].selectedOption, "unassign");
       expect(message.codeSelectors[1].warning.classes.contains('hidden'), false);
 
