@@ -61,8 +61,8 @@ class CodaUI {
     messageCodingTable.onChange.listen((event) {
       var target = event.target;
       if (target is InputElement || target is SelectElement) {
-        TableRowElement row = parentOfClass(target, 'message-row');
-        DivElement inputGroup = parentOfClass(target, 'input-group');
+        TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
+        DivElement inputGroup = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('input-group'));
         String messageID = row.attributes['message-id'];
         MessageViewModel message = messageMap[messageID];
         String schemeID = inputGroup.attributes['scheme-id'];
@@ -82,7 +82,7 @@ class CodaUI {
 
     window.onKeyDown.listen((event) {
       if (event.key == 'Tab') {
-        TableRowElement row = parentOfClass(CodeSelector.activeCodeSelector.viewElement, 'message-row');
+        TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageID = row.attributes['message-id'];
         selectNextEmptyCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
         event.preventDefault();
@@ -99,7 +99,7 @@ class CodaUI {
       if (activeShortcuts.keys.contains(event.key)) {
         CodeSelector.activeCodeSelector.selectedOption = activeShortcuts[event.key];
         CodeSelector.activeCodeSelector.hideWarning();
-        TableRowElement row = parentOfClass(CodeSelector.activeCodeSelector.viewElement, 'message-row');
+        TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageId = row.attributes['message-id'];
         messageMap[messageId].schemeCodeChanged(dataset, CodeSelector.activeCodeSelector.scheme.id, CodeSelector.activeCodeSelector.selectedOption);
         selectNextEmptyCodeSelector(messageId, CodeSelector.activeCodeSelector.scheme.id);
@@ -162,14 +162,11 @@ class CodaUI {
   }
 }
 
-parentOfClass(Element element, String parentClass) {
- Element parent = element;
-  while (parent != null) {
-    if (parent.classes.contains(parentClass)) {
-      return parent;
-    } else {
-      parent = parent.parent;
-    }
+List<Element> getAncestors(Element element) {
+  List ancestors = [element];
+  while (element != null) {
+    ancestors.add(element);
+    element = element.parent;
   }
-  return null; // no parent with the given class.
+  return ancestors;
 }
