@@ -94,7 +94,7 @@ class CodaUI {
       CodeSelector.activeCodeSelector.scheme.codes.forEach((code) {
         activeShortcuts[code['shortcut']] = code['valueID'];
       });
-      activeShortcuts[' '] = CodeSelector.emptyCodeValue; // add space as shortcut for unassigning a code
+      activeShortcuts[' '] = CodeSelector.EMPTY_CODE_VALUE; // add space as shortcut for unassigning a code
 
       if (activeShortcuts.keys.contains(event.key)) {
         CodeSelector.activeCodeSelector.selectedOption = activeShortcuts[event.key];
@@ -117,14 +117,14 @@ class CodaUI {
     if (horizontalCoding) {
       if (codeSelectorIndex < message.codeSelectors.length - 1) { // it's not the code selector in the last column
         CodeSelector.activeCodeSelector = message.codeSelectors[codeSelectorIndex + 1];
-        if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.emptyCodeValue) {
+        if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
           selectNextEmptyCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
         }
       } else { // it's the code selector in the last column, move to the next message
         int messageIndex = messages.indexOf(message);
         if (messageIndex < messages.length - 1) { // it's not the last message
           CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[0];
-          if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.emptyCodeValue) {
+          if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
             selectNextEmptyCodeSelector(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
           }
         } else {} // it's the last message, stop

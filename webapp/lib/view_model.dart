@@ -58,7 +58,7 @@ class MessageViewModel {
 
     // Update the checkbox
     CodeSelector selector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
-    if (valueId == CodeSelector.emptyCodeValue) {
+    if (valueId == CodeSelector.EMPTY_CODE_VALUE) {
       selector.checked = false;
     } else {
       selector.checked = true;
@@ -83,7 +83,7 @@ class CodeSelector {
     _activeCodeSelector.dropdown.focus();
   }
 
-  static final String emptyCodeValue = 'unassign';
+  static const EMPTY_CODE_VALUE = 'unassign';
 
   Scheme scheme;
 
@@ -102,7 +102,7 @@ class CodeSelector {
     OptionElement option = new OptionElement();
     option
       ..attributes['schemeid'] = scheme.id
-      ..attributes['valueid'] = emptyCodeValue
+      ..attributes['valueid'] = EMPTY_CODE_VALUE
       ..selected = true;
     dropdown.append(option);
     scheme.codes.forEach((code) {
