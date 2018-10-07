@@ -215,3 +215,80 @@ Map jsonDatasetTwoSchemes = {
     }
   ]
 };
+
+Map jsonDatasetTwoSchemesNoCodes = {
+  "Name": "Test",
+  "Id": "test_dataset_id",
+  "Documents": [
+    {
+      "Id": "msg 0",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
+      "Id": "msg 1",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
+      "Labels": []
+    },
+    {
+      "Id": "msg 2",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
+      "Labels": []
+    },
+    {
+      "Id": "msg 3",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
+      "Id": "msg 4",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
+      "Id": "msg 5",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+  ],
+  "CodeSchemes": [
+    {
+      "SchemeID": "scheme 1",
+      "Codes": [
+        {
+          "FriendlyName": "code 1",
+          "ValueID": "code 1",
+          "Colour": "#f46241",
+          "Shortcut": "1"
+        },
+        {
+          "FriendlyName": "code 2",
+          "ValueID": "code 2",
+          "Shortcut": "2"
+        }
+      ]
+    },
+    {
+      "SchemeID": "scheme 2",
+      "Codes": [
+        {
+          "FriendlyName": "code 1",
+          "ValueID": "code 1",
+          "Colour": "#f46241",
+          "Shortcut": "a"
+        },
+        {
+          "FriendlyName": "code 2",
+          "ValueID": "code 2",
+          "Shortcut": "b"
+        }
+      ]
+    }
+  ]
+};

@@ -16,7 +16,6 @@ init() {
       projectId: firebase_constants.projectId,
       storageBucket: firebase_constants.storageBucket,
       messagingSenderId: firebase_constants.messagingSenderId);
-   
 }
 
 updateMessage(Dataset dataset, Message msg) {
@@ -34,5 +33,5 @@ Dataset loadDataset(String datasetName) {
   if (VERBOSE) print("Loading dataset: $datasetName");
 
   // Temporary code
-  return new Dataset.fromJson(jsonDatasetTwoSchemes);
+  return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
 }
