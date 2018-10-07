@@ -5,37 +5,45 @@ library coda.ui;
 
 import 'dart:html';
 
+import 'config.dart';
 import 'data_model.dart';
-import 'view_model.dart';
 
 import 'authentication.dart' as auth;
-import 'firebase_tools.dart' as fb;
+import 'firebase_tools.dart' as fbt;
+
+part 'view_model.dart';
 
 void init() {
   CodaUI codaUI = new CodaUI();
   String datasetName = Uri.base.queryParameters["dataset"];
-  codaUI.displayDataset(fb.loadDataset(datasetName));
+  codaUI.displayDataset(fbt.loadDataset(datasetName));
 }
 
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
   TableElement get messageCodingTable => querySelector('#message-coding-table');
-  
+
+  static InputElement horizontalCodingToggle = querySelector('#horizontal-coding');
+  static bool get horizontalCoding => horizontalCodingToggle.checked;
+
   Dataset dataset;
-  List<MessageViewModel> messages = [];
-  
-  // Cache main elemetns of the UI
+  List<MessageViewModel> messages;
+  Map<String, MessageViewModel> messageMap;
+
+  // Cache main elements of the UI
   Element tableHead = null;
   Element tableBody = null;
 
   CodaUI() {
-    fb.init();
+    fbt.init();
     auth.init();
   }
 
   displayDataset(Dataset dataset) {
     clearMessageCodingTable(); // Clear up the table before loading the new dataset.
     this.dataset = dataset;
+    this.messages = [];
+    this.messageMap = {};
 
     messageCodingTable.append(createTableHeader(dataset));
 
@@ -45,9 +53,88 @@ class CodaUI {
     dataset.messages.forEach((message) {
       MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
       messages.add(messageViewModel);
+      messageMap[message.id] = messageViewModel;
       body.append(messageViewModel.viewElement);
     });
     messageCodingTable.append(body);
+
+    messageCodingTable.onChange.listen((event) {
+      var target = event.target;
+      if (target is InputElement || target is SelectElement) {
+        TableRowElement row = parentOfClass(target, 'message-row');
+        DivElement inputGroup = parentOfClass(target, 'input-group');
+        String messageID = row.attributes['message-id'];
+        MessageViewModel message = messageMap[messageID];
+        String schemeID = inputGroup.attributes['scheme-id'];
+
+        if (target is InputElement) { // change on checkbox element
+          message.schemeCheckChanged(dataset, schemeID, target.checked);
+        }
+        if (target is SelectElement) { // change on dropdown select element
+          CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+          CodeSelector.activeCodeSelector = codeSelector;
+          message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
+          codeSelector.hideWarning();
+          selectNextEmptyCodeSelector(messageID, schemeID);
+        }
+      }
+    });
+
+    window.onKeyDown.listen((event) {
+      if (event.key == 'Tab') {
+        TableRowElement row = parentOfClass(CodeSelector.activeCodeSelector.viewElement, 'message-row');
+        String messageID = row.attributes['message-id'];
+        selectNextEmptyCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      Map activeShortcuts = {};
+      CodeSelector.activeCodeSelector.scheme.codes.forEach((code) {
+        activeShortcuts[code['shortcut']] = code['valueID'];
+      });
+      activeShortcuts[' '] = CodeSelector.emptyCodeValue; // add space as shortcut for unassigning a code
+
+      if (activeShortcuts.keys.contains(event.key)) {
+        CodeSelector.activeCodeSelector.selectedOption = activeShortcuts[event.key];
+        CodeSelector.activeCodeSelector.hideWarning();
+        TableRowElement row = parentOfClass(CodeSelector.activeCodeSelector.viewElement, 'message-row');
+        String messageId = row.attributes['message-id'];
+        messageMap[messageId].schemeCodeChanged(dataset, CodeSelector.activeCodeSelector.scheme.id, CodeSelector.activeCodeSelector.selectedOption);
+        selectNextEmptyCodeSelector(messageId, CodeSelector.activeCodeSelector.scheme.id);
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+    });
+    CodeSelector.activeCodeSelector = messages[0].codeSelectors[0];
+  }
+
+  selectNextEmptyCodeSelector(String messageID, String schemeID) {
+    MessageViewModel message = messageMap[messageID];
+    int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+    if (horizontalCoding) {
+      if (codeSelectorIndex < message.codeSelectors.length - 1) { // it's not the code selector in the last column
+        CodeSelector.activeCodeSelector = message.codeSelectors[codeSelectorIndex + 1];
+        if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.emptyCodeValue) {
+          selectNextEmptyCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
+        }
+      } else { // it's the code selector in the last column, move to the next message
+        int messageIndex = messages.indexOf(message);
+        if (messageIndex < messages.length - 1) { // it's not the last message
+          CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[0];
+          if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.emptyCodeValue) {
+            selectNextEmptyCodeSelector(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
+          }
+        } else {} // it's the last message, stop
+      }
+    } else {
+      int messageIndex = messages.indexOf(message);
+      if (messageIndex < messages.length - 1) { // it's not the last message
+        CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[codeSelectorIndex];
+      } else {} // it's the last message, stop
+    }
   }
 
   createTableHeader(Dataset dataset) {
@@ -64,7 +151,7 @@ class CodaUI {
     dataset.codeSchemes.forEach((codeScheme) {
       headerRow.addCell()
         ..classes.add('message-code')
-        ..text = codeScheme.schemeID;
+        ..text = codeScheme.id;
     });
     return header;
   }
@@ -73,4 +160,16 @@ class CodaUI {
     this.tableHead?.remove();
     this.tableBody?.remove();
   }
+}
+
+parentOfClass(Element element, String parentClass) {
+ Element parent = element;
+  while (parent != null) {
+    if (parent.classes.contains(parentClass)) {
+      return parent;
+    } else {
+      parent = parent.parent;
+    }
+  }
+  return null; // no parent with the given class.
 }

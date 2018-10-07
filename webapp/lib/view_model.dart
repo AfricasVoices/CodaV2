@@ -1,14 +1,7 @@
 /**
  * Represents the ViewModel of the application, mediating between the data model and the HTML view.
  */
-library coda.viewmodel;
-
-import 'dart:html';
-
-import 'data_model.dart';
-import 'config.dart';
-import 'firebase_tools.dart' as fbt;
-import 'authentication.dart' as auth;
+part of coda.ui;
 
 /// A typedef for the listener function to be called when a checkbox is changed.
 typedef void CheckboxChanged(bool checked);
@@ -23,6 +16,8 @@ class MessageViewModel {
 
   MessageViewModel(this.message, Dataset dataset) {
     viewElement = new TableRowElement();
+    viewElement.classes.add('message-row');
+    viewElement.setAttribute('message-id', '${message.id}');
     viewElement.addCell()
       ..classes.add('message-id')
       ..text = message.id;
@@ -34,32 +29,41 @@ class MessageViewModel {
       CodeSelector codeSelector = new CodeSelector(scheme);
       codeSelectors.add(codeSelector);
       // If the message is already labelled in this scheme, select that code.
-      var existingLabels = message.labels.where((label) => label.schemeID == scheme.schemeID);
+      var existingLabels = message.labels.where((label) => label.schemeID == scheme.id);
       if (existingLabels.isNotEmpty) {
         Label label = existingLabels.first;
         codeSelector.selectedOption = label.valueID;
       }
 
-      codeSelector.addCheckboxListener((bool checked) {
-        if (VERBOSE) print("Message checkbox: ${message.id} $checked");
-        fbt.updateMessage(dataset, message);
-      });
-      codeSelector.addCodeSelectorListener((String valueID) {
-        final messageId = message.id;
-        final schemeId = scheme.schemeID;
-        if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueID");
-
-        // Update the data-model by prepending this decision
-        message.labels.add(
-          new Label(schemeId, new DateTime.now(), valueID, 
-            new Origin(auth.getUserEmail(), auth.getUserName())
-            ));
-        fbt.updateMessage(dataset, message);
-      });
       viewElement.addCell()
         ..classes.add('message-code')
         ..append(codeSelector.viewElement);
     });
+  }
+
+  schemeCheckChanged(Dataset dataset, String schemeId, bool checked) {
+    if (VERBOSE) print("Message checkbox: ${message.id} ${schemeId} $checked");
+    fbt.updateMessage(dataset, message);
+  }
+
+  schemeCodeChanged(Dataset dataset, String schemeId, String valueId) {
+    final messageId = message.id;
+    if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueId");
+
+    // Update the data-model by prepending this decision
+    message.labels.add(
+      new Label(schemeId, new DateTime.now(), valueId,
+        new Origin(auth.getUserEmail(), auth.getUserName())
+        ));
+    fbt.updateMessage(dataset, message);
+
+    // Update the checkbox
+    CodeSelector selector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
+    if (valueId == CodeSelector.emptyCodeValue) {
+      selector.checked = false;
+    } else {
+      selector.checked = true;
+    }
   }
 }
 
@@ -67,35 +71,50 @@ class MessageViewModel {
 class CodeSelector {
   DivElement viewElement;
   InputElement checkbox;
-  SelectElement codeSelector;
+  SelectElement dropdown;
   Element warning;
 
-  CodeSelector(Scheme scheme) {
+  static CodeSelector _activeCodeSelector;
+  static CodeSelector get activeCodeSelector => _activeCodeSelector;
+  static set activeCodeSelector(CodeSelector activeCodeSelector) {
+    _activeCodeSelector?.viewElement?.classes?.toggle('active', false);
+    // Focus on the new code selector
+    _activeCodeSelector = activeCodeSelector;
+    _activeCodeSelector.viewElement.classes.toggle('active', true);
+    _activeCodeSelector.dropdown.focus();
+  }
+
+  static final String emptyCodeValue = 'unassign';
+
+  Scheme scheme;
+
+  CodeSelector(this.scheme) {
     viewElement = new DivElement();
     viewElement.classes.add('input-group');
-    viewElement.attributes['scheme'] = scheme.schemeID;
+    viewElement.attributes['scheme-id'] = scheme.id;
 
+    // TODO: Implement checkbox read from the scheme
     checkbox = new InputElement(type: 'checkbox');
     viewElement.append(checkbox);
 
-    codeSelector = new SelectElement();
-    codeSelector.classes.add('code-selector');
+    dropdown = new SelectElement();
+    dropdown.classes.add('code-selector');
     // An empty code used to unlabel the message
     OptionElement option = new OptionElement();
     option
-      ..attributes['schemeid'] = scheme.schemeID
-      ..attributes['valueid'] = 'unassign'
+      ..attributes['schemeid'] = scheme.id
+      ..attributes['valueid'] = emptyCodeValue
       ..selected = true;
-    codeSelector.append(option);
+    dropdown.append(option);
     scheme.codes.forEach((code) {
       OptionElement option = new OptionElement();
       option
-        ..attributes['schemeid'] = scheme.schemeID
+        ..attributes['schemeid'] = scheme.id
         ..attributes['valueid'] = code["valueID"]
-        ..text = code['name'];
-      codeSelector.append(option);
+        ..text = "${code['name']} (${code['shortcut']})";
+      dropdown.append(option);
     });
-    viewElement.append(codeSelector);
+    viewElement.append(dropdown);
 
     warning = new Element.tag('i');
     warning
@@ -106,27 +125,16 @@ class CodeSelector {
       ..attributes['data-toggle'] = 'tooltip'
       ..attributes['data-placement'] = 'bottom';
     viewElement.append(warning);
-    // When an option from the list has been selected manually, the warning message should be hidden if it's not already.
-    addCodeSelectorListener((String valueID) => warning.classes.toggle('hidden', true));
   }
 
-  addCheckboxListener(CheckboxChanged checkboxChanged) {
-    checkbox.onChange.listen((event) {
-      checkboxChanged(checkbox.checked);
-    });
-  }
-
-  addCodeSelectorListener(SelectorChanged selectorChanged) {
-    codeSelector.onChange.listen((event) {
-      selectorChanged(codeSelector.selectedOptions[0].attributes["valueid"]);
-    });
-  }
+  /// When an option from the list has been selected manually, the warning message should be hidden if it's not already.
+  hideWarning() => warning.classes.toggle('hidden', true);
 
   set checked(bool checked) => checkbox.checked = checked;
   bool get checked => checkbox.checked;
 
   set selectedOption(String valueID) {
-    OptionElement option = codeSelector.querySelector('option[valueid="$valueID"]');
+    OptionElement option = dropdown.querySelector('option[valueid="$valueID"]');
     // When the option set programmatically doesn't exist in the scheme, show the warning sign.
     if (option == null) {
       warning
@@ -137,5 +145,5 @@ class CodeSelector {
     }
   }
 
-  String get selectedOption => codeSelector.selectedOptions[0].attributes['valueid'];
+  String get selectedOption => dropdown.selectedOptions[0].attributes['valueid'];
 }
