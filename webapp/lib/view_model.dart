@@ -8,6 +8,7 @@ import 'dart:html';
 import 'data_model.dart';
 import 'config.dart';
 import 'firebase_tools.dart' as fbt;
+import 'authentication.dart' as auth;
 
 /// A typedef for the listener function to be called when a checkbox is changed.
 typedef void CheckboxChanged(bool checked);
@@ -35,7 +36,7 @@ class MessageViewModel {
       // If the message is already labelled in this scheme, select that code.
       var existingLabels = message.labels.where((label) => label.schemeID == scheme.schemeID);
       if (existingLabels.isNotEmpty) {
-        Label label = existingLabels.last;
+        Label label = existingLabels.first;
         codeSelector.selectedOption = label.valueID;
       }
 
@@ -44,7 +45,12 @@ class MessageViewModel {
         fbt.updateMessage(dataset, message);
       });
       codeSelector.addCodeSelectorListener((String valueID) {
-        if (VERBOSE) print("Message checkbox: ${message.id} ${scheme.schemeID} $valueID");
+        final messageId = message.id;
+        final schemeId = scheme.schemeID;
+        if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueID");
+
+        // Update the data-model by prepending this decision
+        message.labels.add(new Label(schemeId, new DateTime.now(), valueID, auth.getUserEmail()));
         fbt.updateMessage(dataset, message);
       });
       viewElement.addCell()
