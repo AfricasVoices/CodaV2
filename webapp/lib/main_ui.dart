@@ -11,19 +11,21 @@ import 'view_model.dart';
 import 'authentication.dart' as auth;
 import 'firebase_tools.dart' as fbt;
 
+CodaUI _codaUI;
+
+CodaUI get codaUI => _codaUI;
+
 void init() {
-  CodaUI codaUI = new CodaUI();
-  String datasetName = Uri.base.queryParameters["dataset"];
-  codaUI.displayDataset(fbt.loadDataset(datasetName));
+  _codaUI = new CodaUI();
 }
 
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
   TableElement get messageCodingTable => querySelector('#message-coding-table');
-  
+
   Dataset dataset;
   List<MessageViewModel> messages = [];
-  
+
   // Cache main elemetns of the UI
   Element tableHead = null;
   Element tableBody = null;

@@ -6,6 +6,10 @@ import 'dart:html';
 
 import 'package:firebase/firebase.dart' as firebase;
 
+import 'firebase_tools.dart' as fbt;
+
+import 'main_ui.dart' as ui;
+
 ButtonElement signInButton = querySelector('#sign-in');
 ButtonElement signOutButton = querySelector('#sign-out');
 DivElement userPicElement = querySelector('#user-pic');
@@ -64,6 +68,12 @@ void authStateObserver(firebase.User user) {
 
     // Show sign-in button.
     signInButton.attributes.remove('hidden');
+
+    // Remove coding table from the UI
+    ui.codaUI.clearMessageCodingTable();
+
+    // Hide coding buttons
+    querySelector('nav #coding-nav').style.visibility = 'hidden';
   } else { // User signed in
     // Set the user's profile pic and name
     userPicElement.style.backgroundImage = 'url(${getProfilePicUrl()})';
@@ -76,5 +86,12 @@ void authStateObserver(firebase.User user) {
 
     // Hide sign-in button.
     signInButton.setAttribute('hidden', 'true');
+
+    // Load the data for this user
+    String datasetName = Uri.base.queryParameters["dataset"];
+    ui.codaUI.displayDataset(fbt.loadDataset(datasetName));
+
+    // Show coding buttons
+    querySelector('nav #coding-nav').style.visibility = 'visible';
   }
 }
