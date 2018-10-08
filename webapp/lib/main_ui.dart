@@ -70,6 +70,7 @@ class CodaUI {
 
       if (target is InputElement) { // change on checkbox element
         message.schemeCheckChanged(dataset, schemeID, target.checked);
+        return;
       }
       if (target is SelectElement) { // change on dropdown select element
         CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
