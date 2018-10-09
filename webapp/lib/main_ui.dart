@@ -63,8 +63,8 @@ class CodaUI {
       var target = event.target;
       if (target is! InputElement && target is! SelectElement) return;
 
-      TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
-      DivElement inputGroup = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('input-group'));
+      TableRowElement row = getAncestors(target).firstWhere((e) => e.classes.contains('message-row'));
+      DivElement inputGroup = getAncestors(target).firstWhere((e) => e.classes.contains('input-group'));
       String messageID = row.attributes['message-id'];
       MessageViewModel message = messageMap[messageID];
       String schemeID = inputGroup.attributes['scheme-id'];
