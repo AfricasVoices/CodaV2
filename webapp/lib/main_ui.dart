@@ -14,9 +14,7 @@ import 'firebase_tools.dart' as fbt;
 part 'view_model.dart';
 
 void init() {
-  CodaUI codaUI = new CodaUI();
-  String datasetName = Uri.base.queryParameters["dataset"];
-  codaUI.displayDataset(fbt.loadDataset(datasetName));
+  _codaUI = new CodaUI();
 }
 
 class CodaUI {
