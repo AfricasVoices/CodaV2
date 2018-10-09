@@ -82,6 +82,43 @@ class CodaUI {
       }
     });
 
+    // When clicking on a row, select the first dropdown from that row
+    // When clicking around a checkbox or dropdown, select that dropdown
+    messageCodingTable.onMouseDown.listen((event) {
+      var target = event.target;
+      TableRowElement clickedRow = getAncestors(target).firstWhere((e) => e.classes.contains('message-row'), orElse: () => null);
+      TableCellElement messageCodeCell = getAncestors(target).firstWhere((e) => e.classes.contains('message-code'), orElse: () => null);
+
+       // User clicked on the message text or id
+      if (clickedRow != null && messageCodeCell == null) {
+        // If the row clicked is the same as the row with the already selected dropdown, don't do anything
+        TableRowElement activeSelectorRow = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
+        if (clickedRow == activeSelectorRow) return;
+
+        // Select the first code selector in the clicked row
+        String messageID = clickedRow.attributes['message-id'];
+        MessageViewModel message = messageMap[messageID];
+        CodeSelector.activeCodeSelector = message.codeSelectors[0];
+
+        return;
+      }
+
+      // User clicked on or around a checkbox or dropdown
+      if (messageCodeCell != null) {
+        DivElement inputGroup = getAncestors(target).firstWhere((e) => e.classes.contains('input-group'), orElse: () => null);
+        // inputGroup here is null only when clicking on the header, ignore this click.
+        if (inputGroup == null) return;
+
+        // Select the dropdown in the clicked table cell
+        String messageID = clickedRow.attributes['message-id'];
+        MessageViewModel message = messageMap[messageID];
+        String schemeID = inputGroup.attributes['scheme-id'];
+        CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+        CodeSelector.activeCodeSelector = codeSelector;
+      }
+
+    });
+
     window.onKeyDown.listen((event) {
       if (event.key == 'Tab') {
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
