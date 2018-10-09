@@ -13,6 +13,9 @@ import 'firebase_tools.dart' as fbt;
 
 part 'view_model.dart';
 
+CodaUI _codaUI;
+CodaUI get codaUI => _codaUI;
+
 void init() {
   _codaUI = new CodaUI();
 }
