@@ -7,8 +7,7 @@ import 'dart:html';
 import 'package:test/test.dart';
 
 import 'package:CodaV2/data_model.dart';
-import 'package:CodaV2/view_model.dart';
-import 'package:CodaV2/main_ui.dart' as coda_ui;
+import 'package:CodaV2/main_ui.dart';
 import 'package:CodaV2/sample_data/sample_json_datasets.dart';
 
 
@@ -149,7 +148,7 @@ void main() {
     table.id = "message-coding-table";
     document.body.append(table);
     Dataset dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
-    coda_ui.CodaUI ui = new coda_ui.CodaUI();
+    CodaUI ui = new CodaUI();
     ui.displayDataset(dataset);
 
     test("from empty", () async {

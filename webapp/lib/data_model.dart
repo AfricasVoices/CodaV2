@@ -93,6 +93,7 @@ class Scheme {
       var code = {
         'name': jsonCode['FriendlyName'],
         'valueID': jsonCode['ValueID'],
+        'shortcut': jsonCode['Shortcut']
       };
       if (jsonCode.containsKey('Colour')) {
         code['colour'] = new Colour.hex(jsonCode['Colour']);

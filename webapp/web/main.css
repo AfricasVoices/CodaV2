@@ -262,3 +262,9 @@ main tbody {
 .input-group .warning.hidden {
   visibility: hidden;
 }
+
+/******* Tabbing ********/
+.input-group.active .code-selector {
+  border-color: black;
+  border-left-width: 3px;
+}
