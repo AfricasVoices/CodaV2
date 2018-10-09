@@ -105,9 +105,9 @@ class CodaUI {
 
       // User clicked on or around a checkbox or dropdown
       if (messageCodeCell != null) {
-        DivElement inputGroup = getAncestors(target).firstWhere((e) => e.classes.contains('input-group'), orElse: () => null);
-        // inputGroup here is null only when clicking on the header, ignore this click.
-        if (inputGroup == null) return;
+        DivElement inputGroup = messageCodeCell.firstChild;
+        // The correct element (ie. <div class='input-group'>) isn't here only for the header, so we exit earlier in this case.
+        if (inputGroup is! DivElement && !inputGroup.classes.contains('input-group')) return;
 
         // Select the dropdown in the clicked table cell
         String messageID = clickedRow.attributes['message-id'];
