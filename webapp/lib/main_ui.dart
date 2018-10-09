@@ -178,7 +178,7 @@ class CodaUI {
 }
 
 List<Element> getAncestors(Element element) {
-  List ancestors = [element];
+  List<Element> ancestors = [element];
   while (element != null) {
     ancestors.add(element);
     element = element.parent;
