@@ -149,7 +149,7 @@ void main() {
     document.body.append(table);
     Dataset dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
     CodaUI ui = new CodaUI();
-    ui.displayDataset(dataset);
+    ui.displayDatasetView(dataset);
 
     test("from empty", () async {
       MessageViewModel message = ui.messages[0];
