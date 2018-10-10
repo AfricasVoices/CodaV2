@@ -39,6 +39,10 @@ Dataset loadDataset(String datasetName) {
   if (VERBOSE) print("Loading dataset: $datasetName");
 
   // Temporary code
+  if (datasetName == null) {
+    throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+  }
+
   String msgCountDatasetPrefix = 'dataset-msg-';
   if (datasetName.startsWith(msgCountDatasetPrefix)) {
     try {
