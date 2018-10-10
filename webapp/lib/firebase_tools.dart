@@ -39,8 +39,38 @@ Dataset loadDataset(String datasetName) {
   if (VERBOSE) print("Loading dataset: $datasetName");
 
   // Temporary code
-  if (datasetName != 'test-dataset') {
-    throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+  String msgCountDatasetPrefix = 'dataset-msg-';
+  if (datasetName.startsWith(msgCountDatasetPrefix)) {
+    try {
+      int count = int.parse(datasetName.replaceFirst(msgCountDatasetPrefix, ''));
+      return generateEmptyDataset(datasetName, 3, count);
+    } catch (e) {
+      throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+    }
   }
-  return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
+  if (datasetName == 'test-dataset') {
+    return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
+  }
+  throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+}
+
+Dataset generateEmptyDataset(String name, int schemeCount, int messageCount) {
+  Dataset dataset = new Dataset(name);
+  for (int i = 0; i < schemeCount; i++) {
+    Scheme scheme = new Scheme('scheme $i');
+    for (int c = 0; c < 5; c++) {
+      scheme.codes.add({
+        'name': 'Code $c',
+        'valueID': 'code $c',
+        'shortcut': '$c'
+      });
+    }
+    dataset.codeSchemes.add(scheme);
+  }
+
+  for (int i = 0; i < messageCount; i++) {
+    dataset.messages.add(new Message('msg_$i', 'message', new DateTime.now()));
+  }
+
+  return dataset;
 }
