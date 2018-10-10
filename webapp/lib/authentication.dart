@@ -10,8 +10,10 @@ import 'firebase_tools.dart' as fbt;
 
 import 'main_ui.dart' as ui;
 
-ButtonElement signInButton = querySelector('#sign-in');
 ButtonElement signOutButton = querySelector('#sign-out');
+ButtonElement signInButtonNav = querySelector('#sign-in-nav');
+ButtonElement signInButtonMain = querySelector('#sign-in-main');
+DivElement signInPanel = querySelector('#sign-in-panel');
 DivElement userPicElement = querySelector('#user-pic');
 DivElement userNameElement = querySelector('#user-name');
 
@@ -30,7 +32,8 @@ signOut() {
 init() {
   firebase.auth().onAuthStateChanged.listen(authStateObserver);
 
-  signInButton.onClick.listen((_) => signIn());
+  signInButtonNav.onClick.listen((_) => signIn());
+  signInButtonMain.onClick.listen((_) => signIn());
   signOutButton.onClick.listen((_) => signOut());
 }
 
@@ -67,13 +70,11 @@ void authStateObserver(firebase.User user) {
     signOutButton.setAttribute('hidden', 'true');
 
     // Show sign-in button.
-    signInButton.attributes.remove('hidden');
+    signInButtonNav.attributes.remove('hidden');
+    signInPanel.attributes.remove('hidden');
 
-    // Remove coding table from the UI
-    ui.codaUI.clearMessageCodingTable();
-
-    // Hide coding buttons
-    querySelector('nav #coding-nav').style.visibility = 'hidden';
+    // Display signed out view.
+    ui.codaUI.displaySignedOutView();
   } else { // User signed in
     // Set the user's profile pic and name
     userPicElement.style.backgroundImage = 'url(${getProfilePicUrl()})';
@@ -85,13 +86,18 @@ void authStateObserver(firebase.User user) {
     signOutButton.attributes.remove('hidden');
 
     // Hide sign-in button.
-    signInButton.setAttribute('hidden', 'true');
+    signInButtonNav.setAttribute('hidden', 'true');
+    signInPanel.setAttribute('hidden', 'true');
 
     // Load the data for this user
     String datasetName = Uri.base.queryParameters["dataset"];
-    ui.codaUI.displayDataset(fbt.loadDataset(datasetName));
-
-    // Show coding buttons
-    querySelector('nav #coding-nav').style.visibility = 'visible';
+    var dataset;
+    try {
+      dataset = fbt.loadDataset(datasetName);
+    } catch (e) {
+      ui.codaUI.displayUrlErrorView(e.toString());
+      return;
+    }
+    ui.codaUI.displayDatasetView(dataset);
   }
 }

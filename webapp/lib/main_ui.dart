@@ -23,6 +23,8 @@ void init() {
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
   TableElement get messageCodingTable => querySelector('#message-coding-table');
+  Element get messageCodingNavButtons => querySelector('nav #coding-nav');
+  DivElement get otherContent => querySelector('#other-content');
 
   static InputElement horizontalCodingToggle = querySelector('#horizontal-coding');
   static bool get horizontalCoding => horizontalCodingToggle.checked;
@@ -40,8 +42,26 @@ class CodaUI {
     auth.init();
   }
 
-  displayDataset(Dataset dataset) {
+  displaySignedOutView() {
+    clearMessageCodingTable(); // Clear up the table.
+    otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
+    messageCodingNavButtons.setAttribute('hidden', 'true'); // Hide coding buttons.
+  }
+
+  displayUrlErrorView(String text) {
+    clearMessageCodingTable(); // Clear up the table.
+    otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
+    messageCodingNavButtons.setAttribute('hidden', 'true'); // Hide coding buttons.
+    otherContent.text = text;
+  }
+
+  displayDatasetView(Dataset dataset) {
+    // Prepare for displaying the dataset view by clearing up the DOM.
     clearMessageCodingTable(); // Clear up the table before loading the new dataset.
+    otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
+    messageCodingNavButtons.attributes.remove('hidden'); // Show coding buttons
+
+    // (Re)initialise objects
     this.dataset = dataset;
     this.messages = [];
     this.messageMap = {};

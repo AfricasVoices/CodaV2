@@ -20,7 +20,7 @@
     <nav>
       <div id="navbar">
         <a class="navbar-brand" href="#">Coda v2</a>
-        <ul class="left navbar-item-list" id="coding-nav">
+        <ul class="left navbar-item-list" id="coding-nav" hidden="true">
 
           <li class="dropdown">
             <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><b>Dataset</b><i class="fas fa-caret-down" style="margin-left: 2px"></i></a>
@@ -75,13 +75,13 @@
 
         <ul class="right navbar-item-list" id="auth-nav">
           <li>
-            <button id="sign-in" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign in">
+            <button id="sign-in-nav" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign in" hidden="true">
               Sign in
             </button>
           </li>
 
           <li>
-            <button id="sign-out" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign out">
+            <button id="sign-out" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign out" hidden="true">
               Sign out
             </button>
           </li>
@@ -101,9 +101,14 @@
 
     <!-- Main coding area -->
     <main>
-      <table id="message-coding-table">
-
-      </table>
+      <table id="message-coding-table"></table>
+      <div id="other-content"></div>
+      <div id="sign-in-panel" hidden="true">
+        Before using Coda, you need to sign in:
+        <button id="sign-in-main" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign in">
+          Sign in
+        </button>
+      </div>
     </main>
   </body>
 </html>

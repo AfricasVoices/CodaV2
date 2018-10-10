@@ -5,6 +5,12 @@ import 'data_model.dart';
 import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
 
+class DatasetLoadException implements Exception {
+  final String _message;
+  const DatasetLoadException(this._message);
+  String toString() => _message;
+}
+
 firestore.Firestore _firestoreInstance = firebase.firestore();
 
 init() {
@@ -33,5 +39,8 @@ Dataset loadDataset(String datasetName) {
   if (VERBOSE) print("Loading dataset: $datasetName");
 
   // Temporary code
+  if (datasetName != 'test-dataset') {
+    throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+  }
   return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
 }

@@ -205,10 +205,12 @@ nav #user-pic {
   margin: 10px;
 }
 
+nav #coding-nav[hidden],
 nav #user-pic[hidden],
 nav #user-name[hidden],
-nav #sign-in[hidden],
-nav #sign-out[hidden] {
+nav #sign-in-nav[hidden],
+nav #sign-out[hidden],
+main #sign-in-panel[hidden] {
   display: none;
 }
 
@@ -267,4 +269,17 @@ main tbody {
 .input-group.active .code-selector {
   border-color: black;
   border-left-width: 3px;
+}
+
+/******* Other content in main body ******/
+#other-content,
+#sign-in-panel,
+#sign-in-main {
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+}
+
+#sign-in-main {
+  box-shadow: 1px 1px 4px #ccc;
 }
