@@ -282,4 +282,7 @@ main tbody {
 
 #sign-in-main {
   box-shadow: 1px 1px 4px #ccc;
+  background: #3498db;
+  color: #ffffff;
+  border: none;
 }
