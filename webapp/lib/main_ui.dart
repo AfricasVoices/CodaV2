@@ -22,6 +22,7 @@ void init() {
 
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
+  DivElement get loaderAnimation => querySelector('#loader');
   TableElement get messageCodingTable => querySelector('#message-coding-table');
   Element get messageCodingNavButtons => querySelector('nav #coding-nav');
   DivElement get otherContent => querySelector('#other-content');
@@ -56,6 +57,22 @@ class CodaUI {
   }
 
   displayDatasetView(Dataset dataset) {
+    // We need to use animation frames because otherwise the browser doesn't actually do the changes we ask for
+    // in the showLoader method before displaying the dataset view (which is quite a heavy DOM method),
+    // so I'm guessing it tries to bundle them up.
+    // With animation frames, we can be explicit that we want to show the loader first, and hide it at the end.
+    window.requestAnimationFrame((_) {
+      showLoader();
+      window.requestAnimationFrame((_) {
+        _displayDatasetView(dataset);
+        window.requestAnimationFrame((_){
+          hideLoader();
+        });
+      });
+    });
+  }
+
+  _displayDatasetView(Dataset dataset) {
     // Prepare for displaying the dataset view by clearing up the DOM.
     clearMessageCodingTable(); // Clear up the table before loading the new dataset.
     otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
@@ -232,6 +249,14 @@ class CodaUI {
   void clearMessageCodingTable() {
     this.tableHead?.remove();
     this.tableBody?.remove();
+  }
+
+  void showLoader() {
+    loaderAnimation.attributes.remove('hidden');
+  }
+
+  void hideLoader() {
+    loaderAnimation.setAttribute('hidden', 'true');
   }
 }
 
