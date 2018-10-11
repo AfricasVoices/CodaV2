@@ -4,7 +4,6 @@
 library coda.ui;
 
 import 'dart:html';
-import 'dart:async';
 
 import 'config.dart';
 import 'data_model.dart';
