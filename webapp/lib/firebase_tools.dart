@@ -2,6 +2,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' as firestore;
 import 'firebase_constants.dart' as firebase_constants;
 import 'data_model.dart';
+import 'dataset_tools.dart' as dataset_tools;
 import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
 
@@ -43,11 +44,11 @@ Dataset loadDataset(String datasetName) {
     throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
   }
 
-  String msgCountDatasetPrefix = 'dataset-msg-';
+  const msgCountDatasetPrefix = 'dataset-msg-';
   if (datasetName.startsWith(msgCountDatasetPrefix)) {
     try {
       int count = int.parse(datasetName.replaceFirst(msgCountDatasetPrefix, ''));
-      return generateEmptyDataset(datasetName, 3, count);
+      return dataset_tools.generateEmptyDataset(datasetName, 3, count);
     } catch (e) {
       throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
     }
@@ -56,25 +57,4 @@ Dataset loadDataset(String datasetName) {
     return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
   }
   throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
-}
-
-Dataset generateEmptyDataset(String name, int schemeCount, int messageCount) {
-  Dataset dataset = new Dataset(name);
-  for (int i = 0; i < schemeCount; i++) {
-    Scheme scheme = new Scheme('scheme $i');
-    for (int c = 0; c < 5; c++) {
-      scheme.codes.add({
-        'name': 'Code $c',
-        'valueID': 'code $c',
-        'shortcut': '$c'
-      });
-    }
-    dataset.codeSchemes.add(scheme);
-  }
-
-  for (int i = 0; i < messageCount; i++) {
-    dataset.messages.add(new Message('msg_$i', 'message', new DateTime.now()));
-  }
-
-  return dataset;
 }
