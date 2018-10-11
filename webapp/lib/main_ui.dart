@@ -4,6 +4,7 @@
 library coda.ui;
 
 import 'dart:html';
+import 'dart:async';
 
 import 'config.dart';
 import 'data_model.dart';
@@ -36,6 +37,8 @@ class CodaUI {
   // Cache main elements of the UI
   Element tableHead = null;
   Element tableBody = null;
+  bool eventListenersAttached = false;
+
 
   CodaUI() {
     fbt.init();
@@ -55,29 +58,10 @@ class CodaUI {
     otherContent.text = text;
   }
 
-  displayDatasetView(Dataset dataset) {
-    // Prepare for displaying the dataset view by clearing up the DOM.
-    clearMessageCodingTable(); // Clear up the table before loading the new dataset.
-    otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
-    messageCodingNavButtons.attributes.remove('hidden'); // Show coding buttons
-
-    // (Re)initialise objects
-    this.dataset = dataset;
-    this.messages = [];
-    this.messageMap = {};
-
-    messageCodingTable.append(createTableHeader(dataset));
-
-    TableSectionElement body = new Element.tag('tbody');
-    this.tableBody = body;
-
-    dataset.messages.forEach((message) {
-      MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
-      messages.add(messageViewModel);
-      messageMap[message.id] = messageViewModel;
-      body.append(messageViewModel.viewElement);
-    });
-    messageCodingTable.append(body);
+  attachEventListeners(Element messageCodingTable) {
+    // Attach the global listeners at most once
+    if (eventListenersAttached) return;
+    eventListenersAttached = true;
 
     messageCodingTable.onChange.listen((event) {
       var target = event.target;
@@ -168,6 +152,34 @@ class CodaUI {
         return;
       }
     });
+  }
+
+
+  displayDatasetView(Dataset dataset) {
+    // Prepare for displaying the dataset view by clearing up the DOM.
+    clearMessageCodingTable(); // Clear up the table before loading the new dataset.
+    otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
+    messageCodingNavButtons.attributes.remove('hidden'); // Show coding buttons
+
+    // (Re)initialise objects
+    this.dataset = dataset;
+    this.messages = [];
+    this.messageMap = {};
+
+    messageCodingTable.append(createTableHeader(dataset));
+
+    TableSectionElement body = new Element.tag('tbody');
+    this.tableBody = body;
+
+    dataset.messages.forEach((message) {
+      MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
+      messages.add(messageViewModel);
+      messageMap[message.id] = messageViewModel;
+      body.append(messageViewModel.viewElement);
+    });
+    messageCodingTable.append(body);
+    attachEventListeners(messageCodingTable);
+
     CodeSelector.activeCodeSelector = messages[0].codeSelectors[0];
   }
 
