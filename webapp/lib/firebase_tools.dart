@@ -2,6 +2,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' as firestore;
 import 'firebase_constants.dart' as firebase_constants;
 import 'data_model.dart';
+import 'dataset_tools.dart' as dataset_tools;
 import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
 
@@ -39,8 +40,21 @@ Dataset loadDataset(String datasetName) {
   if (VERBOSE) print("Loading dataset: $datasetName");
 
   // Temporary code
-  if (datasetName != 'test-dataset') {
+  if (datasetName == null) {
     throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
   }
-  return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
+
+  const msgCountDatasetPrefix = 'dataset-msg-';
+  if (datasetName.startsWith(msgCountDatasetPrefix)) {
+    try {
+      int count = int.parse(datasetName.replaceFirst(msgCountDatasetPrefix, ''));
+      return dataset_tools.generateEmptyDataset(datasetName, 3, count);
+    } catch (e) {
+      throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+    }
+  }
+  if (datasetName == 'test-dataset') {
+    return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
+  }
+  throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
 }
