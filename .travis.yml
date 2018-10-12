@@ -1,8 +1,8 @@
+before_script: cd webapp
+
 language: dart
 dart:
 - stable
-
-before_script: cd webapp
 
 dart_task:
 - pub get
