@@ -2,6 +2,8 @@ language: dart
 dart:
 - stable
 
+before_script: cd webapp
+
 dart_task:
 - pub get
-- dartanalyzer: --fatal-warnings webapp
+- dartanalyzer: --fatal-warnings
