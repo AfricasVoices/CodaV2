@@ -6,4 +6,4 @@ before_script: cd webapp
 
 dart_task:
 - pub get
-- dartanalyzer: --fatal-warnings
+- dartanalyzer: --fatal-warnings .
