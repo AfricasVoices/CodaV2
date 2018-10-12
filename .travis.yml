@@ -6,4 +6,5 @@ dart:
 
 dart_task:
 - pub get
+- test: --platform chrome
 - dartanalyzer: --fatal-warnings .
