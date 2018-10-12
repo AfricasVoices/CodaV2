@@ -3,4 +3,5 @@ dart:
 - stable
 
 dart_task:
+- pub get
 - dartanalyzer: --fatal-warnings webapp
