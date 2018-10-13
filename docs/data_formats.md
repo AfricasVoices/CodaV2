@@ -9,18 +9,18 @@ Code Scheme definition (JSON, named $Name_$Version)
 
 ```
 {
-  "schemeID"      :  String,		// Format "Scheme-UUID"
-  "Name"          :  String,		// Friendly name
-  "Version"       :  String,		// Semantic version code
-  "Values"        :  [
+  "schemeID"      :  String,		// Required, Format "Scheme-UUID"
+  "Name"          :  String,		// Required, Friendly name
+  "Version"       :  String,		// Required, Semantic version code
+  "Values"        :  [          // Required
     {
-      "DisplayText"    : String,	// Coda will display this
-      "NumericValue"   : Int,		// Unique in code scheme
-      "VisibleInCoda"  : Bool,		// Coda will display iff true
-      "Colour"         : String
+      "DisplayText"    : String,	// Required, Coda will display this
+      "NumericValue"   : Int,		  // Required, Unique in code scheme
+      "VisibleInCoda"  : Bool,		// Required, Coda will display iff true
+      "Colour"         : String   // Optional
     }
   ],
-  "Documentation" : {
+  "Documentation" : {             // Optional
      "URI" :  String 
   }
 }
