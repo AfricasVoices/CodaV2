@@ -9,16 +9,21 @@ Code Scheme definition (JSON):
 
 ```
 {
-  "schemeID"  :  String,
-  "Name"      :  String,
-  "Version"   :  String,
-  "Values"    :  [
-  {
-    "DisplayText"    : String,
-    "NumericValue"   : Int,
-    "VisibleInCoda"  : Bool,
-    "Colour"         : String
-		}
-	]
+  "schemeID"      :  String,		// Format "Scheme-UUID"
+  "Name"          :  String,		// Friendly name
+  "Version"       :  String,		// Semantic version code
+  "Values"        :  [
+    {
+      "DisplayText"    : String,	// Coda will display this
+      "NumericValue"   : Int,		// Unique in code scheme
+      "VisibleInCoda"  : Bool,		// Coda will display iff true
+      "Colour"         : String
+    }
+  ],
+  "Documentation" : {
+     "URI" :  String 
+  }
 }
 ```
+
+
