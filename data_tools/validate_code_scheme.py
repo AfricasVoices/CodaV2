@@ -53,6 +53,12 @@ def verify_JSON_path(scheme_path):
 
         if "Color" in value.keys():
             check_string(value["Color"])
+        
+        if "Shortcut" in value.keys():
+            check_string(value["Shortcut"])
+            assert len(value["Shortcut"]) == 1
+        
+    return scheme
 
 
 def check_string(s):
