@@ -2,16 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: debian:stretch
+      - image: google/dart:2.0.0-dev.69.2
     steps:
       - checkout
-      - run:
-          name: Greeting
-          command: echo Hello, world.
-      - run:
-          name: Print the Current Time
-          command: date
-    branches:
-      only:
-        - master
-        - /circleci-.*/
+      - run: cd webapp
+      - run: pub get
+      - run: pub run test
