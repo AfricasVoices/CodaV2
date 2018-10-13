@@ -5,19 +5,20 @@
 
 Code schemes are used to represent possible values, they are defined in JSON, and loaded into Firebase using a support tool
 
-Code Scheme definition (JSON, named $Name_$Version)
+Code Scheme definition (JSON, named $Name-$Version)
 
 ```
 {
-  "schemeID"      :  String,		// Required, Format "Scheme-UUID"
+  "SchemeID"      :  String,		// Required, Globally Unique Format "Scheme-sUUID"
   "Name"          :  String,		// Required, Friendly name
   "Version"       :  String,		// Required, Semantic version code
   "Values"        :  [          // Required
     {
+      "ValueID"        : String,  // Required, Unique in code scheme format "Scheme-???-sUUID"
       "DisplayText"    : String,	// Required, Coda will display this
       "NumericValue"   : Int,		  // Required, Unique in code scheme
       "VisibleInCoda"  : Bool,		// Required, Coda will display iff true
-      "Colour"         : String   // Optional
+      "Color"         : String   // Optional
     }
   ],
   "Documentation" : {             // Optional
