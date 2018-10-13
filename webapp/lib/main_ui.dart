@@ -23,7 +23,6 @@ void init() {
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
   DivElement get loaderAnimation => querySelector('#loader');
-  TableElement get messageCodingTable => querySelector('#message-coding-table');
   Element get messageCodingNavButtons => querySelector('nav #coding-nav');
   DivElement get otherContent => querySelector('#other-content');
 
@@ -35,8 +34,7 @@ class CodaUI {
   Map<String, MessageViewModel> messageMap;
 
   // Cache main elements of the UI
-  Element tableHead = null;
-  Element tableBody = null;
+  TableElement messageCodingTable;
 
   CodaUI() {
     fbt.init();
@@ -84,9 +82,32 @@ class CodaUI {
     this.messageMap = {};
 
     messageCodingTable.append(createTableHeader(dataset));
+    messageCodingTable.append(createTableBody(dataset));
+    addListenersToMessageCodingTable();
 
+    CodeSelector.activeCodeSelector = messages[0].codeSelectors[0];
+  }
+
+  TableSectionElement createTableHeader(Dataset dataset) {
+    TableSectionElement header = new Element.tag('thead');
+
+    TableRowElement headerRow = header.addRow();
+    headerRow.addCell()
+      ..classes.add('message-id')
+      ..text = 'ID';
+    headerRow.addCell()
+      ..classes.add('message-text')
+      ..text = 'Message';
+    dataset.codeSchemes.forEach((codeScheme) {
+      headerRow.addCell()
+        ..classes.add('message-code')
+        ..text = codeScheme.id;
+    });
+    return header;
+  }
+
+  TableSectionElement createTableBody(Dataset dataset) {
     TableSectionElement body = new Element.tag('tbody');
-    this.tableBody = body;
 
     dataset.messages.forEach((message) {
       MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
@@ -94,8 +115,11 @@ class CodaUI {
       messageMap[message.id] = messageViewModel;
       body.append(messageViewModel.viewElement);
     });
-    messageCodingTable.append(body);
 
+    return body;
+  }
+
+  addListenersToMessageCodingTable() {
     messageCodingTable.onChange.listen((event) {
       var target = event.target;
       if (target is! InputElement && target is! SelectElement) return;
@@ -157,7 +181,7 @@ class CodaUI {
 
     });
 
-    window.onKeyDown.listen((event) {
+    messageCodingTable.onKeyDown.listen((event) {
       if (event.key == 'Tab') {
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageID = row.attributes['message-id'];
@@ -185,7 +209,6 @@ class CodaUI {
         return;
       }
     });
-    CodeSelector.activeCodeSelector = messages[0].codeSelectors[0];
   }
 
   selectNextEmptyCodeSelector(String messageID, String schemeID) {
@@ -227,28 +250,12 @@ class CodaUI {
     } // else, it's the last message, stop
   }
 
-  createTableHeader(Dataset dataset) {
-    TableSectionElement header = new Element.tag('thead');
-    this.tableHead = header;
-
-    TableRowElement headerRow = header.addRow();
-    headerRow.addCell()
-      ..classes.add('message-id')
-      ..text = 'ID';
-    headerRow.addCell()
-      ..classes.add('message-text')
-      ..text = 'Message';
-    dataset.codeSchemes.forEach((codeScheme) {
-      headerRow.addCell()
-        ..classes.add('message-code')
-        ..text = codeScheme.id;
-    });
-    return header;
-  }
-
   void clearMessageCodingTable() {
-    this.tableHead?.remove();
-    this.tableBody?.remove();
+    messageCodingTable?.remove();
+    messageCodingTable = new TableElement();
+    messageCodingTable.id = 'message-coding-table';
+    Element main = querySelector('main');
+    main.insertBefore(messageCodingTable, main.firstChild);
   }
 
   void showLoader() {
