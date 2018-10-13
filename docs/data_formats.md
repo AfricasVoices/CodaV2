@@ -5,7 +5,7 @@
 
 Code schemes are used to represent possible values, they are defined in JSON, and loaded into Firebase using a support tool
 
-Code Scheme definition (JSON):
+Code Scheme definition (JSON, named $Name_$Version)
 
 ```
 {
