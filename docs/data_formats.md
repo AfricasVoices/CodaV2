@@ -16,6 +16,7 @@ Code Scheme definition (JSON, named $Name-$Version)
     {
       "ValueID"        : String,  // Required, Unique in code scheme format "Scheme-???-sUUID"
       "DisplayText"    : String,	// Required, Coda will display this
+      "Shortcut"       : String,  // Optional, single character for shortcut
       "NumericValue"   : Int,		  // Required, Unique in code scheme
       "VisibleInCoda"  : Bool,		// Required, Coda will display iff true
       "Color"         : String   // Optional
