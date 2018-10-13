@@ -5,6 +5,5 @@ jobs:
       - image: google/dart:2.0.0-dev.69.2
     steps:
       - checkout
-      - run:
       - run: cd webapp && pub get
       - run: cd webapp && pub run test
