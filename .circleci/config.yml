@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: google/dart:2.0.0-dev.69.2
+      - image: google/dart:2.0.0
     steps:
       - checkout
       - run: cd webapp && pub get
