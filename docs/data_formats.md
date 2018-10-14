@@ -12,9 +12,9 @@ Code Scheme definition (JSON, named $Name-$Version)
   "SchemeID"      :  String,		// Required, Globally Unique Format "Scheme-sUUID"
   "Name"          :  String,		// Required, Friendly name
   "Version"       :  String,		// Required, Semantic version code
-  "Values"        :  [          // Required
+  "Codes"        :  [          // Required
     {
-      "ValueID"        : String,  // Required, Unique in code scheme format "Scheme-???-sUUID"
+      "CodeID"        : String,  // Required, Unique in code scheme format "Scheme-???-sUUID"
       "DisplayText"    : String,	// Required, Coda will display this
       "Shortcut"       : String,  // Optional, single character for shortcut
       "NumericValue"   : Int,		  // Required, Unique in code scheme
