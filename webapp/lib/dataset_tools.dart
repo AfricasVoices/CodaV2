@@ -5,11 +5,10 @@ Dataset generateEmptyDataset(String name, int schemeCount, int messageCount) {
   for (int i = 0; i < schemeCount; i++) {
     Scheme scheme = new Scheme('scheme $i');
     for (int c = 0; c < 5; c++) {
-      scheme.codes.add({
-        'name': 'Code $c',
-        'valueID': 'code $c',
-        'shortcut': '$c'
-      });
+
+      scheme.codes.add(
+        new Code("$c", "Code $c", c, true)
+      );
     }
     dataset.codeSchemes.add(scheme);
   }

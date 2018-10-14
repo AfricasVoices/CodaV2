@@ -5,6 +5,7 @@ import 'data_model.dart';
 import 'dataset_tools.dart' as dataset_tools;
 import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
+import 'dart:async';
 
 class DatasetLoadException implements Exception {
   final String _message;
@@ -33,10 +34,35 @@ updateMessage(Dataset dataset, Message msg) {
   _firestoreInstance.doc(docPath).set(msg.toMap()).then((_) {
     if (VERBOSE) print("Store complete: ${msg.id}");
   });
+}
 
+Future<List<Scheme>> loadSchemes(String datasetId) async {
+  List<Scheme> ret = <Scheme>[];
+
+  if (VERBOSE) print("loadSchemes: Loading schemes for: $datasetId");
+
+  var schemeCollectionRoot = "/datasets/$datasetId/code_schemes";
+  if (VERBOSE) print("loadSchemes: Root of query: $schemeCollectionRoot");
+
+  var schemesQuery = await _firestoreInstance.collection(schemeCollectionRoot).get();
+  if (VERBOSE) print("loadSchemes: Query constructed");
+  
+  schemesQuery.forEach((scheme) {
+    if (VERBOSE) print("loadSchemes: Processing ${scheme.id}");
+
+    ret.add(
+      new Scheme.fromFirebaseMap(scheme.data())
+    );
+  });
+
+  if (VERBOSE) print("loadSchemes: ${ret.length} schemes loaded");
+  return ret;
 }
 
 Dataset loadDataset(String datasetName) {
+  if (VERBOSE) print("Loading coding schemes for: reach_demo");
+  loadSchemes("reach_demo");
+
   if (VERBOSE) print("Loading dataset: $datasetName");
 
   // Temporary code

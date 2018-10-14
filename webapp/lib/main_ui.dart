@@ -193,7 +193,7 @@ class CodaUI {
 
       Map activeShortcuts = {};
       CodeSelector.activeCodeSelector.scheme.codes.forEach((code) {
-        activeShortcuts[code['shortcut']] = code['valueID'];
+        activeShortcuts[code.shortcut] = code.id;
       });
       activeShortcuts[' '] = CodeSelector.EMPTY_CODE_VALUE; // add space as shortcut for unassigning a code
 
