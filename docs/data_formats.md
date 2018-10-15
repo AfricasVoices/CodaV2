@@ -35,22 +35,23 @@ Messages are used to represent a message to be coded. They are defined in JSON a
 Message definition (JSON, named $ID)
 ```
 {
-  "MessageID"           : String,     // Required, Globally unique
-  "Text"                : String,     // Required
-  "CreationDateTimeUTC" : DateTime,   // Required
-  "Labels"              : [           // Required
+  "MessageID"           : String,           // Required, Globally unique
+  "Text"                : String,           // Required
+  "CreationDateTimeUTC" : ISO 8601 String,  // Required
+  "Labels"              : [                 // Required
     {
-      "SchemeID"        : String,     // Required
-      "CodeID"          : String,     // Required
-      "DateTimeUTC"     : DateTime,   // Required
-      "Checked"         : Bool,       // Optional
-      "Confidence"      : Double,     // Optional
-      "Origin"          : {           // Required
-        "OriginID"      : String,     // Required
-        "Name"          : String,     // Required
-        "OriginType"    : String,     // Required
-        "Metadata"      : {           // Optional
-          "key": "value"
+      "SchemeID"        : String,           // Required
+      "CodeID"          : String,           // Required
+      "DateTimeUTC"     : ISO 8601 String,  // Required
+      "Checked"         : Bool,             // Optional
+      "Confidence"      : Double,           // Optional
+      "LabelSet"        : Int,              // Optional, used to group multiple labels together in future UI
+      "Origin"          : {                 // Required
+        "OriginID"      : String,           // Required
+        "Name"          : String,           // Required
+        "OriginType"    : String,           // Required
+        "Metadata"      : {                 // Optional
+          String : String
         }
       }
     }
