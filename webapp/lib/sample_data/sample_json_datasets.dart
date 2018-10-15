@@ -94,7 +94,7 @@ Map jsonDatasetOneScheme = {
         {
           "FriendlyName": "code 1",
           "ValueID": "code 1",
-          "Colour": "#f46241",
+          "Color": "#f46241",
           "Shortcut": "1"
         },
         {
@@ -231,7 +231,7 @@ Map jsonDatasetTwoSchemes = {
         {
           "FriendlyName": "code 1",
           "ValueID": "code 1",
-          "Colour": "#f46241",
+          "Color": "#f46241",
           "Shortcut": "1"
         },
         {
@@ -247,7 +247,7 @@ Map jsonDatasetTwoSchemes = {
         {
           "FriendlyName": "code 1",
           "ValueID": "code 1",
-          "Colour": "#f46241",
+          "Color": "#f46241",
           "Shortcut": "a"
         },
         {
@@ -308,7 +308,7 @@ Map jsonDatasetTwoSchemesNoCodes = {
         {
           "FriendlyName": "code 1",
           "ValueID": "code 1",
-          "Colour": "#f46241",
+          "Color": "#f46241",
           "Shortcut": "1"
         },
         {
@@ -324,7 +324,7 @@ Map jsonDatasetTwoSchemesNoCodes = {
         {
           "FriendlyName": "code 1",
           "ValueID": "code 1",
-          "Colour": "#f46241",
+          "Color": "#f46241",
           "Shortcut": "a"
         },
         {
