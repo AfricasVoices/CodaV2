@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/src/interop/auth_interop.dart' as auth_interop;
 
-import 'logger.dart' as log;
+import 'package:CodaV2/logger.dart' as log;
 
 MockAuth _testAuth = new MockAuth();
 

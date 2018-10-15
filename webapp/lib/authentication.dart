@@ -9,7 +9,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'config.dart';
 import 'firebase_tools.dart' as fbt;
 import 'main_ui.dart' as ui;
-import 'mock_auth.dart' as mock;
+import 'mocks/mock_auth.dart' as mock;
 
 ButtonElement signOutButton = querySelector('#sign-out');
 ButtonElement signInButtonNav = querySelector('#sign-in-nav');
