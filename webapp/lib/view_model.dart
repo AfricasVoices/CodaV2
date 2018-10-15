@@ -32,7 +32,8 @@ class MessageViewModel {
       var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
       if (existingLabels.isNotEmpty) {
         Label label = existingLabels.first;
-        codeSelector.selectedOption = label.codeId;
+        codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
+        codeSelector.checked = label.checked;
       }
       viewElement.addCell()
         ..classes.add('message-code')
@@ -41,29 +42,50 @@ class MessageViewModel {
   }
 
   schemeCheckChanged(Dataset dataset, String schemeId, bool checked) {
+    final messageId = message.id;
+    log.verbose("Message checkbox: $messageId $schemeId => $checked");
 
-    log.verbose("Message checkbox: ${message.id} ${schemeId} $checked");
+    var existingLabels = message.labels.where((label) => label.schemeId == schemeId);
+    // Don't allow checking when a code hasn't been picked from the scheme
+    if (existingLabels.isEmpty || existingLabels.first.codeId == Label.MANUALLY_UNCODED) {
+      codeSelectors.singleWhere((cs) => cs.scheme.id == schemeId).checked = false;
+      log.verbose("Cancel message checkbox change on empty code: $messageId $schemeId");
+      return;
+    }
+    // Add a new label which is the current label with the changed checkbox
+    Label currentLabel = existingLabels.first;
+    message.labels.insert(0,
+      new Label(schemeId, new DateTime.now(), currentLabel.codeId,
+        new Origin(auth.getUserEmail(), auth.getUserName()),
+        checked: checked
+        ));
     fbt.updateMessage(dataset, message);
   }
 
-  schemeCodeChanged(Dataset dataset, String schemeId, String valueId) {
+  schemeCodeChanged(Dataset dataset, String schemeId, String codeId) {
     final messageId = message.id;
-    log.verbose("Message code-value: $messageId $schemeId => $valueId");
+    log.verbose("Message code-value: $messageId $schemeId => $codeId");
+
+    // If uncoding a previously coded message, mark it with a special label
+    // Also prepare the checkbox status
+    bool checked;
+    if (codeId == CodeSelector.EMPTY_CODE_VALUE) {
+      codeId = Label.MANUALLY_UNCODED;
+      checked = false;
+    } else {
+      checked = true;
+    }
+
+    // Update the checkbox
+    codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId).checked = checked;
 
     // Update the data-model by prepending this decision
     message.labels.insert(0,
-      new Label(schemeId, new DateTime.now(), valueId,
-        new Origin(auth.getUserEmail(), auth.getUserName())
+      new Label(schemeId, new DateTime.now(), codeId,
+        new Origin(auth.getUserEmail(), auth.getUserName()),
+        checked: checked
         ));
     fbt.updateMessage(dataset, message);
-
-    // Update the checkbox
-    CodeSelector selector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
-    if (valueId == CodeSelector.EMPTY_CODE_VALUE) {
-      selector.checked = false;
-    } else {
-      selector.checked = true;
-    }
   }
 }
 
@@ -133,13 +155,13 @@ class CodeSelector {
   set checked(bool checked) => checkbox.checked = checked;
   bool get checked => checkbox.checked;
 
-  set selectedOption(String valueID) {
-    OptionElement option = dropdown.querySelector('option[valueid="$valueID"]');
+  set selectedOption(String codeId) {
+    OptionElement option = dropdown.querySelector('option[valueid="$codeId"]');
     // When the option set programmatically doesn't exist in the scheme, show the warning sign.
     if (option == null) {
       warning
         ..classes.remove('hidden')
-        ..attributes['title'] = 'The message is pre-labelled with the code "$valueID" that doesn\'t exist in the scheme';
+        ..attributes['title'] = 'The message is pre-labelled with the code "$codeId" that doesn\'t exist in the scheme';
     } else {
       option.selected = true;
     }
