@@ -5,7 +5,7 @@ Map jsonDatasetNoSchemes = {
   "Id": "test_dataset_id",
   "Documents": [
     {
-      "MessageID": "msg 0",
+      "Id": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
@@ -20,13 +20,13 @@ Map jsonDatasetOneScheme = {
   "Id": "test_dataset_id",
   "Documents": [
     {
-      "MessageID": "msg 0",
+      "Id": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "MessageID": "msg 1",
+      "Id": "msg 1",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
       "Labels": [
@@ -34,12 +34,16 @@ Map jsonDatasetOneScheme = {
           "SchemeID": "scheme 1",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 1",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     },
     {
-      "MessageID": "msg 2",
+      "Id": "msg 2",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -47,12 +51,16 @@ Map jsonDatasetOneScheme = {
           "SchemeID": "scheme 1",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 11",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     },
     {
-      "MessageID": "msg 3",
+      "Id": "msg 3",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -60,13 +68,21 @@ Map jsonDatasetOneScheme = {
           "SchemeID": "scheme 1",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 1",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         },
         {
           "SchemeID": "scheme 1",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 2",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     }
@@ -111,7 +127,11 @@ Map jsonDatasetTwoSchemes = {
           "SchemeID": "scheme 1",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 1",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     },
@@ -124,7 +144,11 @@ Map jsonDatasetTwoSchemes = {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 2",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     },
@@ -137,13 +161,21 @@ Map jsonDatasetTwoSchemes = {
           "SchemeID": "scheme 1",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 1",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         },
         {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 2",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     },
@@ -156,13 +188,21 @@ Map jsonDatasetTwoSchemes = {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 1",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         },
         {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 2",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         }
       ]
     },
@@ -175,7 +215,11 @@ Map jsonDatasetTwoSchemes = {
           "SchemeID": "scheme 2",
           "DateTimeUTC": "2018-09-23T14:12:00Z",
           "ValueID": "code 22",
-          "LabelOrigin": "info@example.com"
+          "LabelOrigin": {
+            "Id": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
         },
       ]
     },

@@ -50,7 +50,7 @@ class MessageViewModel {
     if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueId");
 
     // Update the data-model by prepending this decision
-    message.labels.add(
+    message.labels.insert(0,
       new Label(schemeId, new DateTime.now(), valueId,
         new Origin(auth.getUserEmail(), auth.getUserName())
         ));
