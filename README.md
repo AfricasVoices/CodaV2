@@ -1,5 +1,7 @@
 # CodaV2
 
+[![CircleCI](https://circleci.com/gh/AfricasVoices/CodaV2/tree/master.svg?style=svg)](https://circleci.com/gh/AfricasVoices/CodaV2/tree/master)
+
 CodaV2 the second version of [Coda](https://github.com/AfricasVoices/coda), an interactive tool that helps you label short text datasets.
 
 ## Developer Setup
