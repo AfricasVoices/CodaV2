@@ -7,7 +7,6 @@ jobs:
       - checkout
       - run:
           name: Install Chrome
-          background: true
           command: |
             DEBIAN_FRONTEND=noninteractive
             echo 'deb http://dl.google.com/linux/chrome/deb stable main' >> /etc/apt/sources.list.d/google-chrome.list
