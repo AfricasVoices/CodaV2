@@ -29,10 +29,10 @@ class MessageViewModel {
       CodeSelector codeSelector = new CodeSelector(scheme);
       codeSelectors.add(codeSelector);
       // If the message is already labelled in this scheme, select that code.
-      var existingLabels = message.labels.where((label) => label.schemeID == scheme.id);
+      var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
       if (existingLabels.isNotEmpty) {
         Label label = existingLabels.first;
-        codeSelector.selectedOption = label.valueID;
+        codeSelector.selectedOption = label.codeId;
       }
       viewElement.addCell()
         ..classes.add('message-code')

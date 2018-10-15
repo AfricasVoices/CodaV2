@@ -72,7 +72,7 @@ bool isUserSignedIn() {
 }
 
 /// Triggers when the authentication state changes (e.g. when the user signs-in or signs-out).
-void authStateObserver(firebase.User user) {
+void authStateObserver(firebase.User user) async {
   if (user == null) { // User not signed in
     // Hide user's profile pic, name and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
@@ -103,9 +103,9 @@ void authStateObserver(firebase.User user) {
     String datasetName = Uri.base.queryParameters["dataset"];
     var dataset;
     try {
-      dataset = fbt.loadDataset(datasetName);
-    } catch (e) {
-      ui.codaUI.displayUrlErrorView(e.toString());
+      dataset = await fbt.loadDataset(datasetName);
+    } catch (e, s) {
+      ui.codaUI.displayUrlErrorView(e.toString() + '     ' + s.toString());
       return;
     }
     ui.codaUI.displayDatasetView(dataset);

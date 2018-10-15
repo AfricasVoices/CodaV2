@@ -19,7 +19,7 @@ void main() {
       Dataset dataset;
 
       setUp(() {
-        dataset = new Dataset.fromJson(jsonDatasetNoSchemes);
+        dataset = new Dataset.fromFirebaseMap('test', jsonDatasetNoSchemes);
       });
 
       tearDown(() {
@@ -37,7 +37,7 @@ void main() {
       Dataset dataset;
 
       setUp(() {
-        dataset = new Dataset.fromJson(jsonDatasetOneScheme);
+        dataset = new Dataset.fromFirebaseMap('test', jsonDatasetOneScheme);
       });
 
       tearDown(() {
@@ -81,7 +81,7 @@ void main() {
       Dataset dataset;
 
       setUp(() {
-        dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
+        dataset = new Dataset.fromFirebaseMap('test', jsonDatasetTwoSchemes);
       });
 
       tearDown(() {
@@ -150,7 +150,7 @@ void main() {
     TableElement table = new TableElement();
     table.id = "message-coding-table";
     document.body.append(table);
-    Dataset dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
+    Dataset dataset = new Dataset.fromFirebaseMap('test', jsonDatasetTwoSchemes);
     CodaUI ui = new CodaUI();
     ui.displayDatasetView(dataset);
 
@@ -170,7 +170,7 @@ void main() {
       await new Future.delayed(const Duration(milliseconds: 200));
 
       expect(log.firestoreCallLog.last['callType'], 'updateMessage');
-      expect(log.firestoreCallLog.last['content'], message.message.toMap());
+      expect(log.firestoreCallLog.last['content'], message.message.toFirebaseMap());
       expect(message.codeSelectors[0].selectedOption, "code 2");
     });
 
@@ -191,7 +191,7 @@ void main() {
       await new Future.delayed(const Duration(milliseconds: 200));
 
       expect(log.firestoreCallLog.last['callType'], 'updateMessage');
-      expect(log.firestoreCallLog.last['content'], message.message.toMap());
+      expect(log.firestoreCallLog.last['content'], message.message.toFirebaseMap());
       expect(message.codeSelectors[1].selectedOption, "code 2");
       expect(message.codeSelectors[1].warning.classes.contains('hidden'), true);
     });

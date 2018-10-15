@@ -6,19 +6,22 @@ library coda.model;
 /// A collection of messages and code schemes.
 class Dataset {
   String id;
-  String name;
   List<Message> messages;
   List<Scheme> codeSchemes;
 
-  Dataset(this.name) {
+  Dataset(this.id, this.messages, this.codeSchemes);
+  Dataset.empty(this.id) : messages = [], codeSchemes = [];
+  Dataset.fromFirebaseMap(String id, Map dataset) {
+    this.id = id;
     messages = [];
+    for (Map message in dataset['messages']) {
+      messages.add(new Message.fromFirebaseMap(message));
+    }
+
     codeSchemes = [];
-  }
-  Dataset.fromJson(Map jsonDataset) {
-    name = jsonDataset['Name'];
-    id = jsonDataset['Id'];
-    messages = (jsonDataset['Documents'] as List).map<Message>((jsonDocument) => new Message.fromJson(jsonDocument)).toList();
-    codeSchemes = (jsonDataset['CodeSchemes'] as List).map<Scheme>((jsonScheme) => new Scheme.fromJson(jsonScheme)).toList();
+    for (Map scheme in dataset['code_schemes']) {
+      codeSchemes.add(new Scheme.fromFirebaseMap(scheme));
+    }
   }
 }
 
@@ -32,18 +35,22 @@ class Message {
   Message(this.id, this.text, this.creationDateTime) {
     labels = [];
   }
-  Message.fromJson(Map jsonDocument) {
-    id = jsonDocument['Id'];
-    text = jsonDocument['Text'];
-    creationDateTime = DateTime.parse(jsonDocument['CreationDateTimeUTC']);
-    labels = (jsonDocument['Labels'] as List).map<Label>((jsonLabel) => new Label.fromJson(jsonLabel)).toList();
+  Message.fromFirebaseMap(Map message) {
+    id = message['MessageID'];
+    text = message['Text'];
+    creationDateTime = message['CreationDateTimeUTC'];
+    labels = <Label>[];
+
+    for (Map labelMap in message['Labels']) {
+      labels.add(new Label.fromFirebaseMap(labelMap));
+    }
   }
 
-  toMap() => {
-    "id" : id,
-    "text" : text,
-    "creationDateTime" : creationDateTime,
-    "labels" : labels.map((f) => f.toSimpleMap()).toList()
+  toFirebaseMap() => {
+    "MessageID" : id,
+    "Text" : text,
+    "CreationDateTimeUTC" : creationDateTime,
+    "Labels" : labels.map((f) => f.toFirebaseMap()).toList()
   };
 
   @override
@@ -52,29 +59,34 @@ class Message {
 
 /// A code/label assigned to a message.
 class Label {
-  String schemeID;
+  String schemeId;
+  String codeId;
   DateTime dateTime;
-  String valueID;
   Origin labelOrigin;
   double confidence;
   bool checked;
 
-  Label(this.schemeID, this.dateTime, this.valueID, this.labelOrigin, {this.confidence = 1.0, this.checked = true});
-  Label.fromJson(Map jsonLabel) {
-    schemeID = jsonLabel['SchemeID'];
-    dateTime = DateTime.parse(jsonLabel['DateTimeUTC']);
-    valueID = jsonLabel['ValueID'];
-    labelOrigin = new Origin.fromJson(jsonLabel['LabelOrigin']);
-  }
-  @override
-  String toString() => "$schemeID: $valueID $labelOrigin";
+  Label(this.schemeId, this.dateTime, this.codeId, this.labelOrigin, {this.confidence = 1.0, this.checked = true});
+  Label.fromFirebaseMap(Map label) {
+    schemeId = label['SchemeID'];
+    codeId = label['CodeID'];
+    dateTime = label['DateTimeUTC'];
+    labelOrigin = new Origin.fromFirebaseMap(label['Origin']);
 
-  toSimpleMap() => {
-    "schemeID" : schemeID,
-    "dateTime" : dateTime,
-    "valueID" : valueID,
-    "origin" : labelOrigin.toSimpleMap(),
-    "confidence" : confidence
+    confidence = label.containsKey('Confidence') ? label['Confidence'] : 0.50;
+    checked = label.containsKey('Checked') ? label['Checked'] : false;
+  }
+
+  @override
+  String toString() => "$schemeId: $codeId $labelOrigin";
+
+  toFirebaseMap() => {
+    "SchemeID" : schemeId,
+    "CodeID" : codeId,
+    "DateTimeUTC" : dateTime,
+    "Origin" : labelOrigin.toFirebaseMap(),
+    "Confidence" : confidence,
+    "Checked": checked
   };
 }
 
@@ -89,27 +101,6 @@ class Scheme {
 
   Scheme(this.id) {
     codes = [];
-  }
-  Scheme.fromJson(Map jsonScheme) {
-    // TODO: Legacy, update to new JSON format
-
-    int i = 0;
-
-    id = jsonScheme['SchemeID'];
-    codes = [];
-    jsonScheme['Codes'].forEach((jsonCode) {
-      codes.add(
-        new Code.fromFirebaseMap(
-          {
-              "CodeID" : jsonCode['ValueID'],
-              "DisplayText" : jsonCode['FriendlyName'],
-              "NumericValue" : i++,
-              "VisibleInCoda" : true,
-              "Color": jsonCode.containsKey('Color') ? jsonCode['Color']: ''
-          }
-        )
-      );
-    });
   }
 
   Scheme.fromFirebaseMap(Map scheme) {
@@ -126,6 +117,16 @@ class Scheme {
       this.documentation = scheme['Documentation'];
     }
   }
+
+  @override
+  String toString() => "$id: $name $codes";
+
+  toFirebaseMap() => {
+    "SchemeID": id,
+    "Name": name,
+    "Version": version,
+    "Codes": codes.map((c) => c.toFirebaseMap()).toList()
+  };
 }
 
 class Code {
@@ -147,28 +148,36 @@ class Code {
     shortcut = codeMap.containsKey("Shortcut") ? codeMap["Shortcut"] : "";
     color = codeMap.containsKey("Color") ? codeMap["Color"] : "";
   }
+
+  toFirebaseMap() => {
+    "CodeID": id,
+    "DisplayText": displayText,
+    "NumericValue": numericValue,
+    "VisibleInCoda": visibleInCoda,
+    "Shortcut": shortcut, // Should this be optional?
+    "Color": color
+  };
 }
 
 class Origin {
   String id;
   String name;
   String originType;
-  Map<String, String> metadata;
+  Map<String, dynamic> metadata;
 
   Origin(this.id, this.name, [this.originType = "Manual", this.metadata]);
-  Origin.fromJson(Map jsonOrigin) {
-    id = jsonOrigin['Id'];
-    name = jsonOrigin['Name'];
-    originType = jsonOrigin['OriginType'];
-    metadata = jsonOrigin['Metadata'];
+  Origin.fromFirebaseMap(Map origin) {
+    id = origin['OriginID'];
+    name = origin['Name'];
+    originType = origin['OriginType'];
+    metadata = origin['Metadata'];
   }
 
-
-  toSimpleMap() => {
-    "id" : id,
-    "name" : name,
-    "originType" : originType,
-    "metadata" : metadata != null ? metadata : {}
+  toFirebaseMap() => {
+    "OriginID" : id,
+    "Name" : name,
+    "OriginType" : originType,
+    "Metadata" : metadata != null ? metadata : {}
   };
 
   @override
