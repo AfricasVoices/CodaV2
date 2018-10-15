@@ -6,9 +6,10 @@ import 'dart:html';
 
 import 'package:firebase/firebase.dart' as firebase;
 
+import 'config.dart';
 import 'firebase_tools.dart' as fbt;
-
 import 'main_ui.dart' as ui;
+import 'mocks/mock_auth.dart' as mock;
 
 ButtonElement signOutButton = querySelector('#sign-out');
 ButtonElement signInButtonNav = querySelector('#sign-in-nav');
@@ -17,20 +18,29 @@ DivElement signInPanel = querySelector('#sign-in-panel');
 DivElement userPicElement = querySelector('#user-pic');
 DivElement userNameElement = querySelector('#user-name');
 
+
+firebase.Auth get firebaseAuth {
+  if (TEST_MODE) {
+    return mock.auth();
+  } else {
+    return firebase.auth();
+  }
+}
+
 /// Signs the user in.
 signIn() {
   var provider = new firebase.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider);
+  firebaseAuth.signInWithPopup(provider);
 }
 
 /// Signs the user out.
 signOut() {
-  firebase.auth().signOut();
+  firebaseAuth.signOut();
 }
 
 /// Initialise firebase authentication.
 init() {
-  firebase.auth().onAuthStateChanged.listen(authStateObserver);
+  firebaseAuth.onAuthStateChanged.listen(authStateObserver);
 
   signInButtonNav.onClick.listen((_) => signIn());
   signInButtonMain.onClick.listen((_) => signIn());
@@ -39,7 +49,7 @@ init() {
 
 /// Returns the signed-in user's profile Pic URL.
 String getProfilePicUrl() {
-  String photoURL = firebase.auth().currentUser.photoURL;
+  String photoURL = firebaseAuth.currentUser.photoURL;
   if (photoURL == null) {
     photoURL =  '/assets/user_image_placeholder.png';
   }
@@ -48,17 +58,17 @@ String getProfilePicUrl() {
 
 /// Returns the signed-in user's display name.
 String getUserName() {
-  return firebase.auth().currentUser.displayName;
+  return firebaseAuth.currentUser.displayName;
 }
 
 /// Returns the signed-in user's email address.
 String getUserEmail() {
-  return firebase.auth().currentUser.email;
+  return firebaseAuth.currentUser.email;
 }
 
 /// Returns true if a user is signed-in.
 bool isUserSignedIn() {
-  return firebase.auth().currentUser != null;
+  return firebaseAuth.currentUser != null;
 }
 
 /// Triggers when the authentication state changes (e.g. when the user signs-in or signs-out).

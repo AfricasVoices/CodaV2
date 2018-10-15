@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="x-dart-test" href="view_model_test.dart">
+    <script src="packages/test/dart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Navbar -->
+    <nav>
+      <div id="navbar">
+        <a class="navbar-brand" href="#">Coda v2</a>
+        <ul class="left navbar-item-list" id="coding-nav" hidden="true">
+
+          <li class="dropdown">
+            <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><b>Dataset</b><i class="fas fa-caret-down" style="margin-left: 2px"></i></a>
+            <ul class="dropdown-menu">
+              <li><a class="btn-file">Load new dataset from...<input id="dataset-file" type="file"/></a></li>
+              <li><a class="btn-file">Load new code scheme from...<input id="scheme-file" type="file"/></a></li>
+              <li><a id="export-dataset">Export dataset</a></li>
+              <li><a id="export-instrumentation">Export instrumentation</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button id="save-all-button" type="button" data-toggle="tooltip" data-placement="bottom" title="Save changes within Coda">
+              <i class="fas fa-save"></i>
+              Save
+            </button>
+          </li>
+
+          <li>
+            <button id="auto-code-now-button" type="button" data-toggle="tooltip" data-placement="bottom" title="Click to automatically assign codes">
+              <i class="fas fa-sync-alt"></i>
+              Auto-code now!
+            </button>
+          </li>
+
+          <li>
+            <div class="text-and-button-group">
+              Code by
+              <div class="button-group">
+                <input id="horizontal-coding" type="radio" name="code-by-group" checked>
+                <label class="button" for="horizontal-coding">scheme</label>
+
+                <input id="vertical-coding" type="radio" name="code-by-group">
+                <label class="button" for="vertical-coding">message</label>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <div class="button-group">
+              <button id="undo" type="button" data-toggle="tooltip" data-placement="bottom" title="Undo recent change">
+                <i class="fas fa-undo"></i>
+              </button>
+
+              <button id="redo" type="button" data-toggle="tooltip" data-placement="bottom" title="Redo recent change">
+                <i class="fas fa-redo"></i>
+              </button>
+            </div>
+          </li>
+
+        </ul>
+
+        <ul class="right navbar-item-list" id="auth-nav">
+          <li>
+            <button id="sign-in-nav" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign in" hidden="true">
+              Sign in
+            </button>
+          </li>
+
+          <li>
+            <button id="sign-out" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign out" hidden="true">
+              Sign out
+            </button>
+          </li>
+
+          <li>
+            <div id="user-name"></div>
+          </li>
+
+          <li>
+            <div id="user-pic"></div>
+          </li>
+
+        </ul>
+        <div id="version-label"></div>
+      </div>
+    </nav>
+
+    <!-- Main coding area -->
+    <main>
+      <div id="loader" hidden>
+        <div id="loading-animation"></div>
+        Loading dataset
+      </div>
+      <div id="other-content"></div>
+      <div id="sign-in-panel" hidden="true">
+        Before using Coda, you need to sign in:
+        <button id="sign-in-main" type="button" data-toggle="tooltip" data-placement="bottom" title="Sign in">
+          Sign in
+        </button>
+      </div>
+    </main>
+  </body>
+</html>

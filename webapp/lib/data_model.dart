@@ -100,11 +100,12 @@ class Scheme {
     jsonScheme['Codes'].forEach((jsonCode) {
       codes.add(
         new Code.fromFirebaseMap(
-          { 
+          {
               "CodeID" : jsonCode['ValueID'],
               "DisplayText" : jsonCode['FriendlyName'],
               "NumericValue" : i++,
               "VisibleInCoda" : true,
+              "Color": jsonCode.containsKey('Color') ? jsonCode['Color']: ''
           }
         )
       );
@@ -135,8 +136,7 @@ class Code {
   bool visibleInCoda;
   String color;
 
-  Code(this.id, this.displayText, this.numericValue, this.visibleInCoda, 
-  {this.shortcut = "", this.color = ""});
+  Code(this.id, this.displayText, this.numericValue, this.visibleInCoda, {this.shortcut = "", this.color = ""});
 
   Code.fromFirebaseMap(Map codeMap) {
     id = codeMap["CodeID"];
@@ -145,7 +145,7 @@ class Code {
     visibleInCoda = codeMap["VisibleInCoda"];
 
     shortcut = codeMap.containsKey("Shortcut") ? codeMap["Shortcut"] : "";
-    shortcut = codeMap.containsKey("Color") ? codeMap["Color"] : "";
+    color = codeMap.containsKey("Color") ? codeMap["Color"] : "";
   }
 }
 
@@ -173,36 +173,4 @@ class Origin {
 
   @override
     String toString() => "$originType $id";
-}
-
-/// A simple colour class for transforming between the data model colours and css colours.
-/// Inspired by https://github.com/MichaelFenwick/Color/blob/master/lib/hex_color.dart
-class Colour {
-  int r = 255;
-  int g = 255;
-  int b = 255;
-
-  Colour();
-  Colour.hex(String hexCode) {
-    if (hexCode.startsWith('#')) {
-      hexCode = hexCode.substring(1);
-    }
-    List<String> hexDigits = hexCode.split('');
-    r = int.parse(hexDigits.sublist(0, 2).join(), radix: 16);
-    g = int.parse(hexDigits.sublist(2, 4).join(), radix: 16);
-    b = int.parse(hexDigits.sublist(4).join(), radix: 16);
-  }
-
-  String get rHex => r.toInt().toRadixString(16).padLeft(2, '0');
-  String get gHex => g.toInt().toRadixString(16).padLeft(2, '0');
-  String get bHex => b.toInt().toRadixString(16).padLeft(2, '0');
-
-  String toString() => '$rHex$gHex$bHex';
-  String toCssString() => '#$rHex$gHex$bHex';
-
-  get hashCode {
-    return 256 * 256 * r + 256 * g + b;
-  }
-
-  operator ==(Object other) => other is Colour && this.hashCode == other.hashCode;
 }

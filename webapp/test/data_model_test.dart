@@ -1,8 +1,7 @@
-import 'dart:convert' show json;
-
 import 'package:test/test.dart';
 
 import 'package:CodaV2/data_model.dart';
+import 'package:CodaV2/sample_data/sample_json_datasets.dart';
 
 void main() {
   test("Empty dataset", () {
@@ -12,63 +11,13 @@ void main() {
   });
 
   test("Simple dataset from JSON", () {
-    Map datasetMap = json.decode(testJsonDataset);
-    Dataset dataset = new Dataset.fromJson(datasetMap);
+    Dataset dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
 
-    expect(dataset.messages.length, 2);
-    expect(dataset.codeSchemes.length, 1);
-    expect(dataset.messages[0].id, "msg 1");
+    expect(dataset.messages.length, 6);
+    expect(dataset.codeSchemes.length, 2);
+    expect(dataset.messages[0].id, "msg 0");
     expect(dataset.codeSchemes[0].id, "scheme 1");
-    expect(dataset.codeSchemes[0].codes[0].color, new Colour.hex('f46241'));
-    expect(dataset.codeSchemes[0].codes[1].color, new Colour());
+    expect(dataset.codeSchemes[0].codes[0].color, '#f46241');
+    expect(dataset.codeSchemes[0].codes[1].color, '');
   });
 }
-
-const String testJsonDataset =
-"""{
-  "Name": "Test",
-  "Documents": [
-    {
-      "MessageID": "msg 1",
-      "Text": "first message",
-      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
-      "Labels": [
-        {
-          "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code1",
-          "LabelOrigin": "info@example.com"
-        }
-      ]
-    },
-    {
-      "MessageID": "msg 2",
-      "Text": "second message",
-      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
-      "Labels": [
-        {
-          "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
-          "LabelOrigin": "info@example.com"
-        }
-      ]
-    }
-  ],
-  "CodeSchemes": [
-    {
-      "SchemeID": "scheme 1",
-      "Codes": [
-        {
-          "FriendlyName": "code 1",
-          "ValueID": "code 1",
-          "Colour": "#f46241"
-        },
-        {
-          "FriendlyName": "code 2",
-          "ValueID": "code 2"
-        }
-      ]
-    }
-  ]
-}""";

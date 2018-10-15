@@ -4,6 +4,7 @@ import 'firebase_constants.dart' as firebase_constants;
 import 'data_model.dart';
 import 'dataset_tools.dart' as dataset_tools;
 import 'logger.dart' as log;
+import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
 import 'dart:async';
 
@@ -16,6 +17,7 @@ class DatasetLoadException implements Exception {
 firestore.Firestore _firestoreInstance = firebase.firestore();
 
 init() {
+  if (TEST_MODE) return;
 
   firebase.initializeApp(
       apiKey: firebase_constants.apiKey,
@@ -30,6 +32,11 @@ updateMessage(Dataset dataset, Message msg) {
   log.verbose("Updating: $msg");
 
   var docPath = "datasets/${dataset.id}/msgs/${msg.id}";
+
+  if (TEST_MODE) {
+    log.logFirestoreCall('updateMessage', '$docPath', msg.toMap());
+    return;
+  }
 
   _firestoreInstance.doc(docPath).set(msg.toMap()).then((_) {
     log.verbose("Store complete: ${msg.id}");
@@ -46,7 +53,7 @@ Future<List<Scheme>> loadSchemes(String datasetId) async {
 
   var schemesQuery = await _firestoreInstance.collection(schemeCollectionRoot).get();
   log.verbose("loadSchemes: Query constructed");
-  
+
   schemesQuery.forEach((scheme) {
     log.verbose("loadSchemes: Processing ${scheme.id}");
 
@@ -70,6 +77,11 @@ Dataset loadDataset(String datasetName) {
     throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
   }
 
+  if (TEST_MODE) {
+    log.logFirestoreCall('loadDataset', '$datasetName', jsonDatasetTwoSchemes);
+    return new Dataset.fromJson(jsonDatasetTwoSchemes);
+  }
+
   const msgCountDatasetPrefix = 'dataset-msg-';
   if (datasetName.startsWith(msgCountDatasetPrefix)) {
     try {
@@ -80,7 +92,7 @@ Dataset loadDataset(String datasetName) {
     }
   }
   if (datasetName == 'test-dataset') {
-    return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
+    return new Dataset.fromJson(jsonDatasetTwoSchemes);
   }
   throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
 }

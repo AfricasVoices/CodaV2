@@ -2,16 +2,19 @@ version: 2
 jobs:
   build:
     docker:
-      - image: debian:stretch
+      - image: google/dart:2.0.0
     steps:
       - checkout
       - run:
-          name: Greeting
-          command: echo Hello, world.
-      - run:
-          name: Print the Current Time
-          command: date
-    branches:
-      only:
-        - master
-        - /circleci-.*/
+          name: Install Chrome
+          command: |
+            DEBIAN_FRONTEND=noninteractive
+            echo 'deb http://dl.google.com/linux/chrome/deb stable main' >> /etc/apt/sources.list.d/google-chrome.list
+            curl -fL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+            apt-get update
+            apt-get install --no-install-recommends -y -q google-chrome-stable
+            sed -i 's|HERE/chrome"|HERE/chrome" --no-sandbox|g' /opt/google/chrome/google-chrome
+            apt-get clean
+            rm -rf /var/lib/apt/lists/*
+      - run: cd webapp && pub get
+      - run: cd webapp && pub run test -p chrome
