@@ -38,7 +38,7 @@ class Message {
   Message.fromFirebaseMap(Map message) {
     id = message['MessageID'];
     text = message['Text'];
-    creationDateTime = message['CreationDateTimeUTC'];
+    creationDateTime = message['CreationDateTimeUTC'] is DateTime ? message['CreationDateTimeUTC'] : DateTime.parse(message['CreationDateTimeUTC']);
     labels = <Label>[];
 
     for (Map labelMap in message['Labels']) {
@@ -70,7 +70,7 @@ class Label {
   Label.fromFirebaseMap(Map label) {
     schemeId = label['SchemeID'];
     codeId = label['CodeID'];
-    dateTime = label['DateTimeUTC'];
+    dateTime = label['DateTimeUTC'] is DateTime ? label['DateTimeUTC'] : DateTime.parse(label['DateTimeUTC']);
     labelOrigin = new Origin.fromFirebaseMap(label['Origin']);
 
     confidence = label.containsKey('Confidence') ? label['Confidence'] : 0.50;
@@ -171,7 +171,9 @@ class Origin {
     name = origin['Name'];
     originType = origin['OriginType'];
     // The Map from Firebase is Map<String, dynamic>, we need to convert it to Map<String, String>
-    metadata = (origin['Metadata'] as Map).map((k, v) => new MapEntry(k.toString(), v.toString()));
+    if (origin['Metadata'] != null) {
+      metadata = (origin['Metadata'] as Map).map((k, v) => new MapEntry(k.toString(), v.toString()));
+    }
   }
 
   toFirebaseMap() => {
