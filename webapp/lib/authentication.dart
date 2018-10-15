@@ -104,8 +104,8 @@ void authStateObserver(firebase.User user) async {
     var dataset;
     try {
       dataset = await fbt.loadDataset(datasetName);
-    } catch (e, s) {
-      ui.codaUI.displayUrlErrorView(e.toString() + '     ' + s.toString());
+    } catch (e) {
+      ui.codaUI.displayUrlErrorView(e.toString());
       return;
     }
     ui.codaUI.displayDatasetView(dataset);
