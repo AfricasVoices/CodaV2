@@ -19,8 +19,8 @@ void main() {
     expect(dataset.codeSchemes.length, 1);
     expect(dataset.messages[0].id, "msg 1");
     expect(dataset.codeSchemes[0].id, "scheme 1");
-    expect(dataset.codeSchemes[0].codes[0]['colour'], new Colour.hex('f46241'));
-    expect(dataset.codeSchemes[0].codes[1]['colour'], new Colour());
+    expect(dataset.codeSchemes[0].codes[0].color, new Colour.hex('f46241'));
+    expect(dataset.codeSchemes[0].codes[1].color, new Colour());
   });
 }
 

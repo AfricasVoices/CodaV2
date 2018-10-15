@@ -18,8 +18,8 @@ def verify_JSON_path(scheme_path):
     assert "Version" in scheme.keys()
     check_string(scheme["Version"])
 
-    assert "Values" in scheme.keys()
-    Values = scheme["Values"]
+    assert "Codes" in scheme.keys()
+    Values = scheme["Codes"]
     assert isinstance(Values, list)
 
     seen_display_texts = set()
@@ -30,8 +30,8 @@ def verify_JSON_path(scheme_path):
     for value in Values:
         assert isinstance(value, dict)
 
-        ValueID = value["ValueID"]
-        assert "ValueID" in value.keys()
+        ValueID = value["CodeID"]
+        assert "CodeID" in value.keys()
         check_string(ValueID)
         assert ValueID not in seen_value_ids
         seen_value_ids.add(ValueID)

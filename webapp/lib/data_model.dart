@@ -81,27 +81,71 @@ class Label {
 /// A code scheme being used for coding/labelling messsages.
 class Scheme {
   String id;
-  List<Map> codes;
+  String name;
+  List<Code> codes;
+
+  String version;
+  Map documentation;
 
   Scheme(this.id) {
     codes = [];
   }
   Scheme.fromJson(Map jsonScheme) {
+    // TODO: Legacy, update to new JSON format
+
+    int i = 0;
+
     id = jsonScheme['SchemeID'];
     codes = [];
     jsonScheme['Codes'].forEach((jsonCode) {
-      var code = {
-        'name': jsonCode['FriendlyName'],
-        'valueID': jsonCode['ValueID'],
-        'shortcut': jsonCode['Shortcut']
-      };
-      if (jsonCode.containsKey('Colour')) {
-        code['colour'] = new Colour.hex(jsonCode['Colour']);
-      } else {
-        code['colour'] = new Colour();
-      }
-      codes.add(code);
+      codes.add(
+        new Code.fromFirebaseMap(
+          { 
+              "CodeID" : jsonCode['ValueID'],
+              "DisplayText" : jsonCode['FriendlyName'],
+              "NumericValue" : i++,
+              "VisibleInCoda" : true,
+          }
+        )
+      );
     });
+  }
+
+  Scheme.fromFirebaseMap(Map scheme) {
+    id = scheme['SchemeID'];
+    name = scheme['Name'];
+    version = scheme['Version'];
+    codes = <Code>[];
+
+    for (Map codeMap in scheme['Codes']) {
+      codes.add(new Code.fromFirebaseMap(codeMap));
+    }
+
+    if (scheme.containsKey("Documentation")) {
+      this.documentation = scheme['Documentation'];
+    }
+  }
+}
+
+class Code {
+  String id;
+  String displayText;
+  String shortcut;
+  int numericValue;
+  bool visibleInCoda;
+  String color;
+
+  Code(this.id, this.displayText, this.numericValue, this.visibleInCoda, 
+  {this.shortcut = "", this.color = ""});
+
+  Code.fromFirebaseMap(Map codeMap) {
+    id = codeMap["CodeID"];
+    displayText = codeMap["DisplayText"];
+    numericValue = codeMap["NumericValue"];
+    visibleInCoda = codeMap["VisibleInCoda"];
+
+    shortcut = codeMap.containsKey("Shortcut") ? codeMap["Shortcut"] : "";
+    shortcut = codeMap.containsKey("Color") ? codeMap["Color"] : "";
   }
 }
 

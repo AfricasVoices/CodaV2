@@ -109,8 +109,8 @@ class CodeSelector {
       OptionElement option = new OptionElement();
       option
         ..attributes['schemeid'] = scheme.id
-        ..attributes['valueid'] = code["valueID"]
-        ..text = "${code['name']} (${code['shortcut']})";
+        ..attributes['valueid'] = code.id
+        ..text = "${code.displayText} (${code.shortcut})";
       dropdown.append(option);
     });
     viewElement.append(dropdown);
