@@ -4,6 +4,7 @@ import 'firebase_constants.dart' as firebase_constants;
 import 'data_model.dart';
 import 'dataset_tools.dart' as dataset_tools;
 import 'logger.dart' as log;
+import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
 import 'dart:async';
 
@@ -33,7 +34,7 @@ updateMessage(Dataset dataset, Message msg) {
   var docPath = "datasets/${dataset.id}/msgs/${msg.id}";
 
   if (TEST_MODE) {
-    logFirestoreCall('updateMessage', '$docPath', msg.toMap());
+    log.logFirestoreCall('updateMessage', '$docPath', msg.toMap());
     return;
   }
 
@@ -52,7 +53,7 @@ Future<List<Scheme>> loadSchemes(String datasetId) async {
 
   var schemesQuery = await _firestoreInstance.collection(schemeCollectionRoot).get();
   log.verbose("loadSchemes: Query constructed");
-  
+
   schemesQuery.forEach((scheme) {
     log.verbose("loadSchemes: Processing ${scheme.id}");
 
@@ -77,7 +78,7 @@ Dataset loadDataset(String datasetName) {
   }
 
   if (TEST_MODE) {
-    logFirestoreCall('loadDataset', '$datasetName', jsonDatasetTwoSchemes);
+    log.logFirestoreCall('loadDataset', '$datasetName', jsonDatasetTwoSchemes);
     return new Dataset.fromJson(jsonDatasetTwoSchemes);
   }
 
