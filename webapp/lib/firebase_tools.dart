@@ -3,7 +3,7 @@ import 'package:firebase/firestore.dart' as firestore;
 import 'firebase_constants.dart' as firebase_constants;
 import 'data_model.dart';
 import 'dataset_tools.dart' as dataset_tools;
-import 'config.dart';
+import 'logger.dart' as log;
 import 'sample_data/sample_json_datasets.dart';
 import 'dart:async';
 
@@ -27,43 +27,43 @@ init() {
 }
 
 updateMessage(Dataset dataset, Message msg) {
-  if (VERBOSE) print("Updating: $msg");
+  log.verbose("Updating: $msg");
 
   var docPath = "datasets/${dataset.id}/msgs/${msg.id}";
 
   _firestoreInstance.doc(docPath).set(msg.toMap()).then((_) {
-    if (VERBOSE) print("Store complete: ${msg.id}");
+    log.verbose("Store complete: ${msg.id}");
   });
 }
 
 Future<List<Scheme>> loadSchemes(String datasetId) async {
   List<Scheme> ret = <Scheme>[];
 
-  if (VERBOSE) print("loadSchemes: Loading schemes for: $datasetId");
+  log.verbose("loadSchemes: Loading schemes for: $datasetId");
 
   var schemeCollectionRoot = "/datasets/$datasetId/code_schemes";
-  if (VERBOSE) print("loadSchemes: Root of query: $schemeCollectionRoot");
+  log.verbose("loadSchemes: Root of query: $schemeCollectionRoot");
 
   var schemesQuery = await _firestoreInstance.collection(schemeCollectionRoot).get();
-  if (VERBOSE) print("loadSchemes: Query constructed");
+  log.verbose("loadSchemes: Query constructed");
   
   schemesQuery.forEach((scheme) {
-    if (VERBOSE) print("loadSchemes: Processing ${scheme.id}");
+    log.verbose("loadSchemes: Processing ${scheme.id}");
 
     ret.add(
       new Scheme.fromFirebaseMap(scheme.data())
     );
   });
 
-  if (VERBOSE) print("loadSchemes: ${ret.length} schemes loaded");
+  log.verbose("loadSchemes: ${ret.length} schemes loaded");
   return ret;
 }
 
 Dataset loadDataset(String datasetName) {
-  if (VERBOSE) print("Loading coding schemes for: reach_demo");
+  log.verbose("Loading coding schemes for: reach_demo");
   loadSchemes("reach_demo");
 
-  if (VERBOSE) print("Loading dataset: $datasetName");
+  log.verbose("Loading dataset: $datasetName");
 
   // Temporary code
   if (datasetName == null) {

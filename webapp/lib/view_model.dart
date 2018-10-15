@@ -41,13 +41,14 @@ class MessageViewModel {
   }
 
   schemeCheckChanged(Dataset dataset, String schemeId, bool checked) {
-    if (VERBOSE) print("Message checkbox: ${message.id} ${schemeId} $checked");
+
+    log.verbose("Message checkbox: ${message.id} ${schemeId} $checked");
     fbt.updateMessage(dataset, message);
   }
 
   schemeCodeChanged(Dataset dataset, String schemeId, String valueId) {
     final messageId = message.id;
-    if (VERBOSE) print("Message code-value: $messageId $schemeId => $valueId");
+    log.verbose("Message code-value: $messageId $schemeId => $valueId");
 
     // Update the data-model by prepending this decision
     message.labels.insert(0,

@@ -5,7 +5,7 @@ library coda.ui;
 
 import 'dart:html';
 
-import 'config.dart';
+import 'logger.dart' as log;
 import 'data_model.dart';
 
 import 'authentication.dart' as auth;
