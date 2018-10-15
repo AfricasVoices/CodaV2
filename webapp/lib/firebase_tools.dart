@@ -15,6 +15,7 @@ class DatasetLoadException implements Exception {
 firestore.Firestore _firestoreInstance = firebase.firestore();
 
 init() {
+  if (TEST_MODE) return;
 
   firebase.initializeApp(
       apiKey: firebase_constants.apiKey,
@@ -30,6 +31,15 @@ updateMessage(Dataset dataset, Message msg) {
 
   var docPath = "datasets/${dataset.id}/msgs/${msg.id}";
 
+  if (TEST_MODE) {
+    firestoreCallLog.add({
+      'callType': 'updateMessage',
+      'target': '$docPath',
+      'content': msg.toMap()
+    });
+    return;
+  }
+
   _firestoreInstance.doc(docPath).set(msg.toMap()).then((_) {
     if (VERBOSE) print("Store complete: ${msg.id}");
   });
@@ -44,6 +54,15 @@ Dataset loadDataset(String datasetName) {
     throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
   }
 
+  if (TEST_MODE) {
+    firestoreCallLog.add({
+      'callType': 'loadDataset',
+      'target': '$datasetName',
+      'content': jsonDatasetTwoSchemes
+    });
+    return new Dataset.fromJson(jsonDatasetTwoSchemes);
+  }
+
   const msgCountDatasetPrefix = 'dataset-msg-';
   if (datasetName.startsWith(msgCountDatasetPrefix)) {
     try {
@@ -54,7 +73,7 @@ Dataset loadDataset(String datasetName) {
     }
   }
   if (datasetName == 'test-dataset') {
-    return new Dataset.fromJson(jsonDatasetTwoSchemesNoCodes);
+    return new Dataset.fromJson(jsonDatasetTwoSchemes);
   }
   throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
 }

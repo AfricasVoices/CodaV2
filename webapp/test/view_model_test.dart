@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 
 import 'package:CodaV2/data_model.dart';
 import 'package:CodaV2/main_ui.dart';
+import 'package:CodaV2/config.dart' as config;
 import 'package:CodaV2/sample_data/sample_json_datasets.dart';
 
 
@@ -72,7 +73,7 @@ void main() {
 
         expect(message.codeSelectors.length, 1);
         expect(message.message.id, "msg 3");
-        expect(message.codeSelectors[0].selectedOption, "code 2");
+        expect(message.codeSelectors[0].selectedOption, "code 1");
       });
     });
     group("two schemes", () {
@@ -128,7 +129,7 @@ void main() {
         expect(message.codeSelectors.length, 2);
         expect(message.message.id, "msg 4");
         expect(message.codeSelectors[0].selectedOption, "unassign");
-        expect(message.codeSelectors[1].selectedOption, "code 2");
+        expect(message.codeSelectors[1].selectedOption, "code 1");
       });
 
       test("one code in the second scheme that is not part of the scheme", () {
@@ -144,6 +145,7 @@ void main() {
   });
 
   group("message coding", () {
+    config.TEST_MODE = true;
     TableElement table = new TableElement();
     table.id = "message-coding-table";
     document.body.append(table);
@@ -159,13 +161,15 @@ void main() {
       expect(message.codeSelectors[0].selectedOption, "unassign");
 
       TableRowElement row = querySelector('tbody').firstChild;
-      SelectElement select = row.querySelector('.input-group[scheme="scheme 1"] select');
+      SelectElement select = row.querySelector('.input-group[scheme-id="scheme 1"] select');
       OptionElement option = select.querySelector('option[valueid="code 2"]');
 
       option.selected = true;
-      option.dispatchEvent(new Event('change'));
+      select.dispatchEvent(new Event('change'));
       await new Future.delayed(const Duration(milliseconds: 200));
 
+      expect(config.firestoreCallLog.last['callType'], 'updateMessage');
+      expect(config.firestoreCallLog.last['content'], message.message.toMap());
       expect(message.codeSelectors[0].selectedOption, "code 2");
     });
 
@@ -178,13 +182,15 @@ void main() {
       expect(message.codeSelectors[1].warning.classes.contains('hidden'), false);
 
       TableRowElement row = querySelector('tbody').children[5];
-      SelectElement select = row.querySelector('.input-group[scheme="scheme 2"] select');
+      SelectElement select = row.querySelector('.input-group[scheme-id="scheme 2"] select');
       OptionElement option = select.querySelector('option[valueid="code 2"]');
 
       option.selected = true;
-      option.dispatchEvent(new Event('change'));
+      select.dispatchEvent(new Event('change'));
       await new Future.delayed(const Duration(milliseconds: 200));
 
+      expect(config.firestoreCallLog.last['callType'], 'updateMessage');
+      expect(config.firestoreCallLog.last['content'], message.message.toMap());
       expect(message.codeSelectors[1].selectedOption, "code 2");
       expect(message.codeSelectors[1].warning.classes.contains('hidden'), true);
     });
