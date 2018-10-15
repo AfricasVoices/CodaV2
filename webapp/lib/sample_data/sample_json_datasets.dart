@@ -5,7 +5,7 @@ Map jsonDatasetNoSchemes = {
     {
       "MessageID": "msg 0",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
   ],
@@ -18,17 +18,17 @@ Map jsonDatasetOneScheme = {
     {
       "MessageID": "msg 0",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 1",
           "Origin": {
             "OriginID": "info@example.com",
@@ -41,11 +41,11 @@ Map jsonDatasetOneScheme = {
     {
       "MessageID": "msg 2",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 11",
           "Origin": {
             "OriginID": "info@example.com",
@@ -58,11 +58,11 @@ Map jsonDatasetOneScheme = {
     {
       "MessageID": "msg 3",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 1",
           "Origin": {
             "OriginID": "info@example.com",
@@ -72,7 +72,7 @@ Map jsonDatasetOneScheme = {
         },
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 2",
           "Origin": {
             "OriginID": "info@example.com",
@@ -111,17 +111,17 @@ Map jsonDatasetTwoSchemes = {
     {
       "MessageID": "msg 0",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 1",
           "Origin": {
             "OriginID": "info@example.com",
@@ -134,11 +134,11 @@ Map jsonDatasetTwoSchemes = {
     {
       "MessageID": "msg 2",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 2",
           "Origin": {
             "OriginID": "info@example.com",
@@ -151,11 +151,11 @@ Map jsonDatasetTwoSchemes = {
     {
       "MessageID": "msg 3",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 1",
           "Origin": {
             "OriginID": "info@example.com",
@@ -165,7 +165,7 @@ Map jsonDatasetTwoSchemes = {
         },
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 2",
           "Origin": {
             "OriginID": "info@example.com",
@@ -178,11 +178,11 @@ Map jsonDatasetTwoSchemes = {
     {
       "MessageID": "msg 4",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 1",
           "Origin": {
             "OriginID": "info@example.com",
@@ -192,7 +192,7 @@ Map jsonDatasetTwoSchemes = {
         },
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 2",
           "Origin": {
             "OriginID": "info@example.com",
@@ -205,11 +205,11 @@ Map jsonDatasetTwoSchemes = {
     {
       "MessageID": "msg 5",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": new DateTime.now(),
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
           "CodeID": "code 22",
           "Origin": {
             "OriginID": "info@example.com",
@@ -265,37 +265,37 @@ Map jsonDatasetTwoSchemesNoCodes = {
     {
       "MessageID": "msg 0",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 2",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 3",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 4",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 5",
       "Text": "message",
-      "CreationDateTimeUTC": new DateTime.now(),
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
   ],

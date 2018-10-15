@@ -87,6 +87,7 @@ Future<List<Message>> loadMessages(String datasetId) async {
 Future<Dataset> loadDataset(String datasetId) async {
   log.verbose("Loading dataset: $datasetId");
 
+  // TODO handle non-datasets for demo usage
   if (datasetId == null) {
     throw new DatasetLoadException('Sorry, you need to specify a dataset to load.');
   }
@@ -102,6 +103,4 @@ Future<Dataset> loadDataset(String datasetId) async {
   List<Message> messages = await loadMessages(datasetId);
 
   return new Dataset(datasetId, messages, schemes);
-
-  // throw new DatasetLoadException('Sorry, dataset "$datasetId" not available to load.');
 }

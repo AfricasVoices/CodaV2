@@ -163,21 +163,22 @@ class Origin {
   String id;
   String name;
   String originType;
-  Map<String, dynamic> metadata;
+  Map<String, String> metadata;
 
   Origin(this.id, this.name, [this.originType = "Manual", this.metadata]);
   Origin.fromFirebaseMap(Map origin) {
     id = origin['OriginID'];
     name = origin['Name'];
     originType = origin['OriginType'];
-    metadata = origin['Metadata'];
+    // The Map from Firebase is Map<String, dynamic>, we need to convert it to Map<String, String>
+    metadata = (origin['Metadata'] as Map).map((k, v) => new MapEntry(k.toString(), v.toString()));
   }
 
   toFirebaseMap() => {
     "OriginID" : id,
     "Name" : name,
     "OriginType" : originType,
-    "Metadata" : metadata != null ? metadata : {}
+    "Metadata" : metadata != null ? metadata : <String, String>{}
   };
 
   @override
