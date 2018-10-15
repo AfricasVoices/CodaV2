@@ -66,6 +66,8 @@ class Label {
   double confidence;
   bool checked;
 
+  static const MANUALLY_UNCODED = 'SPECIAL-MANUALLY_UNCODED';
+
   Label(this.schemeId, this.dateTime, this.codeId, this.labelOrigin, {this.confidence = 1.0, this.checked = true});
   Label.fromFirebaseMap(Map label) {
     schemeId = label['SchemeID'];
