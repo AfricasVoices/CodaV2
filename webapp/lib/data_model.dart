@@ -64,7 +64,7 @@ class Label {
     schemeID = jsonLabel['SchemeID'];
     dateTime = DateTime.parse(jsonLabel['DateTimeUTC']);
     valueID = jsonLabel['ValueID'];
-    // labelOrigin = jsonLabel['LabelOrigin'];
+    labelOrigin = new Origin.fromJson(jsonLabel['LabelOrigin']);
   }
   @override
   String toString() => "$schemeID: $valueID $labelOrigin";
@@ -112,6 +112,13 @@ class Origin {
   Map<String, String> metadata;
 
   Origin(this.id, this.name, [this.originType = "Manual", this.metadata]);
+  Origin.fromJson(Map jsonOrigin) {
+    id = jsonOrigin['Id'];
+    name = jsonOrigin['Name'];
+    originType = jsonOrigin['OriginType'];
+    metadata = jsonOrigin['Metadata'];
+  }
+
 
   toSimpleMap() => {
     "id" : id,
