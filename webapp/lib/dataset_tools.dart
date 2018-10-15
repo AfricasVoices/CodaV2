@@ -1,7 +1,7 @@
 import 'data_model.dart';
 
-Dataset generateEmptyDataset(String name, int schemeCount, int messageCount) {
-  Dataset dataset = new Dataset(name);
+Dataset generateEmptyDataset(String datasetId, int schemeCount, int messageCount) {
+  Dataset dataset = new Dataset.empty(datasetId);
   for (int i = 0; i < schemeCount; i++) {
     Scheme scheme = new Scheme('scheme $i');
     for (int c = 0; c < 5; c++) {

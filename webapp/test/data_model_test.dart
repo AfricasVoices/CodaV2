@@ -5,13 +5,13 @@ import 'package:CodaV2/sample_data/sample_json_datasets.dart';
 
 void main() {
   test("Empty dataset", () {
-    Dataset dataset = new Dataset('Name');
+    Dataset dataset = new Dataset.empty('test');
     expect(dataset.messages, []);
     expect(dataset.codeSchemes, []);
   });
 
   test("Simple dataset from JSON", () {
-    Dataset dataset = new Dataset.fromJson(jsonDatasetTwoSchemes);
+    Dataset dataset = new Dataset.fromFirebaseMap('test', jsonDatasetTwoSchemes);
 
     expect(dataset.messages.length, 6);
     expect(dataset.codeSchemes.length, 2);

@@ -31,14 +31,14 @@ init() {
 updateMessage(Dataset dataset, Message msg) {
   log.verbose("Updating: $msg");
 
-  var docPath = "datasets/${dataset.id}/msgs/${msg.id}";
+  var docPath = "datasets/${dataset.id}/messages/${msg.id}";
 
   if (TEST_MODE) {
-    log.logFirestoreCall('updateMessage', '$docPath', msg.toMap());
+    log.logFirestoreCall('updateMessage', '$docPath', msg.toFirebaseMap());
     return;
   }
 
-  _firestoreInstance.doc(docPath).set(msg.toMap()).then((_) {
+  _firestoreInstance.doc(docPath).set(msg.toFirebaseMap()).then((_) {
     log.verbose("Store complete: ${msg.id}");
   });
 }
@@ -57,42 +57,50 @@ Future<List<Scheme>> loadSchemes(String datasetId) async {
   schemesQuery.forEach((scheme) {
     log.verbose("loadSchemes: Processing ${scheme.id}");
 
-    ret.add(
-      new Scheme.fromFirebaseMap(scheme.data())
-    );
+    ret.add(new Scheme.fromFirebaseMap(scheme.data()));
   });
 
   log.verbose("loadSchemes: ${ret.length} schemes loaded");
   return ret;
 }
 
-Dataset loadDataset(String datasetName) {
-  log.verbose("Loading coding schemes for: reach_demo");
-  loadSchemes("reach_demo");
+Future<List<Message>> loadMessages(String datasetId) async {
+  List<Message> ret = <Message>[];
 
-  log.verbose("Loading dataset: $datasetName");
+  log.verbose("loadMessages: Loading messages for: $datasetId");
 
-  // Temporary code
-  if (datasetName == null) {
-    throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+  var messagesCollectionRoot = "/datasets/$datasetId/messages";
+  log.verbose("loadMessages: Root of query: $messagesCollectionRoot");
+
+  var messagesQuery = await _firestoreInstance.collection(messagesCollectionRoot).get();
+  log.verbose("loadMessages: Query constructed");
+
+  messagesQuery.forEach((message) {
+    log.verbose('loadMessages: Processing ${message.id}');
+    ret.add(new Message.fromFirebaseMap(message.data()));
+  });
+
+  log.verbose("loadMessages: ${ret.length} messages loaded");
+  return ret;
+}
+
+Future<Dataset> loadDataset(String datasetId) async {
+  log.verbose("Loading dataset: $datasetId");
+
+  // TODO handle non-datasets for demo usage
+  if (datasetId == null) {
+    throw new DatasetLoadException('Sorry, you need to specify a dataset to load.');
   }
 
   if (TEST_MODE) {
-    log.logFirestoreCall('loadDataset', '$datasetName', jsonDatasetTwoSchemes);
-    return new Dataset.fromJson(jsonDatasetTwoSchemes);
+    log.logFirestoreCall('loadDataset', '$datasetId', jsonDatasetTwoSchemes);
+    return new Dataset('two schemes',
+      jsonDatasetTwoSchemes['Documents'],
+      jsonDatasetTwoSchemes['CodeSchemes']);
   }
 
-  const msgCountDatasetPrefix = 'dataset-msg-';
-  if (datasetName.startsWith(msgCountDatasetPrefix)) {
-    try {
-      int count = int.parse(datasetName.replaceFirst(msgCountDatasetPrefix, ''));
-      return dataset_tools.generateEmptyDataset(datasetName, 3, count);
-    } catch (e) {
-      throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
-    }
-  }
-  if (datasetName == 'test-dataset') {
-    return new Dataset.fromJson(jsonDatasetTwoSchemes);
-  }
-  throw new DatasetLoadException('Sorry, dataset "$datasetName" not available to load.');
+  List<Scheme> schemes = await loadSchemes(datasetId);
+  List<Message> messages = await loadMessages(datasetId);
+
+  return new Dataset(datasetId, messages, schemes);
 }

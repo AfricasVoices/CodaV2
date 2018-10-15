@@ -1,41 +1,37 @@
 library coda.test.data;
 
 Map jsonDatasetNoSchemes = {
-  "Name": "Test",
-  "Id": "test_dataset_id",
-  "Documents": [
+  "messages": [
     {
-      "Id": "msg 0",
+      "MessageID": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
   ],
-  "CodeSchemes": []
+  "code_schemes": []
 };
 
 
 Map jsonDatasetOneScheme = {
-  "Name": "Test",
-  "Id": "test_dataset_id",
-  "Documents": [
+  "messages": [
     {
-      "Id": "msg 0",
+      "MessageID": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "Id": "msg 1",
+      "MessageID": "msg 1",
       "Text": "message",
-      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 1",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 1",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
@@ -43,16 +39,16 @@ Map jsonDatasetOneScheme = {
       ]
     },
     {
-      "Id": "msg 2",
+      "MessageID": "msg 2",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 11",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 11",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
@@ -60,26 +56,26 @@ Map jsonDatasetOneScheme = {
       ]
     },
     {
-      "Id": "msg 3",
+      "MessageID": "msg 3",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 1",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 1",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
         },
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 2",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
@@ -87,19 +83,21 @@ Map jsonDatasetOneScheme = {
       ]
     }
   ],
-  "CodeSchemes": [
+  "code_schemes": [
     {
       "SchemeID": "scheme 1",
+      "Name": "Scheme 1",
+      "Version": "0.0.0.1",
       "Codes": [
         {
           "FriendlyName": "code 1",
-          "ValueID": "code 1",
+          "CodeID": "code 1",
           "Color": "#f46241",
           "Shortcut": "1"
         },
         {
           "FriendlyName": "code 2",
-          "ValueID": "code 2",
+          "CodeID": "code 2",
           "Shortcut": "2"
         }
       ]
@@ -109,70 +107,68 @@ Map jsonDatasetOneScheme = {
 
 
 Map jsonDatasetTwoSchemes = {
-  "Name": "Test",
-  "Id": "test_dataset_id",
-  "Documents": [
+  "messages": [
     {
-      "Id": "msg 0",
+      "MessageID": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "Id": "msg 1",
-      "Text": "message",
-      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
-      "Labels": [
-        {
-          "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 1",
-          "LabelOrigin": {
-            "Id": "info@example.com",
-            "Name": "Example Coder",
-            "OriginType": "Manual"
-          }
-        }
-      ]
-    },
-    {
-      "Id": "msg 2",
-      "Text": "message",
-      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
-      "Labels": [
-        {
-          "SchemeID": "scheme 2",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
-          "LabelOrigin": {
-            "Id": "info@example.com",
-            "Name": "Example Coder",
-            "OriginType": "Manual"
-          }
-        }
-      ]
-    },
-    {
-      "Id": "msg 3",
+      "MessageID": "msg 1",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 1",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 1",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 1",
+          "Origin": {
+            "OriginID": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
+        }
+      ]
+    },
+    {
+      "MessageID": "msg 2",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": [
+        {
+          "SchemeID": "scheme 2",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 2",
+          "Origin": {
+            "OriginID": "info@example.com",
+            "Name": "Example Coder",
+            "OriginType": "Manual"
+          }
+        }
+      ]
+    },
+    {
+      "MessageID": "msg 3",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": [
+        {
+          "SchemeID": "scheme 1",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 1",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
         },
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 2",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
@@ -180,26 +176,26 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
     {
-      "Id": "msg 4",
+      "MessageID": "msg 4",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 1",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 1",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
         },
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 2",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 2",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
@@ -207,16 +203,16 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
     {
-      "Id": "msg 5",
+      "MessageID": "msg 5",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
         {
           "SchemeID": "scheme 2",
-          "DateTimeUTC": "2018-09-23T14:12:00Z",
-          "ValueID": "code 22",
-          "LabelOrigin": {
-            "Id": "info@example.com",
+          "DateTimeUTC": "2018-09-23T14:14:00Z",
+          "CodeID": "code 22",
+          "Origin": {
+            "OriginID": "info@example.com",
             "Name": "Example Coder",
             "OriginType": "Manual"
           }
@@ -224,35 +220,39 @@ Map jsonDatasetTwoSchemes = {
       ]
     },
   ],
-  "CodeSchemes": [
+  "code_schemes": [
     {
       "SchemeID": "scheme 1",
+      "Name": "Scheme 1",
+      "Version": "0.0.0.1",
       "Codes": [
         {
           "FriendlyName": "code 1",
-          "ValueID": "code 1",
+          "CodeID": "code 1",
           "Color": "#f46241",
           "Shortcut": "1"
         },
         {
           "FriendlyName": "code 2",
-          "ValueID": "code 2",
+          "CodeID": "code 2",
           "Shortcut": "2"
         }
       ]
     },
     {
       "SchemeID": "scheme 2",
+      "Name": "Scheme 2",
+      "Version": "0.0.0.1",
       "Codes": [
         {
           "FriendlyName": "code 1",
-          "ValueID": "code 1",
+          "CodeID": "code 1",
           "Color": "#f46241",
           "Shortcut": "a"
         },
         {
           "FriendlyName": "code 2",
-          "ValueID": "code 2",
+          "CodeID": "code 2",
           "Shortcut": "b"
         }
       ]
@@ -261,75 +261,77 @@ Map jsonDatasetTwoSchemes = {
 };
 
 Map jsonDatasetTwoSchemesNoCodes = {
-  "Name": "Test",
-  "Id": "test_dataset_id",
-  "Documents": [
+  "messages": [
     {
-      "Id": "msg 0",
+      "MessageID": "msg 0",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "Id": "msg 1",
-      "Text": "message",
-      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
-      "Labels": []
-    },
-    {
-      "Id": "msg 2",
-      "Text": "message",
-      "CreationDateTimeUTC": "2018-09-23T14:12:00Z",
-      "Labels": []
-    },
-    {
-      "Id": "msg 3",
+      "MessageID": "msg 1",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "Id": "msg 4",
+      "MessageID": "msg 2",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
-      "Id": "msg 5",
+      "MessageID": "msg 3",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
+      "MessageID": "msg 4",
+      "Text": "message",
+      "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
+      "Labels": []
+    },
+    {
+      "MessageID": "msg 5",
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
   ],
-  "CodeSchemes": [
+  "code_schemes": [
     {
       "SchemeID": "scheme 1",
+      "Name": "Scheme 1",
+      "Version": "0.0.0.1",
       "Codes": [
         {
           "FriendlyName": "code 1",
-          "ValueID": "code 1",
+          "CodeID": "code 1",
           "Color": "#f46241",
           "Shortcut": "1"
         },
         {
           "FriendlyName": "code 2",
-          "ValueID": "code 2",
+          "CodeID": "code 2",
           "Shortcut": "2"
         }
       ]
     },
     {
       "SchemeID": "scheme 2",
+      "Name": "Scheme 2",
+      "Version": "0.0.0.1",
       "Codes": [
         {
           "FriendlyName": "code 1",
-          "ValueID": "code 1",
+          "CodeID": "code 1",
           "Color": "#f46241",
           "Shortcut": "a"
         },
         {
           "FriendlyName": "code 2",
-          "ValueID": "code 2",
+          "CodeID": "code 2",
           "Shortcut": "b"
         }
       ]
