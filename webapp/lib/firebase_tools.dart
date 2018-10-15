@@ -33,11 +33,7 @@ updateMessage(Dataset dataset, Message msg) {
   var docPath = "datasets/${dataset.id}/msgs/${msg.id}";
 
   if (TEST_MODE) {
-    firestoreCallLog.add({
-      'callType': 'updateMessage',
-      'target': '$docPath',
-      'content': msg.toMap()
-    });
+    logFirestoreCall('updateMessage', '$docPath', msg.toMap());
     return;
   }
 
@@ -81,11 +77,7 @@ Dataset loadDataset(String datasetName) {
   }
 
   if (TEST_MODE) {
-    firestoreCallLog.add({
-      'callType': 'loadDataset',
-      'target': '$datasetName',
-      'content': jsonDatasetTwoSchemes
-    });
+    logFirestoreCall('loadDataset', '$datasetName', jsonDatasetTwoSchemes);
     return new Dataset.fromJson(jsonDatasetTwoSchemes);
   }
 
