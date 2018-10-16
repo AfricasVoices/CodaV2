@@ -66,6 +66,7 @@ class CodaUI {
       displayUrlErrorView(e.toString());
       log.verbose(e.toString());
       log.verbose(s.toString());
+      hideLoader();
       return;
     }
 
