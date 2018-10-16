@@ -81,9 +81,8 @@ class CodaUI {
         default:
           throw "Change type '$changeType' not supported.";
       }
+      hideLoader();
     });
-
-    hideLoader();
   }
 
   displayDatasetHeadersView(Dataset dataset) {
