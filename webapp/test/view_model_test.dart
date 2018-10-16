@@ -151,8 +151,12 @@ void main() {
     table.id = "message-coding-table";
     document.body.append(table);
     Dataset dataset = new Dataset.fromFirebaseMap('test', jsonDatasetTwoSchemes);
+    // Remove the messages to simulate adding them afterwards
+    List<Message> messages = dataset.messages;
+    dataset.messages = [];
     CodaUI ui = new CodaUI();
-    ui.displayDatasetView(dataset);
+    ui.displayDatasetHeadersView(dataset);
+    ui.addMessagesToView(messages);
 
     test("from empty", () async {
       MessageViewModel message = ui.messages[0];

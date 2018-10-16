@@ -99,15 +99,7 @@ void authStateObserver(firebase.User user) async {
     signInButtonNav.setAttribute('hidden', 'true');
     signInPanel.setAttribute('hidden', 'true');
 
-    // Load the data for this user
-    String datasetName = Uri.base.queryParameters["dataset"];
-    var dataset;
-    try {
-      dataset = await fbt.loadDataset(datasetName);
-    } catch (e) {
-      ui.codaUI.displayUrlErrorView(e.toString());
-      return;
-    }
-    ui.codaUI.displayDatasetView(dataset);
+    // Display dataset view
+    ui.codaUI.displayDatasetView();
   }
 }

@@ -54,23 +54,38 @@ class CodaUI {
     otherContent.text = text;
   }
 
-  displayDatasetView(Dataset dataset) {
-    // We need to use animation frames because otherwise the browser doesn't actually do the changes we ask for
-    // in the showLoader method before displaying the dataset view (which is quite a heavy DOM method),
-    // so I'm guessing it tries to bundle them up.
-    // With animation frames, we can be explicit that we want to show the loader first, and hide it at the end.
-    window.requestAnimationFrame((_) {
-      showLoader();
-      window.requestAnimationFrame((_) {
-        _displayDatasetView(dataset);
-        window.requestAnimationFrame((_){
-          hideLoader();
-        });
-      });
+  displayDatasetView() async {
+    showLoader();
+
+    // Load the dataset
+    String datasetId = Uri.base.queryParameters["dataset"];
+    try {
+      dataset = await fbt.loadDatasetWithOnlyCodeSchemes(datasetId);
+      displayDatasetHeadersView(dataset);
+    } catch (e, s) {
+      displayUrlErrorView(e.toString());
+      log.verbose(e.toString());
+      log.verbose(s.toString());
+      return;
+    }
+
+    fbt.setupListenerForFirebaseMessageUpdates(dataset, (List<Message> messages, fbt.ChangeType changeType) {
+      switch(changeType) {
+        case fbt.ChangeType.added:
+          addMessagesToView(messages);
+          break;
+        case fbt.ChangeType.modified:
+          updateMessagesInView(messages);
+          break;
+        default:
+          throw "Change type '$changeType' not supported.";
+      }
     });
+
+    hideLoader();
   }
 
-  _displayDatasetView(Dataset dataset) {
+  displayDatasetHeadersView(Dataset dataset) {
     // Prepare for displaying the dataset view by clearing up the DOM.
     clearMessageCodingTable(); // Clear up the table before loading the new dataset.
     otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
@@ -82,10 +97,8 @@ class CodaUI {
     this.messageMap = {};
 
     messageCodingTable.append(createTableHeader(dataset));
-    messageCodingTable.append(createTableBody(dataset));
+    messageCodingTable.append(createEmptyTableBody(dataset));
     addListenersToMessageCodingTable();
-
-    CodeSelector.activeCodeSelector = messages[0].codeSelectors[0];
   }
 
   TableSectionElement createTableHeader(Dataset dataset) {
@@ -106,17 +119,28 @@ class CodaUI {
     return header;
   }
 
-  TableSectionElement createTableBody(Dataset dataset) {
-    TableSectionElement body = new Element.tag('tbody');
+  TableSectionElement createEmptyTableBody(Dataset dataset) {
+    return new Element.tag('tbody');
+  }
 
-    dataset.messages.forEach((message) {
+  void addMessagesToView(List<Message> newMessages) {
+    TableSectionElement body = messageCodingTable.tBodies.first;
+
+    newMessages.forEach((message) {
       MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
       messages.add(messageViewModel);
       messageMap[message.id] = messageViewModel;
+      dataset.messages.add(message);
       body.append(messageViewModel.viewElement);
     });
+  }
 
-    return body;
+  void updateMessagesInView(List<Message> changedMessages) {
+    changedMessages.forEach((message) {
+      messageMap[message.id].update(message);
+      int index = dataset.messages.indexWhere((m) => m.id == message.id);
+      dataset.messages[index] = message;
+    });
   }
 
   addListenersToMessageCodingTable() {

@@ -28,13 +28,7 @@ class MessageViewModel {
     dataset.codeSchemes.forEach((scheme) {
       CodeSelector codeSelector = new CodeSelector(scheme);
       codeSelectors.add(codeSelector);
-      // If the message is already labelled in this scheme, select that code.
-      var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
-      if (existingLabels.isNotEmpty) {
-        Label label = existingLabels.first;
-        codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
-        codeSelector.checked = label.checked;
-      }
+      displayLatestLabelForCodeSelector(codeSelector);
       viewElement.addCell()
         ..classes.add('message-code')
         ..append(codeSelector.viewElement);
@@ -86,6 +80,21 @@ class MessageViewModel {
         checked: checked
         ));
     fbt.updateMessage(dataset, message);
+  }
+
+  void update(Message newMessage) {
+    this.message = newMessage;
+    // The only changes we expect are in the coding, so no need to update id or text.
+    codeSelectors.forEach((codeSelector) => displayLatestLabelForCodeSelector(codeSelector));
+  }
+
+  void displayLatestLabelForCodeSelector(CodeSelector codeSelector) {
+    var existingLabels = message.labels.where((label) => label.schemeId == codeSelector.scheme.id);
+    if (existingLabels.isNotEmpty) {
+      Label label = existingLabels.first;
+      codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
+      codeSelector.checked = label.checked;
+    }
   }
 }
 
