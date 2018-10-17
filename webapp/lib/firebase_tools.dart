@@ -83,7 +83,7 @@ void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListe
       return;
     }
 
-    log.verbose("setupListenerForFirebaseMessageUpdates: Starting processing ${querySnapshot.size} messages.");
+    log.verbose("setupListenerForFirebaseMessageUpdates: Starting processing ${querySnapshot.docChanges().length} messages.");
     List<Message> added = [];
     List<Message> modified = [];
     querySnapshot.docChanges().forEach((documentChange) {
@@ -92,10 +92,12 @@ void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListe
         added.add(message);
       } else if (documentChange.type == "modified") {
         modified.add(message);
-      } else {} // skip anything else
+      } else {
+        log.log("setupListenerForFirebaseMessageUpdates: Warning! Skip processing ${documentChange.type} message ${message.id}");
+      }
       log.verbose("setupListenerForFirebaseMessageUpdates: Processed ${documentChange.type} message ${message.id}");
     });
-    log.verbose("setupListenerForFirebaseMessageUpdates: Finished processing ${querySnapshot.size} messages.");
+    log.verbose("setupListenerForFirebaseMessageUpdates: Finished processing ${querySnapshot.docChanges().length} messages.");
 
     listener(added, ChangeType.added);
     listener(modified, ChangeType.modified);
