@@ -163,14 +163,14 @@ class CodeSelector {
     });
     viewElement.append(dropdown);
 
-    warning = new Element.tag('i');
+    warning = new SpanElement();
     warning
-      ..classes.add('fas')
-      ..classes.add('fa-exclamation')
       ..classes.add('warning')
       ..classes.add('hidden')
       ..attributes['data-toggle'] = 'tooltip'
-      ..attributes['data-placement'] = 'bottom';
+      ..attributes['data-placement'] = 'bottom'
+      ..attributes['title'] = 'Latest code is not in code scheme or is not visible in Coda'
+      ..text = '!';
     viewElement.append(warning);
   }
 
