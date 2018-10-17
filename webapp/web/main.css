@@ -168,18 +168,18 @@ main tbody {
   width: 50px;
 }
 
-.message-code {
+.message-code,
+.message-code .input-group {
   width: 200px;
 }
 
 .input-group {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
 }
 
 .input-group .code-selector {
-  flex: 1;
+  width: 160px;
 }
 
 .input-group .warning {
