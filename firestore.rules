@@ -1,0 +1,7 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /datasets/{dataset}/{document=**} {
+      allow read, write: if exists(/databases/$(database)/documents/datasets/$(dataset)/users/$(request.auth.token.email))
+    }
+  }
+}
