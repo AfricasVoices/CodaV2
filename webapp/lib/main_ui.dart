@@ -133,6 +133,11 @@ class CodaUI {
       dataset.messages.add(message);
       body.append(messageViewModel.viewElement);
     });
+
+    // It's the first time we're adding messages to the table, select the first code selector
+    if (CodeSelector.activeCodeSelector == null) {
+      CodeSelector.activeCodeSelector = messages.first.codeSelectors.first;
+    }
   }
 
   void updateMessagesInView(List<Message> changedMessages) {
