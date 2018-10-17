@@ -42,7 +42,7 @@ class MessageViewModel {
     var existingLabels = message.labels.where((label) => label.schemeId == schemeId);
     // Don't allow checking when a code hasn't been picked from the scheme
     if (existingLabels.isEmpty || existingLabels.first.codeId == Label.MANUALLY_UNCODED) {
-      codeSelectors.singleWhere((cs) => cs.scheme.id == schemeId).checked = false;
+      getCodeSelectorForSchemeId(schemeId).checked = false;
       log.verbose("Cancel message checkbox change on empty code: $messageId $schemeId");
       return;
     }
@@ -56,7 +56,7 @@ class MessageViewModel {
     fbt.updateMessage(dataset, message);
 
     // Update the origin
-    displayLatestLabelForCodeSelector(codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId));
+    displayLatestLabelForCodeSelector(getCodeSelectorForSchemeId(schemeId));
   }
 
   schemeCodeChanged(Dataset dataset, String schemeId, String codeId) {
@@ -82,7 +82,7 @@ class MessageViewModel {
     fbt.updateMessage(dataset, message);
 
     // Update the checkbox and origin
-    displayLatestLabelForCodeSelector(codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId));
+    displayLatestLabelForCodeSelector(getCodeSelectorForSchemeId(schemeId));
   }
 
   void update(Message newMessage) {
@@ -96,6 +96,9 @@ class MessageViewModel {
     this.message = newMessage;
     codeSelectors.forEach((codeSelector) => displayLatestLabelForCodeSelector(codeSelector));
   }
+
+  CodeSelector getCodeSelectorForSchemeId(String schemeId) =>
+    codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
 
   Label getLatestLabelForScheme(Scheme scheme) {
     var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
