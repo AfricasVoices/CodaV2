@@ -54,6 +54,10 @@ class MessageViewModel {
         checked: checked
         ));
     fbt.updateMessage(dataset, message);
+
+    // Update the origin
+    CodeSelector codeSelector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
+    codeSelector.origin = message.labels[0].labelOrigin.name;
   }
 
   schemeCodeChanged(Dataset dataset, String schemeId, String codeId) {
@@ -70,9 +74,6 @@ class MessageViewModel {
       checked = true;
     }
 
-    // Update the checkbox
-    codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId).checked = checked;
-
     // Update the data-model by prepending this decision
     message.labels.insert(0,
       new Label(schemeId, new DateTime.now(), codeId,
@@ -80,6 +81,12 @@ class MessageViewModel {
         checked: checked
         ));
     fbt.updateMessage(dataset, message);
+
+    // Update the checkbox and origin
+    CodeSelector codeSelector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
+    codeSelector
+      ..checked = checked
+      ..origin = message.labels[0].labelOrigin.name;
   }
 
   void update(Message newMessage) {
@@ -106,6 +113,7 @@ class MessageViewModel {
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
+      codeSelector.origin = label.labelOrigin.name;
       return;
     }
     codeSelector.selectedOption = CodeSelector.EMPTY_CODE_VALUE;
@@ -118,6 +126,7 @@ class CodeSelector {
   InputElement checkbox;
   SelectElement dropdown;
   Element warning;
+  DivElement originElement;
 
   static CodeSelector _activeCodeSelector;
   static CodeSelector get activeCodeSelector => _activeCodeSelector;
@@ -172,6 +181,10 @@ class CodeSelector {
       ..attributes['title'] = 'Latest code is not in code scheme or is not visible in Coda'
       ..text = '!';
     viewElement.append(warning);
+
+    originElement = new DivElement();
+    originElement.classes.add('origin');
+    viewElement.append(originElement);
   }
 
   /// When an option from the list has been selected manually, the warning message should be hidden if it's not already.
@@ -193,4 +206,6 @@ class CodeSelector {
   }
 
   String get selectedOption => dropdown.selectedOptions[0].attributes['valueid'];
+
+  set origin(String originName) => originElement.text = 'Coded by $originName';
 }
