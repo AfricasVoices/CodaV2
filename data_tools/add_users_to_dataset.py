@@ -6,7 +6,7 @@ import argparse
 import json
 
 
-parser = argparse.ArgumentParser(description="push data to firestore")
+parser = argparse.ArgumentParser(description="push users to firestore")
 parser.add_argument("crypto_token_path", help="Path to crypto key")
 parser.add_argument("dataset_id", help="ID of the dataset")
 parser.add_argument("--use_paths", help="Use paths instead of reading items", action='store_const',
