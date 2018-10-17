@@ -1,5 +1,5 @@
 /**
- * Represents a snackbar UI widget for showing notifications or errors in Coda.
+ * A snackbar UI widget for showing notifications or errors in Coda.
  */
 import 'dart:async';
 import 'dart:html';
