@@ -31,3 +31,18 @@ When you're ready for deployment, the code needs to be converted from Dart to Ja
 ```
 CodaV2/webapp$ webdev build
 ```
+
+There are two scripts that run the build steps and deploy to the right place on Firebase serving. For development deployment:
+
+```
+CodaV2/deploy_dev.sh
+```
+
+and for production use
+```
+CodaV2/deploy_prod.sh
+```
+
+
+
+
