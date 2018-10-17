@@ -16,30 +16,6 @@
         <a class="navbar-brand" href="#">Coda v2</a>
         <ul class="left navbar-item-list" id="coding-nav" hidden="true">
 
-          <li class="dropdown">
-            <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><b>Dataset</b><i class="fas fa-caret-down" style="margin-left: 2px"></i></a>
-            <ul class="dropdown-menu">
-              <li><a class="btn-file">Load new dataset from...<input id="dataset-file" type="file"/></a></li>
-              <li><a class="btn-file">Load new code scheme from...<input id="scheme-file" type="file"/></a></li>
-              <li><a id="export-dataset">Export dataset</a></li>
-              <li><a id="export-instrumentation">Export instrumentation</a></li>
-            </ul>
-          </li>
-
-          <li>
-            <button id="save-all-button" type="button" data-toggle="tooltip" data-placement="bottom" title="Save changes within Coda">
-              <i class="fas fa-save"></i>
-              Save
-            </button>
-          </li>
-
-          <li>
-            <button id="auto-code-now-button" type="button" data-toggle="tooltip" data-placement="bottom" title="Click to automatically assign codes">
-              <i class="fas fa-sync-alt"></i>
-              Auto-code now!
-            </button>
-          </li>
-
           <li>
             <div class="text-and-button-group">
               Code by
@@ -50,18 +26,6 @@
                 <input id="vertical-coding" type="radio" name="code-by-group">
                 <label class="button" for="vertical-coding">message</label>
               </div>
-            </div>
-          </li>
-
-          <li>
-            <div class="button-group">
-              <button id="undo" type="button" data-toggle="tooltip" data-placement="bottom" title="Undo recent change">
-                <i class="fas fa-undo"></i>
-              </button>
-
-              <button id="redo" type="button" data-toggle="tooltip" data-placement="bottom" title="Redo recent change">
-                <i class="fas fa-redo"></i>
-              </button>
             </div>
           </li>
 
