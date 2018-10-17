@@ -95,7 +95,6 @@ void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListe
       } else {
         log.log("setupListenerForFirebaseMessageUpdates: Warning! Skip processing ${documentChange.type} message ${message.id}");
       }
-      log.verbose("setupListenerForFirebaseMessageUpdates: Processed ${documentChange.type} message ${message.id}");
     });
     log.verbose("setupListenerForFirebaseMessageUpdates: Finished processing ${querySnapshot.docChanges().length} messages.");
 
