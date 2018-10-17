@@ -2,10 +2,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-import validate_code_scheme
-
 import argparse
-import json
 
 parser = argparse.ArgumentParser(description="push data to firestore")
 parser.add_argument("crypto_token_path", help="Path to crypto key", nargs=1)
