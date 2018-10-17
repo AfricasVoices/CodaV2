@@ -1,5 +1,5 @@
 /**
- * A snackbar UI widget for showing notifications or errors in Coda.
+ * A loader animation UI widget for showing dataset loading progress.
  */
 import 'dart:html';
 
