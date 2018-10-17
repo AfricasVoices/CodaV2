@@ -164,7 +164,7 @@ class CodaUI {
         return;
       }
       if (target is SelectElement) { // change on dropdown select element
-        CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+        CodeSelector codeSelector = message.getCodeSelectorForSchemeId(schemeID);
         CodeSelector.activeCodeSelector = codeSelector;
         message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
         codeSelector.hideWarning();
@@ -204,7 +204,7 @@ class CodaUI {
         String messageID = clickedRow.attributes['message-id'];
         MessageViewModel message = messageMap[messageID];
         String schemeID = inputGroup.attributes['scheme-id'];
-        CodeSelector codeSelector = message.codeSelectors.singleWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+        CodeSelector codeSelector = message.getCodeSelectorForSchemeId(schemeID);
         CodeSelector.activeCodeSelector = codeSelector;
       }
 
