@@ -14,6 +14,12 @@ class DatasetLoadException implements Exception {
   String toString() => _message;
 }
 
+typedef MessageUpdatesListener(List<Message> messages, ChangeType changeType);
+enum ChangeType {
+  added,
+  modified
+}
+
 firestore.Firestore _firestoreInstance = firebase.firestore();
 
 init() {
@@ -64,27 +70,41 @@ Future<List<Scheme>> loadSchemes(String datasetId) async {
   return ret;
 }
 
-Future<List<Message>> loadMessages(String datasetId) async {
-  List<Message> ret = <Message>[];
+void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListener listener) {
+  log.verbose("setupListenerForFirebaseMessageUpdates: Loading messages for: ${dataset.id}");
 
-  log.verbose("loadMessages: Loading messages for: $datasetId");
+  var messagesCollectionRoot = "/datasets/${dataset.id}/messages";
+  log.verbose("setupListenerForFirebaseMessageUpdates: Root of query: $messagesCollectionRoot");
 
-  var messagesCollectionRoot = "/datasets/$datasetId/messages";
-  log.verbose("loadMessages: Root of query: $messagesCollectionRoot");
+  _firestoreInstance.collection(messagesCollectionRoot).onSnapshot.listen((querySnapshot) {
+    // No need to process local writes to Firebase
+    if (querySnapshot.metadata.hasPendingWrites) {
+      log.verbose("setupListenerForFirebaseMessageUpdates: Skipping processing of local messages");
+      return;
+    }
 
-  var messagesQuery = await _firestoreInstance.collection(messagesCollectionRoot).get();
-  log.verbose("loadMessages: Query constructed");
+    log.verbose("setupListenerForFirebaseMessageUpdates: Starting processing ${querySnapshot.docChanges().length} messages.");
+    List<Message> added = [];
+    List<Message> modified = [];
+    querySnapshot.docChanges().forEach((documentChange) {
+      Message message = new Message.fromFirebaseMap(documentChange.doc.data());
+      if (documentChange.type == "added") {
+        added.add(message);
+      } else if (documentChange.type == "modified") {
+        modified.add(message);
+      } else {
+        log.log("setupListenerForFirebaseMessageUpdates: Warning! Skip processing ${documentChange.type} message ${message.id}");
+      }
+      log.verbose("setupListenerForFirebaseMessageUpdates: Processed ${documentChange.type} message ${message.id}");
+    });
+    log.verbose("setupListenerForFirebaseMessageUpdates: Finished processing ${querySnapshot.docChanges().length} messages.");
 
-  messagesQuery.forEach((message) {
-    log.verbose('loadMessages: Processing ${message.id}');
-    ret.add(new Message.fromFirebaseMap(message.data()));
+    listener(added, ChangeType.added);
+    listener(modified, ChangeType.modified);
   });
-
-  log.verbose("loadMessages: ${ret.length} messages loaded");
-  return ret;
 }
 
-Future<Dataset> loadDataset(String datasetId) async {
+Future<Dataset> loadDatasetWithOnlyCodeSchemes(String datasetId) async {
   log.verbose("Loading dataset: $datasetId");
 
   // TODO handle non-datasets for demo usage
@@ -94,13 +114,10 @@ Future<Dataset> loadDataset(String datasetId) async {
 
   if (TEST_MODE) {
     log.logFirestoreCall('loadDataset', '$datasetId', jsonDatasetTwoSchemes);
-    return new Dataset('two schemes',
-      jsonDatasetTwoSchemes['Documents'],
-      jsonDatasetTwoSchemes['CodeSchemes']);
+    return new Dataset('two schemes', [], jsonDatasetTwoSchemes['CodeSchemes']);
   }
 
   List<Scheme> schemes = await loadSchemes(datasetId);
-  List<Message> messages = await loadMessages(datasetId);
 
-  return new Dataset(datasetId, messages, schemes);
+  return new Dataset(datasetId, [], schemes);
 }

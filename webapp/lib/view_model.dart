@@ -28,13 +28,7 @@ class MessageViewModel {
     dataset.codeSchemes.forEach((scheme) {
       CodeSelector codeSelector = new CodeSelector(scheme);
       codeSelectors.add(codeSelector);
-      // If the message is already labelled in this scheme, select that code.
-      var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
-      if (existingLabels.isNotEmpty) {
-        Label label = existingLabels.first;
-        codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
-        codeSelector.checked = label.checked;
-      }
+      displayLatestLabelForCodeSelector(codeSelector);
       viewElement.addCell()
         ..classes.add('message-code')
         ..append(codeSelector.viewElement);
@@ -86,6 +80,35 @@ class MessageViewModel {
         checked: checked
         ));
     fbt.updateMessage(dataset, message);
+  }
+
+  void update(Message newMessage) {
+    // The only changes we expect are in the coding, so warn if the id or text has changed.
+    if (newMessage.id != message.id) {
+      log.log("updateMessage: Warning! The ID of the updated message (id=${newMessage.id}) differs from the ID of the existing message (id=${message.id})");
+    }
+    if (newMessage.text != message.text) {
+      log.log("updateMessage: Warning! The text of the updated message differs from the ID of the existing message (message-id=${message.id})");
+    }
+    this.message = newMessage;
+    codeSelectors.forEach((codeSelector) => displayLatestLabelForCodeSelector(codeSelector));
+  }
+
+  Label getLatestLabelForScheme(Scheme scheme) {
+    var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
+    if (existingLabels.isNotEmpty) {
+      return existingLabels.first;
+    }
+    return null;
+  }
+  void displayLatestLabelForCodeSelector(CodeSelector codeSelector) {
+    Label label = getLatestLabelForScheme(codeSelector.scheme);
+    if (label != null) {
+      codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
+      codeSelector.checked = label.checked;
+      return;
+    }
+    codeSelector.selectedOption = CodeSelector.EMPTY_CODE_VALUE;
   }
 }
 
