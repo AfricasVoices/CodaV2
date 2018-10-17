@@ -184,6 +184,8 @@ main tbody {
   display: block;
   margin: auto 0 auto 4px;
   color: #ffaa00;
+  font-weight: bold;
+  cursor: default;
 }
 
 .input-group .warning.hidden {
