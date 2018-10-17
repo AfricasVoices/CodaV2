@@ -7,7 +7,7 @@ import 'dart:html';
 
 import 'logger.dart' as log;
 import 'data_model.dart';
-
+import 'snackbar.dart' as snackbar;
 import 'authentication.dart' as auth;
 import 'firebase_tools.dart' as fbt;
 
@@ -39,6 +39,7 @@ class CodaUI {
   CodaUI() {
     fbt.init();
     auth.init();
+    snackbar.init();
   }
 
   displaySignedOutView() {

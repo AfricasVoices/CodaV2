@@ -232,7 +232,7 @@ main tbody {
   z-index: 1;
   width: 150px;
   height: 150px;
-  margin: -75px 0 0 -75px;
+  margin: -75px 0 0 -75px; /* half of width/height to be able to center with left/top: 50% */
   line-height: 150px;
   text-align: center;
 }
@@ -258,4 +258,69 @@ main tbody {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/*** Snackbar ***/
+#snackbar {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  width: 250px;
+  margin: 0 -125px; /* half of width to be able to center horizontally with left: 50% */
+  padding: 18px;
+  box-shadow: 0 0 20px -7px;
+  text-align: center;
+
+  /* Copy the style from buttons */
+  -webkit-appearance: none;
+  border: 1px solid #d8d8d8;
+  border-radius: 0;
+}
+
+#snackbar[hidden] {
+  display: none;
+}
+
+#snackbar[type=notification] {
+  background: #ffffff;
+}
+
+#snackbar[type=warning] {
+  background: #ffe077;
+}
+
+#snackbar[type=error] {
+  background: #ffa088;
+}
+
+#snackbar .contents {
+  color: #555555;
+}
+
+#snackbar .close {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+}
+
+#snackbar .close:before,
+#snackbar .close:after {
+  position: absolute;
+  left: 8px;
+  content: ' ';
+  height: 16px;
+  width: 2px;
+  background: #999999;
+}
+#snackbar .close:before {
+  transform: rotate(45deg);
+}
+#snackbar .close:after {
+  transform: rotate(-45deg);
+}
+#snackbar .close:hover:before,
+#snackbar .close:hover:after {
+  background: #555555;
 }
