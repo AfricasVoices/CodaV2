@@ -56,8 +56,7 @@ class MessageViewModel {
     fbt.updateMessage(dataset, message);
 
     // Update the origin
-    CodeSelector codeSelector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
-    codeSelector.origin = message.labels[0].labelOrigin.name;
+    displayLatestLabelForCodeSelector(codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId));
   }
 
   schemeCodeChanged(Dataset dataset, String schemeId, String codeId) {
@@ -83,10 +82,7 @@ class MessageViewModel {
     fbt.updateMessage(dataset, message);
 
     // Update the checkbox and origin
-    CodeSelector codeSelector = codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
-    codeSelector
-      ..checked = checked
-      ..origin = message.labels[0].labelOrigin.name;
+    displayLatestLabelForCodeSelector(codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId));
   }
 
   void update(Message newMessage) {
@@ -108,15 +104,18 @@ class MessageViewModel {
     }
     return null;
   }
+
   void displayLatestLabelForCodeSelector(CodeSelector codeSelector) {
     Label label = getLatestLabelForScheme(codeSelector.scheme);
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
-      codeSelector.origin = label.labelOrigin.name;
+      codeSelector.origin = 'Coded by ${label.labelOrigin.name}';
       return;
     }
     codeSelector.selectedOption = CodeSelector.EMPTY_CODE_VALUE;
+    codeSelector.checked = false;
+    codeSelector.origin = '';
   }
 }
 
@@ -207,5 +206,5 @@ class CodeSelector {
 
   String get selectedOption => dropdown.selectedOptions[0].attributes['valueid'];
 
-  set origin(String originName) => originElement.text = 'Coded by $originName';
+  set origin(String text) => originElement.text = text;
 }
