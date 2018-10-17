@@ -93,12 +93,14 @@ Map jsonDatasetOneScheme = {
           "FriendlyName": "code 1",
           "CodeID": "code 1",
           "Color": "#f46241",
-          "Shortcut": "1"
+          "Shortcut": "1",
+          "VisibleInCoda": true
         },
         {
           "FriendlyName": "code 2",
           "CodeID": "code 2",
-          "Shortcut": "2"
+          "Shortcut": "2",
+          "VisibleInCoda": true
         }
       ]
     },
@@ -230,12 +232,14 @@ Map jsonDatasetTwoSchemes = {
           "FriendlyName": "code 1",
           "CodeID": "code 1",
           "Color": "#f46241",
-          "Shortcut": "1"
+          "Shortcut": "1",
+          "VisibleInCoda": true
         },
         {
           "FriendlyName": "code 2",
           "CodeID": "code 2",
-          "Shortcut": "2"
+          "Shortcut": "2",
+          "VisibleInCoda": true
         }
       ]
     },
@@ -248,12 +252,14 @@ Map jsonDatasetTwoSchemes = {
           "FriendlyName": "code 1",
           "CodeID": "code 1",
           "Color": "#f46241",
-          "Shortcut": "a"
+          "Shortcut": "a",
+          "VisibleInCoda": true
         },
         {
           "FriendlyName": "code 2",
           "CodeID": "code 2",
-          "Shortcut": "b"
+          "Shortcut": "b",
+          "VisibleInCoda": true
         }
       ]
     }
@@ -309,12 +315,14 @@ Map jsonDatasetTwoSchemesNoCodes = {
           "FriendlyName": "code 1",
           "CodeID": "code 1",
           "Color": "#f46241",
-          "Shortcut": "1"
+          "Shortcut": "1",
+          "VisibleInCoda": true
         },
         {
           "FriendlyName": "code 2",
           "CodeID": "code 2",
-          "Shortcut": "2"
+          "Shortcut": "2",
+          "VisibleInCoda": true
         }
       ]
     },
@@ -327,12 +335,14 @@ Map jsonDatasetTwoSchemesNoCodes = {
           "FriendlyName": "code 1",
           "CodeID": "code 1",
           "Color": "#f46241",
-          "Shortcut": "a"
+          "Shortcut": "a",
+          "VisibleInCoda": true
         },
         {
           "FriendlyName": "code 2",
           "CodeID": "code 2",
-          "Shortcut": "b"
+          "Shortcut": "b",
+          "VisibleInCoda": true
         }
       ]
     }
