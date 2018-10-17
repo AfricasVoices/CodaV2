@@ -152,6 +152,8 @@ class CodeSelector {
       ..selected = true;
     dropdown.append(option);
     scheme.codes.forEach((code) {
+      if (!code.visibleInCoda) return;
+
       OptionElement option = new OptionElement();
       option
         ..attributes['schemeid'] = scheme.id
