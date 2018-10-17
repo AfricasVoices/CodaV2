@@ -211,6 +211,8 @@ class CodaUI {
     });
 
     messageCodingTable.onKeyDown.listen((event) {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
       if (event.key == 'Tab') {
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageID = row.attributes['message-id'];
