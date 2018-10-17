@@ -83,18 +83,32 @@ class MessageViewModel {
   }
 
   void update(Message newMessage) {
+    // The only changes we expect are in the coding, so warn if the id or text has changed.
+    if (newMessage.id != message.id) {
+      log.log("updateMessage: Warning! The ID of the updated message (id=${newMessage.id}) differs from the ID of the existing message (id=${message.id})");
+    }
+    if (newMessage.text != message.text) {
+      log.log("updateMessage: Warning! The text of the updated message differs from the ID of the existing message (message-id=${message.id})");
+    }
     this.message = newMessage;
-    // The only changes we expect are in the coding, so no need to update id or text.
     codeSelectors.forEach((codeSelector) => displayLatestLabelForCodeSelector(codeSelector));
   }
 
-  void displayLatestLabelForCodeSelector(CodeSelector codeSelector) {
-    var existingLabels = message.labels.where((label) => label.schemeId == codeSelector.scheme.id);
+  Label getLatestLabelForScheme(Scheme scheme) {
+    var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
     if (existingLabels.isNotEmpty) {
-      Label label = existingLabels.first;
+      return existingLabels.first;
+    }
+    return null;
+  }
+  void displayLatestLabelForCodeSelector(CodeSelector codeSelector) {
+    Label label = getLatestLabelForScheme(codeSelector.scheme);
+    if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
+      return;
     }
+    codeSelector.selectedOption = CodeSelector.EMPTY_CODE_VALUE;
   }
 }
 
