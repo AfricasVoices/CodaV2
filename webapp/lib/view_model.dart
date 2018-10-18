@@ -113,7 +113,7 @@ class MessageViewModel {
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
-      codeSelector.origin = 'Coded by ${label.labelOrigin.name}';
+      codeSelector.origin = label.labelOrigin.name;
       return;
     }
     codeSelector.selectedOption = CodeSelector.EMPTY_CODE_VALUE;
