@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' as firestore;
+
 import 'firebase_constants.dart' as firebase_constants;
 import 'authentication.dart' as auth;
 import 'data_model.dart';
@@ -35,7 +36,8 @@ init() {
 }
 
 updateMessage(Dataset dataset, Message msg) {
-  log.verbose("Updating: $msg");
+  Stopwatch sw = new Stopwatch()..start();
+  log.trace("updateMessage", "$msg");
 
   var docPath = "datasets/${dataset.id}/messages/${msg.id}";
 
@@ -45,45 +47,49 @@ updateMessage(Dataset dataset, Message msg) {
   }
 
   _firestoreInstance.doc(docPath).set(msg.toFirebaseMap()).then((_) {
-    log.verbose("Store complete: ${msg.id}");
+    log.trace("updateMessage", "Complete: ${msg.id}");
+    log.perf("updateMessage", sw.elapsedMilliseconds);
   });
 }
 
 Future<List<Scheme>> loadSchemes(String datasetId) async {
   List<Scheme> ret = <Scheme>[];
+  Stopwatch sw = new Stopwatch()..start();
 
-  log.verbose("loadSchemes: Loading schemes for: $datasetId");
+  log.trace("loadSchemes", "Loading schemes for: $datasetId");
 
   var schemeCollectionRoot = "/datasets/$datasetId/code_schemes";
-  log.verbose("loadSchemes: Root of query: $schemeCollectionRoot");
+  log.trace("loadSchemes", "Root of query: $schemeCollectionRoot");
 
   var schemesQuery = await _firestoreInstance.collection(schemeCollectionRoot).get();
-  log.verbose("loadSchemes: Query constructed");
+  log.trace("loadSchemes", "Query constructed");
 
   schemesQuery.forEach((scheme) {
-    log.verbose("loadSchemes: Processing ${scheme.id}");
+    log.trace("loadSchemes", "Processing ${scheme.id}");
 
     ret.add(new Scheme.fromFirebaseMap(scheme.data()));
   });
 
-  log.verbose("loadSchemes: ${ret.length} schemes loaded");
+  log.trace("loadSchemes", "${ret.length} schemes loaded in ${sw.elapsedMilliseconds}ms");
+  log.perf("loadSchemes", sw.elapsedMilliseconds);
   return ret;
 }
 
 void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListener listener) {
-  log.verbose("setupListenerForFirebaseMessageUpdates: Loading messages for: ${dataset.id}");
+  Stopwatch sw = new Stopwatch()..start();
+  log.trace("setupListenerForFirebaseMessageUpdates", "Loading messages for: ${dataset.id}");
 
   var messagesCollectionRoot = "/datasets/${dataset.id}/messages";
-  log.verbose("setupListenerForFirebaseMessageUpdates: Root of query: $messagesCollectionRoot");
+  log.trace("setupListenerForFirebaseMessageUpdates", "Root of query: $messagesCollectionRoot");
 
   _firestoreInstance.collection(messagesCollectionRoot).onSnapshot.listen((querySnapshot) {
     // No need to process local writes to Firebase
     if (querySnapshot.metadata.hasPendingWrites) {
-      log.verbose("setupListenerForFirebaseMessageUpdates: Skipping processing of local messages");
+      log.trace("setupListenerForFirebaseMessageUpdates", "Skipping processing of local messages");
       return;
     }
 
-    log.verbose("setupListenerForFirebaseMessageUpdates: Starting processing ${querySnapshot.docChanges().length} messages.");
+    log.trace("setupListenerForFirebaseMessageUpdates", "Starting processing ${querySnapshot.docChanges().length} messages.");
     List<Message> added = [];
     List<Message> modified = [];
     querySnapshot.docChanges().forEach((documentChange) {
@@ -96,7 +102,8 @@ void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListe
         log.log("setupListenerForFirebaseMessageUpdates: Warning! Skip processing ${documentChange.type} message ${message.id}");
       }
     });
-    log.verbose("setupListenerForFirebaseMessageUpdates: Finished processing ${querySnapshot.docChanges().length} messages.");
+    log.trace("setupListenerForFirebaseMessageUpdates", "Finished processing ${querySnapshot.docChanges().length} messages in ${sw.elapsedMilliseconds}ms.");
+    log.perf("DatasetLoad", sw.elapsedMilliseconds);
 
     listener(added, ChangeType.added);
     listener(modified, ChangeType.modified);
@@ -120,24 +127,27 @@ Future<Dataset> loadDatasetWithOnlyCodeSchemes(String datasetId) async {
 
 Future<List<String>> getDatasetIdsList() async {
   List<String> datasetIds = <String>[];
+  Stopwatch sw = new Stopwatch()..start();
 
-  log.verbose('getDatasetIdsList: Loading dataset list');
+  log.trace("setupListenerForFirebaseMessageUpdates", "Loading dataset list");
 
   var datasetsCollectionRoot = "/datasets";
-  log.verbose("getDatasetIdsList: Root of query: $datasetsCollectionRoot");
+  log.trace("getDatasetIdsList", "Root of query: $datasetsCollectionRoot");
 
   var datasetsQuery = await _firestoreInstance
     .collection(datasetsCollectionRoot)
     .where("users", "array-contains", auth.getUserEmail())
     .get();
-  log.verbose("getDatasetIdsList: Query constructed");
+  log.trace("getDatasetIdsList", "Query constructed");
 
   datasetsQuery.forEach((dataset) {
-    log.verbose("getDatasetIdsList: Processing ${dataset.id}");
+    log.trace("getDatasetIdsList", "Processing ${dataset.id}");
 
     datasetIds.add(dataset.id);
   });
 
-  log.verbose("getDatasetIdsList: ${datasetIds.length} dataset ids collected");
+  log.trace("getDatasetIdsList", "${datasetIds.length} dataset ids collected in ${sw.elapsedMilliseconds}ms.");
+  log.perf("getDatasetIdsList", sw.elapsedMilliseconds);
+
   return datasetIds;
 }
