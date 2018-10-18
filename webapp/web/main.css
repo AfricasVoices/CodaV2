@@ -168,7 +168,29 @@ main tbody {
   width: 50px;
 }
 
+.message-code .scheme-title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.scheme-title .scheme-id {
+  font-size: 10px;
+  font-weight: normal;
+  padding-left: 4px;
+  padding-right: 10px; /* to align with the code selector below */
+}
+
+.scheme-title .scheme-name,
+.scheme-title .scheme-id {
+  display: block;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .message-code,
+.message-code .scheme-title,
 .message-code .input-group {
   width: 200px;
 }
@@ -198,6 +220,8 @@ main tbody {
   font-size: 10px;
   color: #555;
   flex: 1 1 100%;
+  text-align: right;
+  padding-right: 10px; /* to align with the code selector below */
 }
 
 /******* Tabbing ********/
