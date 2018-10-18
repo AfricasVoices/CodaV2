@@ -168,25 +168,20 @@ main tbody {
   width: 50px;
 }
 
-.message-code .scheme-title {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-}
-
 .scheme-title .scheme-id {
   font-size: 10px;
   font-weight: normal;
-  padding-left: 4px;
-  padding-right: 10px; /* to align with the code selector below */
+  color: #555;
+  text-align: right;
 }
 
 .scheme-title .scheme-name,
 .scheme-title .scheme-id {
   display: block;
-  flex: 0 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 30px;
 }
 
 .message-code,
@@ -195,13 +190,15 @@ main tbody {
   width: 200px;
 }
 
+.scheme-title .scheme-name,
+.scheme-title .scheme-id,
+.input-group .code-selector {
+  width: 160px;
+}
+
 .input-group {
   display: flex;
   flex-wrap: wrap;
-}
-
-.input-group .code-selector {
-  width: 160px;
 }
 
 .input-group .warning {
