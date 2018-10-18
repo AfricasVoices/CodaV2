@@ -81,7 +81,7 @@ class CodaUI {
     if (datasetId == null) {
       // Show view for selecting datasets to code
       displayDatasetSelectorView();
-      hideLoader();
+      loader.hideLoader();
       return;
     }
 
