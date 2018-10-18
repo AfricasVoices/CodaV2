@@ -55,11 +55,36 @@ class CodaUI {
     otherContent.text = text;
   }
 
+  displayDatasetSelectorView() async {
+    clearMessageCodingTable(); // Clear up the table.
+    otherContent.innerHtml = ''; // Clear out any of the other content, like error messages.
+    messageCodingNavButtons.setAttribute('hidden', 'true'); // Hide coding buttons.
+    List<String> availableDatasets = await fbt.getDatasetIdsList();
+
+    otherContent.text = 'Available datasets:';
+    UListElement list = new UListElement();
+    otherContent.append(list);
+    for (String datasetId in availableDatasets) {
+      list.append(
+        new LIElement()
+          ..append(new AnchorElement()
+            ..href = '?dataset=$datasetId'
+            ..text = datasetId));
+    }
+  }
+
   displayDatasetView() async {
     showLoader();
 
     // Load the dataset
     String datasetId = Uri.base.queryParameters["dataset"];
+    if (datasetId == null) {
+      // Show view for selecting datasets to code
+      displayDatasetSelectorView();
+      hideLoader();
+      return;
+    }
+
     try {
       dataset = await fbt.loadDatasetWithOnlyCodeSchemes(datasetId);
       displayDatasetHeadersView(dataset);

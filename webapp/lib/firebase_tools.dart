@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firestore.dart' as firestore;
 import 'firebase_constants.dart' as firebase_constants;
+import 'authentication.dart' as auth;
 import 'data_model.dart';
-import 'dataset_tools.dart' as dataset_tools;
 import 'logger.dart' as log;
 import 'config.dart';
 import 'sample_data/sample_json_datasets.dart';
@@ -107,9 +107,6 @@ Future<Dataset> loadDatasetWithOnlyCodeSchemes(String datasetId) async {
   log.verbose("Loading dataset: $datasetId");
 
   // TODO handle non-datasets for demo usage
-  if (datasetId == null) {
-    throw new DatasetLoadException('Sorry, you need to specify a dataset to load.');
-  }
 
   if (TEST_MODE) {
     log.logFirestoreCall('loadDataset', '$datasetId', jsonDatasetTwoSchemes);
@@ -119,4 +116,28 @@ Future<Dataset> loadDatasetWithOnlyCodeSchemes(String datasetId) async {
   List<Scheme> schemes = await loadSchemes(datasetId);
 
   return new Dataset(datasetId, [], schemes);
+}
+
+Future<List<String>> getDatasetIdsList() async {
+  List<String> datasetIds = <String>[];
+
+  log.verbose('getDatasetIdsList: Loading dataset list');
+
+  var datasetsCollectionRoot = "/datasets";
+  log.verbose("getDatasetIdsList: Root of query: $datasetsCollectionRoot");
+
+  var datasetsQuery = await _firestoreInstance
+    .collection(datasetsCollectionRoot)
+    .where("users", "array-contains", auth.getUserEmail())
+    .get();
+  log.verbose("getDatasetIdsList: Query constructed");
+
+  datasetsQuery.forEach((dataset) {
+    log.verbose("getDatasetIdsList: Processing ${dataset.id}");
+
+    datasetIds.add(dataset.id);
+  });
+
+  log.verbose("getDatasetIdsList: ${datasetIds.length} dataset ids collected");
+  return datasetIds;
 }
