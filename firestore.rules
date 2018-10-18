@@ -1,7 +1,23 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /datasets/{dataset}/{document=**} {
-      allow read, write: if exists(/databases/$(database)/documents/datasets/$(dataset)/users/$(request.auth.token.email))
+  	match /datasets/{dataset} {
+    	function userIsAllowed(datasetResource) {
+      	return request.auth.token.email in datasetResource.data.users
+      }
+
+      function getDatasetResource() {
+      	return get(/databases/$(database)/documents/datasets/$(dataset))
+      }
+
+    	allow read: if userIsAllowed(resource)
+
+      match /code_schemes/{scheme=**} {
+      	allow read, write: if userIsAllowed(getDatasetResource())
+      }
+
+      match /messages/{message=**} {
+      	allow read, write: if userIsAllowed(getDatasetResource())
+      }
     }
   }
 }
