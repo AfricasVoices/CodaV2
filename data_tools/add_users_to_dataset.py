@@ -11,13 +11,14 @@ parser.add_argument("crypto_token_path", help="Path to crypto key")
 parser.add_argument("dataset_id", help="ID of the dataset")
 parser.add_argument("--use_paths", help="Use paths instead of reading items", action='store_const',
                     const="paths", default="emails")
-parser.add_argument('ids', metavar='id', type=str, nargs='+',
-                    help='ids or paths')
+parser.add_argument("--add", help="Add to existing users instead of replacing them", action='store_true')
+parser.add_argument('ids', help='ids or paths', metavar='id', type=str, nargs='+')
 
 args = parser.parse_args()
 CRYPTO_TOKEN_PATH = args.crypto_token_path
 DATASET_ID = args.dataset_id
 MODE = args.use_paths
+ADD = args.add
 IDS = args.ids
 
 users_to_add = set()
@@ -31,7 +32,7 @@ elif (MODE == "paths"):
 for user_id in users_to_add:
     assert (user_id.find("@") > 0)
 
-print ("Adding users to '{}': {}".format(DATASET_ID, users_to_add))
+print ("Parsed new users for '{}': {}".format(DATASET_ID, users_to_add))
 
 # Use a service account
 # Setup Firebase
@@ -40,13 +41,24 @@ firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-col_ref = db.collection(u'datasets').document(DATASET_ID).collection("users")
+dataset_ref = db.collection(u'datasets').document(DATASET_ID)
 
+if (ADD):
+    existing_users = dataset_ref.get().get('users')
+    users_to_add.update(existing_users)
+    print ("Appending new users to existing users")
+else:
+    print ("Replacing existing users")
+
+users_to_add_unicode = []
 for user_id in users_to_add:
-  doc_ref = col_ref.document(user_id)
-  doc_ref.set({
-    'email': user_id
-    }
-)
+    users_to_add_unicode.append(unicode(user_id))
+
+print ("Setting users to '{}': {}".format(DATASET_ID, users_to_add_unicode))
+
+
+dataset_ref.set({
+    'users': users_to_add_unicode
+})
 
 print ("Done")
