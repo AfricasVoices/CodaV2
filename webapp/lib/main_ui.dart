@@ -8,6 +8,7 @@ import 'dart:html';
 import 'logger.dart' as log;
 import 'data_model.dart';
 import 'snackbar.dart' as snackbar;
+import 'loader_ui.dart' as loader;
 import 'authentication.dart' as auth;
 import 'firebase_tools.dart' as fbt;
 
@@ -22,7 +23,6 @@ void init() {
 
 class CodaUI {
   ButtonElement get saveButton => querySelector('#save-all-button');
-  DivElement get loaderAnimation => querySelector('#loader');
   Element get messageCodingNavButtons => querySelector('nav #coding-nav');
   DivElement get otherContent => querySelector('#other-content');
 
@@ -56,7 +56,7 @@ class CodaUI {
   }
 
   displayDatasetView() async {
-    showLoader();
+    loader.showLoader('Loading dataset');
 
     // Load the dataset
     String datasetId = Uri.base.queryParameters["dataset"];
@@ -67,7 +67,7 @@ class CodaUI {
       displayUrlErrorView(e.toString());
       log.verbose(e.toString());
       log.verbose(s.toString());
-      hideLoader();
+      loader.hideLoader();
       return;
     }
 
@@ -82,7 +82,7 @@ class CodaUI {
         default:
           throw "Change type '$changeType' not supported.";
       }
-      hideLoader();
+      loader.hideLoader();
     });
   }
 
@@ -288,14 +288,6 @@ class CodaUI {
     messageCodingTable.id = 'message-coding-table';
     Element main = querySelector('main');
     main.insertBefore(messageCodingTable, main.firstChild);
-  }
-
-  void showLoader() {
-    loaderAnimation.attributes.remove('hidden');
-  }
-
-  void hideLoader() {
-    loaderAnimation.setAttribute('hidden', 'true');
   }
 }
 
