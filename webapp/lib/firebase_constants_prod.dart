@@ -6,3 +6,4 @@ const String databaseURL = "https://web-coda.firebaseio.com";
 const String projectId = "web-coda";
 const String storageBucket = "web-coda.appspot.com";
 const String messagingSenderId = "329672882311";
+const String logUrl = "https://us-central1-web-coda.cloudfunctions.net/Log";
