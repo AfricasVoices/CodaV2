@@ -7,7 +7,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart' as firebase;
 
 import 'config.dart';
-import 'firebase_tools.dart' as fbt;
+import 'logger.dart';
 import 'main_ui.dart' as ui;
 import 'mocks/mock_auth.dart' as mock;
 
@@ -58,12 +58,12 @@ String getProfilePicUrl() {
 
 /// Returns the signed-in user's display name.
 String getUserName() {
-  return firebaseAuth.currentUser.displayName;
+  return firebaseAuth.currentUser?.displayName;
 }
 
 /// Returns the signed-in user's email address.
 String getUserEmail() {
-  return firebaseAuth.currentUser.email;
+  return firebaseAuth.currentUser?.email;
 }
 
 /// Returns true if a user is signed-in.
@@ -74,6 +74,8 @@ bool isUserSignedIn() {
 /// Triggers when the authentication state changes (e.g. when the user signs-in or signs-out).
 void authStateObserver(firebase.User user) async {
   if (user == null) { // User not signed in
+    log("Logged out");
+
     // Hide user's profile pic, name and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
@@ -86,6 +88,8 @@ void authStateObserver(firebase.User user) async {
     // Display signed out view.
     ui.codaUI.displaySignedOutView();
   } else { // User signed in
+    log("Logged in");
+
     // Set the user's profile pic and name
     userPicElement.style.backgroundImage = 'url(${getProfilePicUrl()})';
     userNameElement.text = getUserName();
