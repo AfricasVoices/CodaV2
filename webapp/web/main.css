@@ -65,6 +65,7 @@ nav {
   left: 0;
   top: 0;
   height: 50px;
+  z-index: 1; /* Should be on top of the table (same value as the table header is ok), otherwise bits of the table appear on top when scrolling */
 }
 
 nav .navbar-brand {
@@ -160,8 +161,23 @@ main tbody {
   border-top: 1px solid #e7e7e7;
   text-align: left;
 }
+
 #message-coding-table thead td {
+  /* Sticky header */
+  position: sticky;
+  top: 51px; /* 50px nav height + 1px border */
+  background: white;
+  z-index: 1; /* Should be on top of the table, otherwise bits of the table appear on top when scrolling */
+
+  /* Appearance */
   font-weight: bold;
+  border-top: none;
+  padding-top: 26px;
+  box-shadow: 0px 2px 0px 0px #999999; /* instead of a bottom border, as that doesn't seem to work properly */
+}
+
+#message-coding-table tbody tr:first-child td {
+  padding-top: 18px;
 }
 
 .message-id {
