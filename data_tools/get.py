@@ -41,8 +41,8 @@ if CONTENT_TYPE in ["all", "schemes"]:
 if CONTENT_TYPE in ["all", "messages"]:
     if ALL:
         print ("Messages:")
-    messages = {}
+    messages = []
     for message in fcw.get_all_messages(DATASET_ID):
         messages.append(message)
-    print (json.dumps(messages_map, indent=2))
+    print (json.dumps(messages, indent=2))
 
