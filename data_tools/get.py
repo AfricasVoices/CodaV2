@@ -33,16 +33,16 @@ if CONTENT_TYPE in ["all", "users"]:
 if CONTENT_TYPE in ["all", "schemes"]:
     if ALL:
         print ("Schemes:")
-    schemes_map = {}
+    schemes = []
     for scheme in fcw.get_code_scheme_ids(DATASET_ID):
-        schemes_map[scheme] = fcw.get_code_scheme(DATASET_ID, scheme)
-    print (json.dumps(schemes_map, indent=2))
+        schemes.append(fcw.get_code_scheme(DATASET_ID, scheme))
+    print (json.dumps(schemes, indent=2))
 
 if CONTENT_TYPE in ["all", "messages"]:
     if ALL:
         print ("Messages:")
-    messages_map = {}
+    messages = {}
     for message in fcw.get_all_messages(DATASET_ID):
-        messages_map[message["MessageID"]] = message
+        messages.append(message)
     print (json.dumps(messages_map, indent=2))
 
