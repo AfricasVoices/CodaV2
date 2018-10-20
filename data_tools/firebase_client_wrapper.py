@@ -1,0 +1,49 @@
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+client = None
+
+def init_client(crypto_token_path):
+    global client
+    cred = credentials.Certificate(crypto_token_path)
+    firebase_admin.initialize_app(cred)
+    client = firestore.client()
+
+def get_dataset_ids():
+    ids = []
+    for dataset in client.collection(u'datasets').get():
+        ids.append(dataset.id)
+    return ids
+
+def get_dataset(id):
+    return client.document(u'datasets/{}'.format(id)).get()
+
+def get_user_ids(dataset_id):
+    ret = get_dataset(dataset_id).get("users")
+    return ret
+
+def get_code_scheme_ids(dataset_id):
+    ids = []
+    for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
+        ids.append(scheme.id)
+    return ids
+
+def get_code_scheme(dataset_id, scheme_id):
+    return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
+
+def get_message_ids(dataset_id):
+    ids = []
+    for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
+        ids.append(message.id)
+    return ids
+
+def get_all_messages(dataset_id):
+    messages = []
+    for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
+        messages.append(message.to_dict())
+    return messages
+
+
+def get_message(dataset_id, message_id):
+    return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id)).get().to_dict()
