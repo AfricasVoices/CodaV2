@@ -38,6 +38,7 @@ def get_message_ids(dataset_id):
         ids.append(message.id)
     return ids
 
+# This is a much faster way of doing an entire dataset read than repeated get_message calls
 def get_all_messages(dataset_id):
     messages = []
     for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
