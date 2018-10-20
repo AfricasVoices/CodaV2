@@ -20,8 +20,7 @@ def get_dataset(id):
     return client.document(u'datasets/{}'.format(id)).get()
 
 def get_user_ids(dataset_id):
-    ret = get_dataset(dataset_id).get("users")
-    return ret
+    return get_dataset(dataset_id).get("users")
 
 def get_code_scheme_ids(dataset_id):
     ids = []
