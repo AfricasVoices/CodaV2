@@ -49,7 +49,7 @@ class Message {
   toFirebaseMap() => {
     "MessageID" : id,
     "Text" : text,
-    "CreationDateTimeUTC" : creationDateTime,
+    "CreationDateTimeUTC" : creationDateTime.toIso8601String(),
     "Labels" : labels.map((f) => f.toFirebaseMap()).toList()
   };
 
@@ -85,7 +85,7 @@ class Label {
   toFirebaseMap() => {
     "SchemeID" : schemeId,
     "CodeID" : codeId,
-    "DateTimeUTC" : dateTime,
+    "DateTimeUTC" : dateTime.toIso8601String(),
     "Origin" : labelOrigin.toFirebaseMap(),
     "Confidence" : confidence,
     "Checked": checked
