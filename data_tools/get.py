@@ -21,21 +21,26 @@ if (len(sys.argv) == 2):
 DATASET_ID = sys.argv[2]
 
 if (len(sys.argv) == 4):
-    CONTENT_TYPE = sys.argv[3]
+    CONTENT_TYPE = sys.argv[3].lower()
+
+ALL = CONTENT_TYPE == "all"
 
 if CONTENT_TYPE in ["all", "users"]:
-    print ("Users:")
+    if ALL: 
+        print ("Users:")
     print (json.dumps(fcw.get_user_ids(DATASET_ID), indent=2))
 
 if CONTENT_TYPE in ["all", "schemes"]:
-    print ("Schemes:")
+    if ALL:
+        print ("Schemes:")
     schemes_map = {}
     for scheme in fcw.get_code_scheme_ids(DATASET_ID):
         schemes_map[scheme] = fcw.get_code_scheme(DATASET_ID, scheme)
     print (json.dumps(schemes_map, indent=2))
 
 if CONTENT_TYPE in ["all", "messages"]:
-    print ("Messages:")
+    if ALL:
+        print ("Messages:")
     messages_map = {}
     for message in fcw.get_all_messages(DATASET_ID):
         messages_map[message["MessageID"]] = message
