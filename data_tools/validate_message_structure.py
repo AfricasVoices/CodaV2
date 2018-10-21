@@ -5,6 +5,7 @@ import re
 # Valdiates a message collection is of the form:
 # https://github.com/AfricasVoices/CodaV2/blob/master/docs/data_formats.md
 
+
 def verify_JSON_path(messages_path):
     f = open(messages_path, 'r')
     messages = json.loads(f.read())
@@ -16,78 +17,87 @@ def verify_JSON_path(messages_path):
     seen_message_ids = set()
 
     for message in messages:
-        assert isinstance(message, dict)
-
-        assert "MessageID" in message.keys()
         MessageID = message["MessageID"]
-        check_string(MessageID)
         assert MessageID not in seen_message_ids
         seen_message_ids.add(MessageID)
-
-        assert "Text" in message.keys()
-        Text = message["Text"]
-        check_string(Text)
-
-        assert "CreationDateTimeUTC" in message.keys()
-        CreationDateTimeUTC = message["CreationDateTimeUTC"]
-        check_iso8601_string(CreationDateTimeUTC)
-
-        assert "Labels" in message.keys()
-        Labels = message["Labels"]
-        assert isinstance(Labels, list)
-
-        for label in Labels:
-            assert isinstance(label, dict)
-
-            assert "SchemeID" in label.keys()
-            SchemeID = label["SchemeID"]
-            check_string(SchemeID)
-
-            assert "CodeID" in label.keys()
-            CodeID = label["CodeID"]
-            check_string(CodeID)
-
-            assert "DateTimeUTC" in label.keys()
-            DateTimeUTC = label["DateTimeUTC"]
-            check_iso8601_string(DateTimeUTC)
-
-            if "Checked" in label.keys():
-                check_bool(label["Checked"])
-
-            if "Confidence" in label.keys():
-                check_double(label["Confidence"])
-
-            if "LabelSet" in label.keys():
-                check_int(label["LabelSet"])
-
-            assert "Origin" in label.keys()
-            Origin = label["Origin"]
-            assert isinstance(Origin, dict)
-
-            assert "OriginID" in Origin.keys()
-            OriginID = Origin["OriginID"]
-            check_string(OriginID)
-
-            assert "Name" in Origin.keys()
-            Name = Origin["Name"]
-            check_string(Name)
-
-            assert "OriginType" in Origin.keys()
-            OriginType = Origin["OriginType"]
-            check_string(OriginType)
-
-            assert "Metadata" in Origin.keys()
-            Metadata = Origin["Metadata"]
-            assert isinstance(Metadata, dict)
-
-            for key, value in Metadata:
-                check_string(key)
-                check_string(value)
+        verify_message(message)
 
     return messages
 
+def verify_message(message):
+    assert isinstance(message, dict)
+
+    assert "MessageID" in message.keys()
+    MessageID = message["MessageID"]
+    check_string(MessageID)
+    
+    assert "Text" in message.keys()
+    Text = message["Text"]
+    check_string(Text)
+
+    assert "CreationDateTimeUTC" in message.keys()
+    CreationDateTimeUTC = message["CreationDateTimeUTC"]
+    check_iso8601_string(CreationDateTimeUTC)
+
+    assert "Labels" in message.keys()
+    Labels = message["Labels"]
+    assert isinstance(Labels, list)
+
+    for label in Labels:
+        assert isinstance(label, dict)
+
+        assert "SchemeID" in label.keys()
+        SchemeID = label["SchemeID"]
+        check_string(SchemeID)
+
+        assert "CodeID" in label.keys()
+        CodeID = label["CodeID"]
+        check_string(CodeID)
+
+        assert "DateTimeUTC" in label.keys()
+        DateTimeUTC = label["DateTimeUTC"]
+        check_iso8601_string(DateTimeUTC)
+
+        if "Checked" in label.keys():
+            check_bool(label["Checked"])
+
+        if "Confidence" in label.keys():
+            confidence = label["Confidence"]
+            if confidence == 1 or confidence == 0:
+                check_int(confidence)
+            else:
+                check_double(label["Confidence"])
+
+        if "LabelSet" in label.keys():
+            check_int(label["LabelSet"])
+
+        assert "Origin" in label.keys()
+        Origin = label["Origin"]
+        assert isinstance(Origin, dict)
+
+        assert "OriginID" in Origin.keys()
+        OriginID = Origin["OriginID"]
+        check_string(OriginID)
+
+        assert "Name" in Origin.keys()
+        Name = Origin["Name"]
+        check_string(Name)
+
+        assert "OriginType" in Origin.keys()
+        OriginType = Origin["OriginType"]
+        check_string(OriginType)
+
+        assert "Metadata" in Origin.keys()
+        Metadata = Origin["Metadata"]
+        assert isinstance(Metadata, dict)
+
+        for key, value in Metadata:
+            check_string(key)
+            check_string(value)
+
+
 def check_string(s):
-    assert isinstance(s, unicode)
+    assert isinstance(s, str)
     assert s != ""
 
 def check_int(i):

@@ -4,10 +4,15 @@ import argparse
 # Valdiates a code scheme is of the form: 
 # https://github.com/AfricasVoices/CodaV2/blob/master/docs/data_formats.md
 
+    
+
+
 def verify_JSON_path(scheme_path):
     f = open(scheme_path, 'r')
     scheme = json.loads(f.read())
+    verify_scheme(scheme)
 
+def verify_scheme(scheme):
     assert "SchemeID" in scheme.keys()
     check_string(scheme["SchemeID"])
 

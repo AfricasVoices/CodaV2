@@ -19,6 +19,10 @@ def get_dataset_ids():
 def get_dataset(id):
     return client.document(u'datasets/{}'.format(id)).get()
 
+def get_dataset_ref(id):
+    return client.document(u'datasets/{}'.format(id))
+
+
 def get_user_ids(dataset_id):
     return get_dataset(dataset_id).get("users")
 
@@ -30,6 +34,10 @@ def get_code_scheme_ids(dataset_id):
 
 def get_code_scheme(dataset_id, scheme_id):
     return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
+
+def get_code_scheme_ref(dataset_id, scheme_id):
+    return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id))
+
 
 def get_message_ids(dataset_id):
     ids = []
@@ -47,3 +55,6 @@ def get_all_messages(dataset_id):
 
 def get_message(dataset_id, message_id):
     return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id)).get().to_dict()
+
+def get_message_ref(dataset_id, message_id):
+    return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id))
