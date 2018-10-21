@@ -58,7 +58,7 @@ else:
 
 users_to_add_unicode = []
 for user_id in users_to_add:
-    users_to_add_unicode.append(unicode(user_id))
+    users_to_add_unicode.append(str(user_id))
 
 print ("Setting users for '{}': {}".format(DATASET_ID, users_to_add_unicode))
 
