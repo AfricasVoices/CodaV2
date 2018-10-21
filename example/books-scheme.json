@@ -1,0 +1,33 @@
+{
+    "SchemeID"      :  "Scheme-b3030c7f",
+    "Name"          :  "Books",
+    "Version"       :  "0.0.0.1",
+    "Codes"        :  [         
+      {
+        "CodeID"        : "code-8f1c2c4d",
+        "DisplayText"    : "Pride and Prejudice",
+        "Shortcut"       : "p",	
+        "NumericValue"   : 1,
+        "VisibleInCoda"  : true
+      },
+      {
+        "CodeID"        : "code-cdb1a128",
+        "DisplayText"    : "Alice in Wonderland",	
+        "Shortcut"       : "a",	
+        "NumericValue"   : 2,
+        "VisibleInCoda"  : true
+      },
+      {
+        "CodeID"        : "code-NA-f93d3eb7",
+        "DisplayText"    : "NA (missing)",	
+        "NumericValue"   : -10,
+        "VisibleInCoda"  : true
+      },
+      {
+        "CodeID"        : "code-NC-42f1d983",
+        "DisplayText"    : "NC (not coded)",	
+        "NumericValue"   : -30,
+        "VisibleInCoda"  : true
+      }
+    ]
+  }
