@@ -31,7 +31,12 @@ print ("message structure validated: {}".format(MESSAGES_PATH))
 
 col_ref = db.collection(u'datasets').document(DATASET_ID).collection("messages")
 
+i = 0
 for message in messages:
+  i = i + 1
+
+  if (i % 100 == 0):
+    print ("{}/{}".format(i, len(messages)))
   messageId = message["MessageID"]
   doc_ref = col_ref.document(messageId)
   doc_ref.set(message)
