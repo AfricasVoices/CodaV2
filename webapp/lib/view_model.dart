@@ -134,9 +134,11 @@ class CodeSelector {
   static CodeSelector get activeCodeSelector => _activeCodeSelector;
   static set activeCodeSelector(CodeSelector activeCodeSelector) {
     _activeCodeSelector?.viewElement?.classes?.toggle('active', false);
+    _activeCodeSelector?.viewElement?.parent?.parent?.classes?.toggle('active', false);
     // Focus on the new code selector
     _activeCodeSelector = activeCodeSelector;
     _activeCodeSelector.viewElement.classes.toggle('active', true);
+    _activeCodeSelector?.viewElement?.parent?.parent?.classes?.toggle('active', true);
     _activeCodeSelector.dropdown.focus();
   }
 
