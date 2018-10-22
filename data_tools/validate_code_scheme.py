@@ -10,7 +10,7 @@ import argparse
 def verify_JSON_path(scheme_path):
     f = open(scheme_path, 'r')
     scheme = json.loads(f.read())
-    verify_scheme(scheme)
+    return verify_scheme(scheme)
 
 def verify_scheme(scheme):
     assert "SchemeID" in scheme.keys()
