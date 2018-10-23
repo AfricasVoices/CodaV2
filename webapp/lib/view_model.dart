@@ -49,7 +49,7 @@ class MessageViewModel {
     // Add a new label which is the current label with the changed checkbox
     Label currentLabel = existingLabels.first;
     message.labels.insert(0,
-      new Label(schemeId, new DateTime.now(), currentLabel.codeId,
+      new Label(schemeId, new DateTime.now().toUtc(), currentLabel.codeId,
         new Origin(auth.getUserEmail(), auth.getUserName()),
         checked: checked
         ));
@@ -75,7 +75,7 @@ class MessageViewModel {
 
     // Update the data-model by prepending this decision
     message.labels.insert(0,
-      new Label(schemeId, new DateTime.now(), codeId,
+      new Label(schemeId, new DateTime.now().toUtc(), codeId,
         new Origin(auth.getUserEmail(), auth.getUserName()),
         checked: checked
         ));
