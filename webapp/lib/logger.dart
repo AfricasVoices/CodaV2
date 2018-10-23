@@ -33,7 +33,7 @@ trace(String f, String s) {
 
 _write(String s) {
   var m = {
-    "DateTime" : DateTime.now().toIso8601String(),
+    "DateTime" : DateTime.now().toUtc().toIso8601String(),
     "Email" : auth.getUserEmail(),
     "msg" : s
   };
@@ -44,7 +44,7 @@ _write(String s) {
 } 
 
 _writeMap(Map m) {
-  m["DateTime"] = DateTime.now().toIso8601String();
+  m["DateTime"] = DateTime.now().toUtc().toIso8601String();
   m["Email"] = auth.getUserEmail();
   print (m);
   _logToServer(m);
