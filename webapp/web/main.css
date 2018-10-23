@@ -162,6 +162,8 @@ main tbody {
   text-align: left;
 }
 
+
+
 #message-coding-table thead td {
   /* Sticky header */
   position: sticky;
@@ -182,6 +184,10 @@ main tbody {
 
 .message-id {
   width: 50px;
+}
+
+.message-row.active {
+  border-left: 5px solid #000000;
 }
 
 .scheme-title .scheme-id {

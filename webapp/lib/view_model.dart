@@ -134,9 +134,19 @@ class CodeSelector {
   static CodeSelector get activeCodeSelector => _activeCodeSelector;
   static set activeCodeSelector(CodeSelector activeCodeSelector) {
     _activeCodeSelector?.viewElement?.classes?.toggle('active', false);
+
+    if (_activeCodeSelector?.viewElement != null) {
+      Element messageElement = getAncestors(_activeCodeSelector.viewElement).firstWhere((a) => a.classes.contains('message-row'));
+      messageElement.classes.toggle('active', false);
+    }
+    // _activeCodeSelector?.viewElement?.parent?.parent?.classes?
     // Focus on the new code selector
     _activeCodeSelector = activeCodeSelector;
     _activeCodeSelector.viewElement.classes.toggle('active', true);
+    if (_activeCodeSelector?.viewElement != null) {
+      Element messageElement = getAncestors(_activeCodeSelector.viewElement).firstWhere((a) => a.classes.contains('message-row'));
+      messageElement.classes.toggle('active', true);
+    }
     _activeCodeSelector.dropdown.focus();
   }
 
