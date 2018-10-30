@@ -337,7 +337,7 @@ class CodaUI {
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageId = row.attributes['message-id'];
         CodeSelector codeSelector = CodeSelector.activeCodeSelector;
-        selectNextEmptyCodeSelector(messageId, codeSelector.scheme.id);
+        selectNextCodeSelector(messageId, codeSelector.scheme.id);
         messageList.messageMap[messageId].schemeCodeChanged(dataset, codeSelector.scheme.id, codeSelector.selectedOption);
         if (continuousSorting && messageList.sortBySeqOrSchemeId == codeSelector.scheme.id) {
           sortTableView();
@@ -385,7 +385,7 @@ class CodaUI {
     if (messageIndex < messageList.messages.length - 1) { // it's not the last message
       CodeSelector.activeCodeSelector = messageList.messages[messageIndex + 1].codeSelectors[codeSelectorIndex];
       if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
-        selectNextCodeSelectorVertical(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
+        selectNextCodeSelectorVertical(messageList.messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
       }
     } // else, it's the last message, stop
   }
