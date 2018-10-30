@@ -14,22 +14,30 @@ After you have installed Dart, you can run the project locally using the `webdev
 $ pub global activate webdev
 ```
 
-You can now run the `CodaV2/webapp/` project with `webdev serve`:
-
-```
-CodaV2/webapp$ webdev serve
-```
-
 Before the first run and if any new packages are added, the Dart package manager needs to be run as well:
 
 ```
 CodaV2/webapp$ pub get
 ```
 
+You can now run the `CodaV2/webapp/` project with `webdev serve`:
+
+```
+CodaV2/webapp$ webdev serve
+```
+
 When you're ready for deployment, the code needs to be converted from Dart to JavaScript:
 
 ```
 CodaV2/webapp$ webdev build
+```
+
+This will create a `CodaV2/webapp/build/` folder which you can copy onto the HTTP serving server (you can skip the `packages/` folder, as that's not needed).
+
+You can run the tests with the following command:
+
+```
+CodaV2/webapp$ pub run test -p chrome
 ```
 
 There are two scripts that run the build steps and deploy to the right place on Firebase serving. For development deployment:
@@ -42,7 +50,3 @@ and for production use
 ```
 CodaV2/deploy_prod.sh
 ```
-
-
-
-
