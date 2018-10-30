@@ -2,30 +2,35 @@
   "messages" : [
     {
       "MessageID"           : "msg-1",
+      "SequenceID"          : 1,
       "Text"                : "Text text text",
       "CreationDateTimeUTC" : "2018-09-23T14:14:00Z",
       "Labels"              : []
     },
     {
       "MessageID"           : "msg-2",
+      "SequenceID"          : 2,
       "Text"                : "Text text text",
       "CreationDateTimeUTC" : "2018-09-23T14:14:00Z",
       "Labels"              : []
     },
     {
       "MessageID"           : "msg-3",
+      "SequenceID"          : 3,
       "Text"                : "Text text text",
       "CreationDateTimeUTC" : "2018-09-23T14:14:00Z",
       "Labels"              : []
     },
     {
       "MessageID"           : "msg-4",
+      "SequenceID"          : 4,
       "Text"                : "Text text text",
       "CreationDateTimeUTC" : "2018-09-23T14:14:00Z",
       "Labels"              : []
     },
     {
       "MessageID"           : "msg-5",
+      "SequenceID"          : 5,
       "Text"                : "Text text text",
       "CreationDateTimeUTC" : "2018-09-23T14:14:00Z",
       "Labels"              : []

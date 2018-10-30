@@ -28,15 +28,17 @@ class Dataset {
 /// A textual message being coded.
 class Message {
   String id;
+  int sequenceNumber;
   String text;
   DateTime creationDateTime;
   List<Label> labels;
 
-  Message(this.id, this.text, this.creationDateTime) {
+  Message(this.id, this.sequenceNumber, this.text, this.creationDateTime) {
     labels = [];
   }
   Message.fromFirebaseMap(Map message) {
     id = message['MessageID'];
+    sequenceNumber = message["SequenceNumber"];
     text = message['Text'];
     creationDateTime = message['CreationDateTimeUTC'] is DateTime ? message['CreationDateTimeUTC'] : DateTime.parse(message['CreationDateTimeUTC']);
     labels = <Label>[];
@@ -48,6 +50,7 @@ class Message {
 
   toFirebaseMap() => {
     "MessageID" : id,
+    "SequenceNumber": sequenceNumber,
     "Text" : text,
     "CreationDateTimeUTC" : creationDateTime.toIso8601String(),
     "Labels" : labels.map((f) => f.toFirebaseMap()).toList()

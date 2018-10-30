@@ -36,6 +36,7 @@ Message definition (JSON, named $ID)
 ```
 {
   "MessageID"           : String,           // Required, Globally unique
+  "SequenceNumber"      : Int               // Required, Unique, but not necessarily consecutive
   "Text"                : String,           // Required
   "CreationDateTimeUTC" : ISO 8601 String,  // Required
   "Labels"              : [                 // Required

@@ -1,5 +1,6 @@
-/* Some resets */
+@charset "UTF-8";
 
+/* Some resets */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -115,6 +116,18 @@ nav .button {
   margin-left: 10px;
 }
 
+/*** Continuous coding checkbox ***/
+label[for="continuous-sorting"] {
+  line-height: 30px;
+  margin: 10px;
+  margin-right: 2px;
+  display: inline-block;
+}
+
+input#continuous-sorting {
+  vertical-align: middle;
+}
+
 /*** Login details: user name and picture ***/
 
 nav #user-name {
@@ -155,14 +168,16 @@ main tbody {
   vertical-align: top;
 }
 
+#message-coding-table {
+  outline: none;
+}
+
 #message-coding-table td {
   padding: 6px 12px;
   border: none;
   border-top: 1px solid #e7e7e7;
   text-align: left;
 }
-
-
 
 #message-coding-table thead td {
   /* Sticky header */
@@ -182,8 +197,28 @@ main tbody {
   padding-top: 18px;
 }
 
-.message-id {
+.message-seq {
   width: 50px;
+}
+
+.button.sort {
+  padding: 0 3px;
+  margin: 0 0 0 8px;
+}
+
+.sort::after {
+  content: "↓";
+  color: #d8d8d8;
+}
+
+.sort.asc::after {
+  content: "↓";
+  color: #555555;
+}
+
+.sort.desc::after {
+  content: "↑";
+  color: #555555;
 }
 
 .message-row.active {

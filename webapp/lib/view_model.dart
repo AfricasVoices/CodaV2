@@ -8,6 +8,59 @@ typedef void CheckboxChanged(bool checked);
 /// A typedef for the listener function to be called when the selected option in a selector is changed.
 typedef void SelectorChanged(String valueID);
 
+/// Maintains a sorted view model over the list of messages.
+class MessageListViewModel {
+  List<MessageViewModel> messages = [];
+  Map<String, MessageViewModel> messageMap = {};
+
+  MessageListViewModel();
+
+  String sortBySeqOrSchemeId = "seq";
+  bool sortAscending = true;
+
+  int add(Dataset dataset, MessageViewModel messageViewModel) {
+    messages.add(messageViewModel);
+    messageMap[messageViewModel.message.id] = messageViewModel;
+    sort(dataset);
+    return messages.indexOf(messageViewModel);
+  }
+
+  void sort(Dataset dataset) {
+    if (messages.length == 0) return;
+
+    if (sortBySeqOrSchemeId == "seq") {
+      messages.sort(
+        (a, b) => sortAscending ? a.message.sequenceNumber.compareTo(b.message.sequenceNumber)
+                                : b.message.sequenceNumber.compareTo(a.message.sequenceNumber));
+      return;
+    }
+
+    Scheme scheme = dataset.codeSchemes.singleWhere((s) => s.id == sortBySeqOrSchemeId);
+    var codeCompare = <MessageViewModel, String>{};
+    for (var message in messages) {
+      String codeId = message.getLatestLabelForSchemeId(sortBySeqOrSchemeId)?.codeId;
+      String codeName;
+      if (codeId == null || codeId == Label.MANUALLY_UNCODED) {
+        codeName = '~';
+      } else {
+        codeName = scheme.codes.singleWhere((c) => c.id == codeId).displayText;
+      }
+      String sequenceNumber = message.message.sequenceNumber.toString().padLeft(10, '0');
+      String aCompareString = '$codeName-$sequenceNumber';
+
+      codeCompare[message] = aCompareString;
+    }
+    messages.sort(
+      (a, b) => sortAscending ? codeCompare[a].compareTo(codeCompare[b])
+                              : codeCompare[b].compareTo(codeCompare[a]));
+  }
+
+  labelMessage(Dataset dataset, String messageId, String schemeId, String selectedOption) {
+    messageMap[messageId].schemeCodeChanged(dataset, schemeId, selectedOption);
+    sort(dataset);
+  }
+}
+
 /// A ViewModel for a message, corresponding to a table row in the UI.
 class MessageViewModel {
   Message message;
@@ -19,8 +72,8 @@ class MessageViewModel {
     viewElement.classes.add('message-row');
     viewElement.setAttribute('message-id', '${message.id}');
     viewElement.addCell()
-      ..classes.add('message-id')
-      ..text = message.id;
+      ..classes.add('message-seq')
+      ..text = '${message.sequenceNumber}';
     viewElement.addCell()
       ..classes.add('message-text')
       ..text = message.text;
@@ -91,7 +144,7 @@ class MessageViewModel {
       log.log("updateMessage: Warning! The ID of the updated message (id=${newMessage.id}) differs from the ID of the existing message (id=${message.id})");
     }
     if (newMessage.text != message.text) {
-      log.log("updateMessage: Warning! The text of the updated message differs from the ID of the existing message (message-id=${message.id})");
+      log.log("updateMessage: Warning! The text of the updated message differs from the ID of the existing message (message-seq=${message.id})");
     }
     this.message = newMessage;
     codeSelectors.forEach((codeSelector) => displayLatestLabelForCodeSelector(codeSelector));
@@ -100,8 +153,8 @@ class MessageViewModel {
   CodeSelector getCodeSelectorForSchemeId(String schemeId) =>
     codeSelectors.singleWhere((selector) => selector.scheme.id == schemeId);
 
-  Label getLatestLabelForScheme(Scheme scheme) {
-    var existingLabels = message.labels.where((label) => label.schemeId == scheme.id);
+  Label getLatestLabelForSchemeId(String schemeId) {
+    var existingLabels = message.labels.where((label) => label.schemeId == schemeId);
     if (existingLabels.isNotEmpty) {
       return existingLabels.first;
     }
@@ -109,7 +162,7 @@ class MessageViewModel {
   }
 
   void displayLatestLabelForCodeSelector(CodeSelector codeSelector) {
-    Label label = getLatestLabelForScheme(codeSelector.scheme);
+    Label label = getLatestLabelForSchemeId(codeSelector.scheme.id);
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
@@ -220,4 +273,8 @@ class CodeSelector {
   String get selectedOption => dropdown.selectedOptions[0].attributes['valueid'];
 
   set origin(String text) => originElement.text = text;
+
+  focus() {
+    dropdown.focus();
+  }
 }
