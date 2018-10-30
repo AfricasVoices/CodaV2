@@ -4,6 +4,7 @@ Map jsonDatasetNoSchemes = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
@@ -17,12 +18,14 @@ Map jsonDatasetOneScheme = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
+      "SequenceNumber": 1,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -40,6 +43,7 @@ Map jsonDatasetOneScheme = {
     },
     {
       "MessageID": "msg 2",
+      "SequenceNumber": 2,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -57,6 +61,7 @@ Map jsonDatasetOneScheme = {
     },
     {
       "MessageID": "msg 3",
+      "SequenceNumber": 3,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -114,12 +119,14 @@ Map jsonDatasetTwoSchemes = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
+      "SequenceNumber": 1,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -137,6 +144,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 2",
+      "SequenceNumber": 2,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -154,6 +162,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 3",
+      "SequenceNumber": 3,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -181,6 +190,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 4",
+      "SequenceNumber": 4,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -208,6 +218,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 5",
+      "SequenceNumber": 5,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -276,36 +287,42 @@ Map jsonDatasetTwoSchemesNoCodes = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
+      "SequenceNumber": 1,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 2",
+      "SequenceNumber": 2,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 3",
+      "SequenceNumber": 3,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 4",
+      "SequenceNumber": 4,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 5",
+      "SequenceNumber": 5,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
