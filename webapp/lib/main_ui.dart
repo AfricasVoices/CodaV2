@@ -384,6 +384,9 @@ class CodaUI {
     int messageIndex = messageList.messages.indexOf(message);
     if (messageIndex < messageList.messages.length - 1) { // it's not the last message
       CodeSelector.activeCodeSelector = messageList.messages[messageIndex + 1].codeSelectors[codeSelectorIndex];
+      if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
+        selectNextEmptyCodeSelectorVertical(messageID, CodeSelector.activeCodeSelector.scheme.id);
+      }
     } // else, it's the last message, stop
   }
 
