@@ -29,6 +29,9 @@ class CodaUI {
   static InputElement horizontalCodingToggle = querySelector('#horizontal-coding');
   static bool get horizontalCoding => horizontalCodingToggle.checked;
 
+  static InputElement jumpToNextUncodedCheckbox = querySelector('#jump-to-next-uncoded');
+  static bool get jumpToNextUncoded => jumpToNextUncodedCheckbox.checked;
+
   Dataset dataset;
   List<MessageViewModel> messages;
   Map<String, MessageViewModel> messageMap;
@@ -201,7 +204,7 @@ class CodaUI {
         CodeSelector.activeCodeSelector = codeSelector;
         message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
         codeSelector.hideWarning();
-        selectNextEmptyCodeSelector(messageID, schemeID);
+        selectNextCodeSelector(messageID, schemeID);
       }
     });
 
@@ -249,7 +252,7 @@ class CodaUI {
       if (event.key == 'Tab') {
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageID = row.attributes['message-id'];
-        selectNextEmptyCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
+        selectNextCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -267,7 +270,7 @@ class CodaUI {
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageId = row.attributes['message-id'];
         messageMap[messageId].schemeCodeChanged(dataset, CodeSelector.activeCodeSelector.scheme.id, CodeSelector.activeCodeSelector.selectedOption);
-        selectNextEmptyCodeSelector(messageId, CodeSelector.activeCodeSelector.scheme.id);
+        selectNextCodeSelector(messageId, CodeSelector.activeCodeSelector.scheme.id);
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -275,42 +278,43 @@ class CodaUI {
     });
   }
 
-  selectNextEmptyCodeSelector(String messageID, String schemeID) {
+  selectNextCodeSelector(String messageID, String schemeID) {
     if (horizontalCoding) {
-      selectNextEmptyCodeSelectorHorizontal(messageID, schemeID);
+      selectNextCodeSelectorHorizontal(messageID, schemeID);
     } else {
-      selectNextEmptyCodeSelectorVertical(messageID, schemeID);
+      selectNextCodeSelectorVertical(messageID, schemeID);
     }
-
-    // TODO: scroll into view if needed
   }
 
-  selectNextEmptyCodeSelectorHorizontal(String messageID, String schemeID) {
+  selectNextCodeSelectorHorizontal(String messageID, String schemeID) {
     MessageViewModel message = messageMap[messageID];
     int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
 
     if (codeSelectorIndex < message.codeSelectors.length - 1) { // it's not the code selector in the last column, move to the next column
       CodeSelector.activeCodeSelector = message.codeSelectors[codeSelectorIndex + 1];
-      if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
-        selectNextEmptyCodeSelectorHorizontal(messageID, CodeSelector.activeCodeSelector.scheme.id);
+      if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
+        selectNextCodeSelectorHorizontal(messageID, CodeSelector.activeCodeSelector.scheme.id);
       }
     } else { // it's the code selector in the last column, move to the next message
       int messageIndex = messages.indexOf(message);
       if (messageIndex < messages.length - 1) { // it's not the last message
         CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[0];
-        if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
-          selectNextEmptyCodeSelectorHorizontal(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
+        if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
+          selectNextCodeSelectorHorizontal(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
         }
       } // else, it's the last message, stop
     }
   }
 
-  selectNextEmptyCodeSelectorVertical(String messageID, String schemeID) {
+  selectNextCodeSelectorVertical(String messageID, String schemeID) {
     MessageViewModel message = messageMap[messageID];
     int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
     int messageIndex = messages.indexOf(message);
     if (messageIndex < messages.length - 1) { // it's not the last message
       CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[codeSelectorIndex];
+      if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
+        selectNextCodeSelectorVertical(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
+      }
     } // else, it's the last message, stop
   }
 
