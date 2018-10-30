@@ -115,6 +115,19 @@ nav .button {
   margin-left: 10px;
 }
 
+/*** Jump to next uncoded checkbox */
+
+label[for="jump-to-next-uncoded"] {
+  line-height: 30px;
+  margin: 10px;
+  margin-right: 2px;
+  display: inline-block;
+}
+
+ input#jump-to-next-uncoded {
+  vertical-align: middle;
+}
+
 /*** Login details: user name and picture ***/
 
 nav #user-name {
