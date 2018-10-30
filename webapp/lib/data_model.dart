@@ -28,12 +28,13 @@ class Dataset {
 /// A textual message being coded.
 class Message {
   String id;
+  int sequenceNumber;
   String text;
   DateTime creationDateTime;
   List<Label> labels;
   Map<String, dynamic> otherData;
 
-  Message(this.id, this.text, this.creationDateTime) {
+  Message(this.id, this.sequenceNumber, this.text, this.creationDateTime) {
     labels = [];
     otherData = {};
   }
