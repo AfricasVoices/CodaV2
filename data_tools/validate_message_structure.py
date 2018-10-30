@@ -107,7 +107,7 @@ def verify_message(message):
 
 
 def check_string(s):
-    assert isinstance(s, unicode)
+    assert isinstance(s, str)
     assert s != ""
 
 def check_int(i):
