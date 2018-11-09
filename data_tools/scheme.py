@@ -1,11 +1,11 @@
 import validators
 
-class Schema(object):
+class Scheme(object):
     scheme_id = None
     name = None
     version = None
     codes = []
-    documentation = {}
+    documentation = dict()
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -21,32 +21,32 @@ class Schema(object):
 
 
     @staticmethod
-    def from_map(data):
-        schema = Schema()
-        schema.scheme_id = validators.validate_string(data["SchemeID"])
-        schema.name = validators.validate_string(data["Name"])
-        schema.version = validators.validate_string(data["Version"])
+    def from_firebase_map(data):
+        scheme = Scheme()
+        scheme.scheme_id = validators.validate_string(data["SchemeID"])
+        scheme.name = validators.validate_string(data["Name"])
+        scheme.version = validators.validate_string(data["Version"])
 
         for code_map in data["Codes"]:
-            code = Code.from_map(code_map)
-            assert code.code_id not in code_map.keys, \
+            code = Code.from_firebase_map(code_map)
+            assert code.code_id not in code_map.keys(), \
                 "Non-unique Code Id found in scheme: {}".format(code.code_id)
-            schema.codes.append(code)
+            scheme.codes.append(code)
 
         if "Documentation" in data.keys():
             doc_map = data["Documentation"]
-            schema.documentation["URI"] = validators.validate_string(doc_map["URI"])
+            scheme.documentation["URI"] = validators.validate_string(doc_map["URI"])
         
-        return schema
+        return scheme
     
-    def to_map(self):
+    def to_firebase_map(self):
         ret = {}
         ret["SchemeID"] = self.scheme_id
         ret["Name"] = self.name
         ret["Version"] = self.version
         ret["Codes"] = []
         for code in self.codes:
-            ret["Codes"].append(code.to_map())
+            ret["Codes"].append(code.to_firebase_map())
 
         if len(documentation.items) > 0:
             ret["Documentation"] = documentation
@@ -63,24 +63,27 @@ class Code:
     color = None
 
     @staticmethod
-    def from_map(data):
+    def from_firebase_map(data):
         code = Code()
         code.code_id = validators.validate_string(data["CodeID"], "CodeID")
         code.display_text = validators.validate_string(data["DisplayText"], "DisplayText")
-        code.shortcut = validators.validate_string(data["Shortcut"], "Shortcut")
+        if "ShortCut" in data.keys():
+            code.shortcut = validators.validate_string(data["Shortcut"], "Shortcut")
         code.numeric_value = validators.validate_int(data["NumericValue"], "NumericValue")
         code.visible_in_coda = validators.validate_bool(data["VisibleInCoda"], "VisibleInCoda")
-        code.color = validators.validate_string(data["Color"], "Color")
+        if "Color" in data.keys():
+            code.color = validators.validate_string(data["Color"], "Color")
         return code
     
-    def to_map(self):
-        ret = {}
+    def to_firebase_map(self):
+        ret = dict()
         ret["CodeID"] = validators.validate_string(self.code_id, "CodeID")
         ret["DisplayText"] = validators.validate_string(self.display_text, "DisplayText")
         ret["Shortcut"] = validators.validate_string(self.shortcut, "Shortcut")
         ret["NumericValue"] = validators.validate_int(self.numeric_value, "NumericValue")
         ret["VisibleInCoda"] = validators.validate_bool(self.visible_in_coda, "VisibleInCoda")
-        ret["Color"] = validators.validate_string(self.color, "Color")
+        if self.color != None:
+            ret["Color"] = validators.validate_string(self.color, "Color")
         return ret
 
     def __eq__(self, other):
