@@ -67,7 +67,7 @@ class Code:
         code = Code()
         code.code_id = validators.validate_string(data["CodeID"], "CodeID")
         code.display_text = validators.validate_string(data["DisplayText"], "DisplayText")
-        if "ShortCut" in data.keys():
+        if "Shortcut" in data.keys():
             code.shortcut = validators.validate_string(data["Shortcut"], "Shortcut")
         code.numeric_value = validators.validate_int(data["NumericValue"], "NumericValue")
         code.visible_in_coda = validators.validate_bool(data["VisibleInCoda"], "VisibleInCoda")
