@@ -43,6 +43,15 @@ class CodaUI {
     fbt.init();
     auth.init();
     snackbar.init();
+
+    window.onError.listen((e) {
+      if (e is ErrorEvent) {
+        var error = e.error;
+        var stacktraceOrFilename = error is Error ? error.stackTrace : e.filename;
+        log.severe('${e.message}: ${stacktraceOrFilename}');
+        snackbar.showSnackbar(e.message, snackbar.NotificatonType.error);
+      }
+    });
   }
 
   displaySignedOutView() {
@@ -93,8 +102,7 @@ class CodaUI {
       displayDatasetHeadersView(dataset);
     } catch (e, s) {
       displayUrlErrorView(e.toString());
-      log.verbose(e.toString());
-      log.verbose(s.toString());
+      log.severe('$e\n$s');
       loader.hideLoader();
       return;
     }

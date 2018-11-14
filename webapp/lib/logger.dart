@@ -31,6 +31,10 @@ trace(String f, String s) {
   }
 }
 
+severe(String s) {
+  _write(s);
+}
+
 _write(String s) {
   var m = {
     "DateTime" : DateTime.now().toUtc().toIso8601String(),
