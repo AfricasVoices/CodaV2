@@ -1,11 +1,11 @@
-# Take CSV containing colums for each coding scheme and generate a schema
+# Take CSV containing colums for each coding scheme and generate a scheme
 
 # Format to the csv
 
-# Schema name  | Schema name  | ...
-# Schema value | Schema value | ...
-# Schema value | Schema value | ...
-# Schema value | Schema value | ...
+# Scheme name  | Scheme name  | ...
+# Scheme value | Scheme value | ...
+# Scheme value | Scheme value | ...
+# Scheme value | Scheme value | ...
 
 import argparse
 import json
@@ -25,7 +25,8 @@ def generate_scheme(header_name, codes):
                 "CodeID" : "code-{}".format(short_uuid()),
                 "DisplayText"    : code,
                 "NumericValue"   : i,
-                "VisibleInCoda"  : True
+                "VisibleInCoda"  : True,
+                "CodeType"       : "Normal"
             }
         )
         i += 1
