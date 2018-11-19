@@ -31,6 +31,11 @@ trace(String f, String s) {
   }
 }
 
+severe(String s) {
+  // TODO: Implement a leaky bucket system for writing the logs (issue #146)
+  _write(s);
+}
+
 _write(String s) {
   var m = {
     "DateTime" : DateTime.now().toUtc().toIso8601String(),

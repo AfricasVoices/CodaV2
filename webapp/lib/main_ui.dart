@@ -3,6 +3,7 @@
  */
 library coda.ui;
 
+import 'dart:convert';
 import 'dart:html';
 
 import 'logger.dart' as log;
@@ -43,6 +44,18 @@ class CodaUI {
     fbt.init();
     auth.init();
     snackbar.init();
+
+    window.onError.listen((e) {
+      if (e is ErrorEvent) {
+        var error = e.error;
+        log.severe(jsonEncode({
+          "messageType": "Error",
+          "message" : e.message,
+          "stackTrace" : error is Error ? error.stackTrace : null,
+          "filename" : error is Error ? null : e.filename
+        }));
+      }
+    });
   }
 
   displaySignedOutView() {
@@ -93,8 +106,13 @@ class CodaUI {
       displayDatasetHeadersView(dataset);
     } catch (e, s) {
       displayUrlErrorView(e.toString());
-      log.verbose(e.toString());
-      log.verbose(s.toString());
+      var error = e.error;
+      log.severe(jsonEncode({
+        "messageType": "Error",
+        "message" : e.message,
+        "stackTrace" : error is Error ? error.stackTrace : null,
+        "filename" : error is Error ? null : e.filename
+      }));
       loader.hideLoader();
       return;
     }
