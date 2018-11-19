@@ -32,6 +32,7 @@ trace(String f, String s) {
 }
 
 severe(String s) {
+  // TODO: Implement a leaky bucket system for writing the logs (issue #146)
   _write(s);
 }
 

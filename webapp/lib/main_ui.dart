@@ -3,6 +3,7 @@
  */
 library coda.ui;
 
+import 'dart:convert';
 import 'dart:html';
 
 import 'logger.dart' as log;
@@ -47,9 +48,12 @@ class CodaUI {
     window.onError.listen((e) {
       if (e is ErrorEvent) {
         var error = e.error;
-        var stacktraceOrFilename = error is Error ? error.stackTrace : e.filename;
-        log.severe('${e.message}: ${stacktraceOrFilename}');
-        snackbar.showSnackbar(e.message, snackbar.NotificatonType.error);
+        log.severe(jsonEncode({
+          "messageType": "Error",
+          "message" : e.message,
+          "stackTrace" : error is Error ? error.stackTrace : null,
+          "filename" : error is Error ? null : e.filename
+        }));
       }
     });
   }
@@ -102,7 +106,13 @@ class CodaUI {
       displayDatasetHeadersView(dataset);
     } catch (e, s) {
       displayUrlErrorView(e.toString());
-      log.severe('$e\n$s');
+      var error = e.error;
+      log.severe(jsonEncode({
+        "messageType": "Error",
+        "message" : e.message,
+        "stackTrace" : error is Error ? error.stackTrace : null,
+        "filename" : error is Error ? null : e.filename
+      }));
       loader.hideLoader();
       return;
     }
