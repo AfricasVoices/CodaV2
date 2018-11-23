@@ -18,3 +18,5 @@ doc/api/
 /.firebase
 
 node_modules
+.DS_Store
+data_tools/__pycache__
