@@ -7,11 +7,11 @@ import validate_code_scheme
 import validate_message_structure
 import validate_user_list
 
-# if (len(sys.argv) != 5):
-#     print ("Usage python add.py crypto_token dataset_id users|schemes|messages path")
-#     print ("add only adds data items that don't currently exist, by id. Existing data")
-#     print ("items remain untouched")
-#     exit(1)
+if (len(sys.argv) != 5):
+    print ("Usage python add.py crypto_token dataset_id users|schemes|messages path")
+    print ("add only adds data items that don't currently exist, by id. Existing data")
+    print ("items remain untouched")
+    exit(1)
 
 CRYPTO_TOKEN_PATH = sys.argv[1]
 fcw.init_client(CRYPTO_TOKEN_PATH)
