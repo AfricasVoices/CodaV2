@@ -27,11 +27,11 @@ if DATASET_ID not in dataset_ids:
 
 
 if CONTENT_TYPE not in ["users", "schemes", "messages"]:
-    print ("update target {} not known".format(TARGET))
+    print ("update content type {} not known".format(CONTENT_TYPE))
     exit(1)
 
-if CONTENT_TYPE != "messages":
-    print ("Only messages are currently supported")
+if CONTENT_TYPE not in  ["messages", "schemes"]:
+    print ("Only messages and schemes are currently supported")
     exit(1)
 
 json_data = json.loads(open(PATH, 'r').read())
@@ -41,7 +41,31 @@ dataset_ref = fcw.get_dataset_ref(DATASET_ID)
 if CONTENT_TYPE == "users":
     pass # Not implemented
 elif CONTENT_TYPE == "schemes":
-    pass # Not implemented
+    added = 0
+    skipped_existing = 0
+
+    existing_ids = fcw.get_code_scheme_ids(DATASET_ID)
+    print ("Existing Ids: {}".format(len(existing_ids)))
+    if json_data is list:
+        schemes = json_data
+    else:
+        assert isinstance(json_data, dict)
+        schemes = [ json_data ]
+    
+    for scheme in schemes:
+        validate_code_scheme.verify_scheme(scheme)
+        id = scheme["SchemeID"]
+    
+        if id in existing_ids:
+            skipped_existing += 1
+            continue
+
+        fcw.get_code_scheme_ref(DATASET_ID, id).set(scheme)
+        print ("Written: {}".format(id))
+        added += 1
+    
+    print ("Added: {}, Skipped: {}".format(added, skipped_existing))
+
 elif CONTENT_TYPE == "messages":
     added = 0
     skipped_existing = 0

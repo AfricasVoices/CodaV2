@@ -4,11 +4,12 @@ from firebase_admin import firestore
 
 client = None
 
-def init_client(crypto_token_path):
+def init_client(crypto_token_path, project_id="web-coda"):
     global client
     cred = credentials.Certificate(crypto_token_path)
-    firebase_admin.initialize_app(cred)
+    firebase_admin.initialize_app(cred, { 'projectId': project_id })
     client = firestore.client()
+
 
 def get_dataset_ids():
     ids = []
@@ -45,16 +46,18 @@ def get_message_ids(dataset_id):
         ids.append(message.id)
     return ids
 
-# This is a much faster way of doing an entire dataset read than repeated get_message calls
+# This is a much faster way of reading an entire dataset rather than repeated get_message calls
 def get_all_messages(dataset_id):
     messages = []
     for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
         messages.append(message.to_dict())
     return messages
 
-
 def get_message(dataset_id, message_id):
     return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id)).get().to_dict()
 
 def get_message_ref(dataset_id, message_id):
     return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id))
+
+def push_coding_status(coding_status):
+    client.document(u'metrics/coda').set(coding_status)
