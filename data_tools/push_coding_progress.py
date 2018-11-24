@@ -4,7 +4,7 @@ import json
 import sys
 
 if (len(sys.argv) != 3):
-    print ("Usage python compute_coding_progress.py dashboard_crypto_token progress_file")
+    print ("Usage python push_coding_progress.py dashboard_crypto_token progress_file")
     exit(1)
 
 DASHBOARD_CRYPTO_TOKEN_PATH = sys.argv[1]

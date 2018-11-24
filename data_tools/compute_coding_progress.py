@@ -32,4 +32,3 @@ for id in ids:
 data["last_update"] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 print (json.dumps(data, indent=2))
-
