@@ -27,7 +27,7 @@ if DATASET_ID not in dataset_ids:
 
 
 if CONTENT_TYPE not in ["users", "schemes", "messages"]:
-    print ("update target {} not known".format(CONTENT_TYPE))
+    print ("update content type {} not known".format(CONTENT_TYPE))
     exit(1)
 
 if CONTENT_TYPE not in  ["messages", "schemes"]:
