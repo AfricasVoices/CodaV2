@@ -64,8 +64,8 @@ class Message {
     });
   }
 
-  Map toFirebaseMap() {
-    Map result = {
+  Map<String, dynamic> toFirebaseMap() {
+    Map<String, dynamic> result = {
       "MessageID" : id,
       "Text" : text,
       "CreationDateTimeUTC" : creationDateTime.toIso8601String(),
@@ -130,8 +130,8 @@ class Label {
   @override
   String toString() => "$schemeId: $codeId $labelOrigin";
 
-  Map toFirebaseMap() {
-    Map result = {
+  Map<String, dynamic> toFirebaseMap() {
+    Map<String, dynamic> result = {
       "SchemeID" : schemeId,
       "CodeID" : codeId,
       "DateTimeUTC" : dateTime.toIso8601String(),
@@ -194,8 +194,8 @@ class Scheme {
   @override
   String toString() => "$id: $name $codes";
 
-  Map toFirebaseMap() {
-    Map result = {
+  Map<String, dynamic> toFirebaseMap() {
+    Map<String, dynamic> result = {
       "SchemeID" : id,
       "Name" : name,
       "Version" : version,
@@ -253,8 +253,8 @@ class Code {
     });
   }
 
-  Map toFirebaseMap() {
-    Map result = {
+  Map<String, dynamic> toFirebaseMap() {
+    Map<String, dynamic> result = {
       "CodeID" : id,
       "DisplayText" : displayText,
       "NumericValue" : numericValue,
@@ -308,8 +308,8 @@ class Origin {
     });
   }
 
-  Map toFirebaseMap() {
-    Map result = {
+  Map<String, dynamic> toFirebaseMap() {
+    Map<String, dynamic> result = {
       "OriginID" : id,
       "Name" : name,
       "OriginType" : originType,
