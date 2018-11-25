@@ -48,15 +48,21 @@ class CodaUI {
     snackbar.init();
 
     window.onError.listen((e) {
-      if (e is ErrorEvent) {
-        var error = e.error;
-        log.severe(jsonEncode({
-          "messageType": "Error",
-          "message" : e.message,
-          "stackTrace" : error is Error ? error.stackTrace.toString() : null,
-          "filename" : error is Error ? null : e.filename
-        }));
+      if (e is! ErrorEvent) {
+        log.severe("Unexpected non ErrorEvent error notification ${e.toString()}");
+        return;
       }
+
+      var errorEvent = e as ErrorEvent;
+      var errorProp = errorEvent.error;
+
+      String stackTrace = errorProp is Error ? errorProp.stackTrace?.toString() : null;
+      log.severe(jsonEncode({
+        "messageType": "Error",
+        "message" : errorEvent.message,
+        "filename" : errorEvent.filename,
+        "stackTrace" : stackTrace
+      }));
     });
 
     continuousSortingCheckbox.onChange.listen((event) {
@@ -114,12 +120,11 @@ class CodaUI {
       displayDatasetHeadersView(dataset);
     } catch (e, s) {
       displayUrlErrorView(e.toString());
-      var error = e.error;
+
       log.severe(jsonEncode({
-        "messageType": "Error",
-        "message" : e.message,
-        "stackTrace" : error is Error ? error.stackTrace.toString() : null,
-        "filename" : error is Error ? null : e.filename
+        "messageType": "Exception",
+        "message" : "Dataset load failed, ${e.toString()}",
+        "stackTrace" : s?.toString()
       }));
       loader.hideLoader();
       return;
