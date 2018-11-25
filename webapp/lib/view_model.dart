@@ -29,9 +29,13 @@ class MessageListViewModel {
     if (messages.length == 0) return;
 
     if (sortBySeqOrSchemeId == "seq") {
-      messages.sort(
-        (a, b) => sortAscending ? a.message.sequenceNumber.compareTo(b.message.sequenceNumber)
-                                : b.message.sequenceNumber.compareTo(a.message.sequenceNumber));
+      messages.sort((a, b) {
+        int aSequenceNumber = a.message.sequenceNumber == null ? -1 : a.message.sequenceNumber;
+        int bSequenceNumber = b.message.sequenceNumber == null ? -1 : b.message.sequenceNumber;
+
+        return sortAscending ? aSequenceNumber.compareTo(bSequenceNumber)
+                             : bSequenceNumber.compareTo(aSequenceNumber);
+      });
       return;
     }
 
@@ -45,10 +49,15 @@ class MessageListViewModel {
       } else {
         codeName = scheme.codes.singleWhere((c) => c.id == codeId).displayText;
       }
-      String sequenceNumber = message.message.sequenceNumber.toString().padLeft(10, '0');
-      String aCompareString = '$codeName-$sequenceNumber';
+      String sequenceNumber;
+      if (message.message.sequenceNumber == null) {
+        sequenceNumber = '~';
+      } else {
+        sequenceNumber = message.message.sequenceNumber.toString().padLeft(10, '0');
+      }
+      String compareString = '$codeName-$sequenceNumber';
 
-      codeCompare[message] = aCompareString;
+      codeCompare[message] = compareString;
     }
     messages.sort(
       (a, b) => sortAscending ? codeCompare[a].compareTo(codeCompare[b])
@@ -73,7 +82,7 @@ class MessageViewModel {
     viewElement.setAttribute('message-id', '${message.id}');
     viewElement.addCell()
       ..classes.add('message-seq')
-      ..text = '${message.sequenceNumber}';
+      ..text = '${message.sequenceNumber == null ? "N/A" : message.sequenceNumber}';
     viewElement.addCell()
       ..classes.add('message-text')
       ..text = message.text;
