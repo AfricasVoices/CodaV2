@@ -4,10 +4,10 @@ from firebase_admin import firestore
 
 client = None
 
-def init_client(crypto_token_path, project_id="web-coda"):
+def init_client(crypto_token_path):
     global client
     cred = credentials.Certificate(crypto_token_path)
-    firebase_admin.initialize_app(cred, { 'projectId': project_id })
+    firebase_admin.initialize_app(cred)
     client = firestore.client()
 
 
