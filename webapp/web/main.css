@@ -116,18 +116,17 @@ nav .button {
   margin-left: 10px;
 }
 
-/*** Checkboxes in header bar ***/
-
-label[for="jump-to-next-uncoded"],
-label[for="continuous-sorting"] {
+/*** Checkboxes ***/
+label[for="continuous-sorting"],
+label[for="jump-to-next-uncoded"] {
   line-height: 30px;
   margin: 10px;
   margin-right: 2px;
   display: inline-block;
 }
 
-input#jump-to-next-uncoded,
-input#continuous-sorting {
+input#continuous-sorting,
+input#jump-to-next-uncoded {
   vertical-align: middle;
 }
 

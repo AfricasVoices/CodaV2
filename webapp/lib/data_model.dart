@@ -47,6 +47,9 @@ class Message {
         case 'MessageID':
           id = value;
           break;
+        case 'SequenceNumber':
+          sequenceNumber = value;
+          break;
         case 'Text':
           text = value;
           break;
@@ -72,6 +75,10 @@ class Message {
       "CreationDateTimeUTC" : creationDateTime.toIso8601String(),
       "Labels" : labels.map((f) => f.toFirebaseMap()).toList()
     };
+    // Write back the sequence nuber only if it's been explicitly set, either in the UI or from Firebase
+    if (sequenceNumber != null) {
+      result["SequenceNumber"] = sequenceNumber;
+    }
     otherData.forEach((property, value) => result[property] = value);
     return result;
   }

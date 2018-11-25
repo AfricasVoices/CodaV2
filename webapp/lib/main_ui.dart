@@ -30,11 +30,11 @@ class CodaUI {
   static InputElement horizontalCodingToggle = querySelector('#horizontal-coding');
   static bool get horizontalCoding => horizontalCodingToggle.checked;
 
-  static InputElement jumpToNextUncodedCheckbox = querySelector('#jump-to-next-uncoded');
-  static bool get jumpToNextUncoded => jumpToNextUncodedCheckbox.checked;
-
   static InputElement continuousSortingCheckbox = querySelector('#continuous-sorting');
   static bool get continuousSorting => continuousSortingCheckbox.checked;
+
+  static InputElement jumpToNextUncodedCheckbox = querySelector('#jump-to-next-uncoded');
+  static bool get jumpToNextUncoded => jumpToNextUncodedCheckbox.checked;
 
   Dataset dataset;
   MessageListViewModel messageList;
@@ -390,7 +390,7 @@ class CodaUI {
       int messageIndex = messageList.messages.indexOf(message);
       if (messageIndex < messageList.messages.length - 1) { // it's not the last message
         CodeSelector.activeCodeSelector = messageList.messages[messageIndex + 1].codeSelectors[0];
-        if (CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
+        if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
           selectNextCodeSelectorHorizontal(messageList.messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
         }
       } // else, it's the last message, stop
