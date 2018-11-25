@@ -174,12 +174,12 @@ class CodeSelector {
     dropdown.append(option);
     scheme.codes.forEach((code) {
       if (!code.visibleInCoda) return;
-
+      String shortcutDisplayText = code.shortcut == null ? '' : '(${code.shortcut})';
       OptionElement option = new OptionElement();
       option
         ..attributes['schemeid'] = scheme.id
         ..attributes['valueid'] = code.id
-        ..text = "${code.displayText} (${code.shortcut})";
+        ..text = "${code.displayText} $shortcutDisplayText";
       dropdown.append(option);
     });
     viewElement.append(dropdown);
