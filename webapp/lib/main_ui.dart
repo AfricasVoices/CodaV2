@@ -297,11 +297,16 @@ class CodaUI {
         return;
       }
 
-      // Select row
+      // Select message row and dropdown
       TableRowElement clickedRow = getAncestors(target).firstWhere((e) => e.classes.contains('message-row'), orElse: () => null);
       TableCellElement messageCodeCell = getAncestors(target).firstWhere((e) => e.classes.contains('message-code'), orElse: () => null);
 
-       // User clicked on the message text or id
+      // Don't do anything if user didn't click on a message row (e.g. they clicked on the header)
+      if (clickedRow == null) {
+        return;
+      }
+
+       // Select first code selector if user clicked on the message text or id
       if (clickedRow != null && messageCodeCell == null) {
         // If the row clicked is the same as the row with the already selected dropdown, don't do anything
         TableRowElement activeSelectorRow = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
@@ -314,21 +319,15 @@ class CodaUI {
         return;
       }
 
-      // User clicked on or around a checkbox or dropdown
+      // Select dropdown if user clicked on or around a checkbox or dropdown
       if (messageCodeCell != null) {
-        var inputGroupOrText = messageCodeCell.firstChild;
-        // There is text instead of the correct div.input-group element only for the header, so we exit earlier in this case.
-        if (inputGroupOrText is Text) return;
-        DivElement inputGroup = inputGroupOrText;
-
-        // Select the dropdown in the clicked table cell
+        DivElement inputGroup = messageCodeCell.firstChild;
         String messageID = clickedRow.attributes['message-id'];
         MessageViewModel message = messageList.messageMap[messageID];
         String schemeID = inputGroup.attributes['scheme-id'];
         CodeSelector codeSelector = message.getCodeSelectorForSchemeId(schemeID);
         CodeSelector.activeCodeSelector = codeSelector;
       }
-
     });
 
     messageCodingTable.onKeyDown.listen((event) {
