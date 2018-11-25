@@ -28,12 +28,13 @@ class Dataset {
 /// A textual message being coded.
 class Message {
   String id;
+  int sequenceNumber;
   String text;
   DateTime creationDateTime;
   List<Label> labels;
   Map<String, dynamic> otherData;
 
-  Message(this.id, this.text, this.creationDateTime) {
+  Message(this.id, this.sequenceNumber, this.text, this.creationDateTime) {
     labels = [];
     otherData = {};
   }
@@ -45,6 +46,9 @@ class Message {
       switch (property) {
         case 'MessageID':
           id = value;
+          break;
+        case 'SequenceNumber':
+          sequenceNumber = value;
           break;
         case 'Text':
           text = value;
@@ -71,6 +75,10 @@ class Message {
       "CreationDateTimeUTC" : creationDateTime.toIso8601String(),
       "Labels" : labels.map((f) => f.toFirebaseMap()).toList()
     };
+    // Write back the sequence nuber only if it's been explicitly set, either in the UI or from Firebase
+    if (sequenceNumber != null) {
+      result["SequenceNumber"] = sequenceNumber;
+    }
     otherData.forEach((property, value) => result[property] = value);
     return result;
   }

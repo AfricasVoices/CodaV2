@@ -1,5 +1,6 @@
-/* Some resets */
+@charset "UTF-8";
 
+/* Some resets */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -115,8 +116,8 @@ nav .button {
   margin-left: 10px;
 }
 
-/*** Jump to next uncoded checkbox */
-
+/*** Checkboxes ***/
+label[for="continuous-sorting"],
 label[for="jump-to-next-uncoded"] {
   line-height: 30px;
   margin: 10px;
@@ -124,7 +125,8 @@ label[for="jump-to-next-uncoded"] {
   display: inline-block;
 }
 
- input#jump-to-next-uncoded {
+input#continuous-sorting,
+input#jump-to-next-uncoded {
   vertical-align: middle;
 }
 
@@ -168,14 +170,16 @@ main tbody {
   vertical-align: top;
 }
 
+#message-coding-table {
+  outline: none;
+}
+
 #message-coding-table td {
   padding: 6px 12px;
   border: none;
   border-top: 1px solid #e7e7e7;
   text-align: left;
 }
-
-
 
 #message-coding-table thead td {
   /* Sticky header */
@@ -195,8 +199,28 @@ main tbody {
   padding-top: 18px;
 }
 
-.message-id {
+.message-seq {
   width: 50px;
+}
+
+.button.sort {
+  padding: 0 3px;
+  margin: 0 0 0 8px;
+}
+
+.sort::after {
+  content: "↓";
+  color: #d8d8d8;
+}
+
+.sort.asc::after {
+  content: "↓";
+  color: #555555;
+}
+
+.sort.desc::after {
+  content: "↑";
+  color: #555555;
 }
 
 .message-row.active {

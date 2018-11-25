@@ -14,7 +14,7 @@ Dataset generateEmptyDataset(String datasetId, int schemeCount, int messageCount
   }
 
   for (int i = 0; i < messageCount; i++) {
-    dataset.messages.add(new Message('msg_$i', 'message', new DateTime.now()));
+    dataset.messages.add(new Message('msg_$i', i, 'message', new DateTime.now()));
   }
 
   return dataset;

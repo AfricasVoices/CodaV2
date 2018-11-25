@@ -30,12 +30,14 @@ class CodaUI {
   static InputElement horizontalCodingToggle = querySelector('#horizontal-coding');
   static bool get horizontalCoding => horizontalCodingToggle.checked;
 
+  static InputElement continuousSortingCheckbox = querySelector('#continuous-sorting');
+  static bool get continuousSorting => continuousSortingCheckbox.checked;
+
   static InputElement jumpToNextUncodedCheckbox = querySelector('#jump-to-next-uncoded');
   static bool get jumpToNextUncoded => jumpToNextUncodedCheckbox.checked;
 
   Dataset dataset;
-  List<MessageViewModel> messages;
-  Map<String, MessageViewModel> messageMap;
+  MessageListViewModel messageList;
 
   // Cache main elements of the UI
   TableElement messageCodingTable;
@@ -51,9 +53,15 @@ class CodaUI {
         log.severe(jsonEncode({
           "messageType": "Error",
           "message" : e.message,
-          "stackTrace" : error is Error ? error.stackTrace : null,
+          "stackTrace" : error is Error ? error.stackTrace.toString() : null,
           "filename" : error is Error ? null : e.filename
         }));
+      }
+    });
+
+    continuousSortingCheckbox.onChange.listen((event) {
+      if (continuousSorting) {
+        sortTableView();
       }
     });
   }
@@ -110,7 +118,7 @@ class CodaUI {
       log.severe(jsonEncode({
         "messageType": "Error",
         "message" : e.message,
-        "stackTrace" : error is Error ? error.stackTrace : null,
+        "stackTrace" : error is Error ? error.stackTrace.toString() : null,
         "filename" : error is Error ? null : e.filename
       }));
       loader.hideLoader();
@@ -140,8 +148,7 @@ class CodaUI {
 
     // (Re)initialise objects
     this.dataset = dataset;
-    this.messages = [];
-    this.messageMap = {};
+    this.messageList = new MessageListViewModel();
 
     messageCodingTable.append(createTableHeader(dataset));
     messageCodingTable.append(createEmptyTableBody(dataset));
@@ -153,19 +160,24 @@ class CodaUI {
 
     TableRowElement headerRow = header.addRow();
     headerRow.addCell()
-      ..classes.add('message-id')
-      ..text = 'ID';
+      ..classes.add('message-seq')
+      ..text = 'Seq'
+      ..append(new SpanElement()
+        ..classes.addAll(['button', 'sort', 'asc']));
     headerRow.addCell()
       ..classes.add('message-text')
       ..text = 'Message';
     dataset.codeSchemes.forEach((codeScheme) {
       headerRow.addCell()
         ..classes.add('message-code')
+        ..setAttribute('scheme-id', codeScheme.id)
         ..append(new DivElement()
           ..classes.add('scheme-title')
           ..append(new SpanElement()
             ..classes.add('scheme-name')
-            ..text = codeScheme.name)
+            ..text = codeScheme.name
+            ..append(new SpanElement()
+            ..classes.addAll(['button', 'sort'])))
           ..append(new SpanElement()
             ..classes.add('scheme-id')
             ..text = codeScheme.id));
@@ -181,25 +193,47 @@ class CodaUI {
     TableSectionElement body = messageCodingTable.tBodies.first;
 
     newMessages.forEach((message) {
-      MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
-      messages.add(messageViewModel);
-      messageMap[message.id] = messageViewModel;
       dataset.messages.add(message);
-      body.append(messageViewModel.viewElement);
+      MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
+      int index = messageList.add(dataset, messageViewModel);
+      if (index == body.children.length) {
+        body.append(messageViewModel.viewElement);
+        return;
+      }
+      body.insertBefore(messageViewModel.viewElement, body.children[index]);
     });
 
     // It's the first time we're adding messages to the table, select the first code selector
     if (CodeSelector.activeCodeSelector == null) {
-      CodeSelector.activeCodeSelector = messages.first.codeSelectors.first;
+      CodeSelector.activeCodeSelector = messageList.messages.first.codeSelectors.first;
     }
   }
 
   void updateMessagesInView(List<Message> changedMessages) {
     changedMessages.forEach((message) {
-      messageMap[message.id].update(message);
+      messageList.messageMap[message.id].update(message);
       int index = dataset.messages.indexWhere((m) => m.id == message.id);
       dataset.messages[index] = message;
     });
+
+    if (continuousSorting) {
+      sortTableView();
+    }
+  }
+
+  void sortTableView() {
+    messageList.sort(dataset);
+
+    TableSectionElement body = messageCodingTable.tBodies.first;
+    var rows = <String, Element>{};
+    for (var row in body.children) {
+      rows[row.attributes['message-id']] = row;
+    }
+    body.nodes.clear();
+
+    for (var message in messageList.messages) {
+      body.append(rows[message.message.id]);
+    }
   }
 
   addListenersToMessageCodingTable() {
@@ -210,7 +244,7 @@ class CodaUI {
       TableRowElement row = getAncestors(target).firstWhere((e) => e.classes.contains('message-row'));
       DivElement inputGroup = getAncestors(target).firstWhere((e) => e.classes.contains('input-group'));
       String messageID = row.attributes['message-id'];
-      MessageViewModel message = messageMap[messageID];
+      MessageViewModel message = messageList.messageMap[messageID];
       String schemeID = inputGroup.attributes['scheme-id'];
 
       if (target is InputElement) { // change on checkbox element
@@ -221,6 +255,9 @@ class CodaUI {
         CodeSelector codeSelector = message.getCodeSelectorForSchemeId(schemeID);
         CodeSelector.activeCodeSelector = codeSelector;
         message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
+        if (continuousSorting && messageList.sortBySeqOrSchemeId == schemeID) {
+          sortTableView();
+        }
         codeSelector.hideWarning();
         selectNextCodeSelector(messageID, schemeID);
       }
@@ -230,10 +267,46 @@ class CodaUI {
     // When clicking around a checkbox or dropdown, select that dropdown
     messageCodingTable.onMouseDown.listen((event) {
       var target = event.target;
+
+      // Change sorting parameters and sort
+      if (target is SpanElement && target.classes.contains('sort')) {
+        TableCellElement clickedColumn = getAncestors(target).firstWhere((e) => e is TableCellElement);
+
+        if (clickedColumn.classes.contains('message-seq')) {
+          messageList.sortBySeqOrSchemeId = 'seq';
+        } else if (clickedColumn.classes.contains('message-code')) {
+          messageList.sortBySeqOrSchemeId = clickedColumn.getAttribute('scheme-id');
+        } else {
+          return;
+        }
+
+        if (target.classes.contains('asc')) {
+          messageCodingTable.tHead.querySelectorAll('.asc').forEach((e) => e.classes.toggle('asc', false));
+          messageCodingTable.tHead.querySelectorAll('.desc').forEach((e) => e.classes.toggle('desc', false));
+          target.classes.toggle('desc', true);
+          messageList.sortAscending = false;
+        } else {
+          messageCodingTable.tHead.querySelectorAll('.asc').forEach((e) => e.classes.toggle('asc', false));
+          messageCodingTable.tHead.querySelectorAll('.desc').forEach((e) => e.classes.toggle('desc', false));
+          target.classes.toggle('asc', true);
+          messageList.sortAscending = true;
+        }
+
+        sortTableView();
+        CodeSelector.activeCodeSelector.focus();
+        return;
+      }
+
+      // Select message row and dropdown
       TableRowElement clickedRow = getAncestors(target).firstWhere((e) => e.classes.contains('message-row'), orElse: () => null);
       TableCellElement messageCodeCell = getAncestors(target).firstWhere((e) => e.classes.contains('message-code'), orElse: () => null);
 
-       // User clicked on the message text or id
+      // Don't do anything if user didn't click on a message row (e.g. they clicked on the header)
+      if (clickedRow == null) {
+        return;
+      }
+
+       // Select first code selector if user clicked on the message text or id
       if (clickedRow != null && messageCodeCell == null) {
         // If the row clicked is the same as the row with the already selected dropdown, don't do anything
         TableRowElement activeSelectorRow = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
@@ -241,27 +314,20 @@ class CodaUI {
 
         // Select the first code selector in the clicked row
         String messageID = clickedRow.attributes['message-id'];
-        MessageViewModel message = messageMap[messageID];
+        MessageViewModel message = messageList.messageMap[messageID];
         CodeSelector.activeCodeSelector = message.codeSelectors[0];
-
         return;
       }
 
-      // User clicked on or around a checkbox or dropdown
+      // Select dropdown if user clicked on or around a checkbox or dropdown
       if (messageCodeCell != null) {
-        var inputGroupOrText = messageCodeCell.firstChild;
-        // There is text instead of the correct div.input-group element only for the header, so we exit earlier in this case.
-        if (inputGroupOrText is Text) return;
-        DivElement inputGroup = inputGroupOrText;
-
-        // Select the dropdown in the clicked table cell
+        DivElement inputGroup = messageCodeCell.firstChild;
         String messageID = clickedRow.attributes['message-id'];
-        MessageViewModel message = messageMap[messageID];
+        MessageViewModel message = messageList.messageMap[messageID];
         String schemeID = inputGroup.attributes['scheme-id'];
         CodeSelector codeSelector = message.getCodeSelectorForSchemeId(schemeID);
         CodeSelector.activeCodeSelector = codeSelector;
       }
-
     });
 
     messageCodingTable.onKeyDown.listen((event) {
@@ -288,8 +354,13 @@ class CodaUI {
         CodeSelector.activeCodeSelector.hideWarning();
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageId = row.attributes['message-id'];
-        messageMap[messageId].schemeCodeChanged(dataset, CodeSelector.activeCodeSelector.scheme.id, CodeSelector.activeCodeSelector.selectedOption);
-        selectNextCodeSelector(messageId, CodeSelector.activeCodeSelector.scheme.id);
+        CodeSelector codeSelector = CodeSelector.activeCodeSelector;
+        selectNextCodeSelector(messageId, codeSelector.scheme.id);
+        messageList.messageMap[messageId].schemeCodeChanged(dataset, codeSelector.scheme.id, codeSelector.selectedOption);
+        if (continuousSorting && messageList.sortBySeqOrSchemeId == codeSelector.scheme.id) {
+          sortTableView();
+        }
+        CodeSelector.activeCodeSelector.focus();
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -306,7 +377,7 @@ class CodaUI {
   }
 
   selectNextCodeSelectorHorizontal(String messageID, String schemeID) {
-    MessageViewModel message = messageMap[messageID];
+    MessageViewModel message = messageList.messageMap[messageID];
     int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
 
     if (codeSelectorIndex < message.codeSelectors.length - 1) { // it's not the code selector in the last column, move to the next column
@@ -315,24 +386,24 @@ class CodaUI {
         selectNextCodeSelectorHorizontal(messageID, CodeSelector.activeCodeSelector.scheme.id);
       }
     } else { // it's the code selector in the last column, move to the next message
-      int messageIndex = messages.indexOf(message);
-      if (messageIndex < messages.length - 1) { // it's not the last message
-        CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[0];
+      int messageIndex = messageList.messages.indexOf(message);
+      if (messageIndex < messageList.messages.length - 1) { // it's not the last message
+        CodeSelector.activeCodeSelector = messageList.messages[messageIndex + 1].codeSelectors[0];
         if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
-          selectNextCodeSelectorHorizontal(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
+          selectNextCodeSelectorHorizontal(messageList.messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
         }
       } // else, it's the last message, stop
     }
   }
 
   selectNextCodeSelectorVertical(String messageID, String schemeID) {
-    MessageViewModel message = messageMap[messageID];
+    MessageViewModel message = messageList.messageMap[messageID];
     int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
-    int messageIndex = messages.indexOf(message);
-    if (messageIndex < messages.length - 1) { // it's not the last message
-      CodeSelector.activeCodeSelector = messages[messageIndex + 1].codeSelectors[codeSelectorIndex];
+    int messageIndex = messageList.messages.indexOf(message);
+    if (messageIndex < messageList.messages.length - 1) { // it's not the last message
+      CodeSelector.activeCodeSelector = messageList.messages[messageIndex + 1].codeSelectors[codeSelectorIndex];
       if (jumpToNextUncoded && CodeSelector.activeCodeSelector.selectedOption != CodeSelector.EMPTY_CODE_VALUE) {
-        selectNextCodeSelectorVertical(messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
+        selectNextCodeSelectorVertical(messageList.messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
       }
     } // else, it's the last message, stop
   }
@@ -341,8 +412,10 @@ class CodaUI {
     messageCodingTable?.remove();
     messageCodingTable = new TableElement();
     messageCodingTable.id = 'message-coding-table';
+    messageCodingTable.tabIndex = 1;
     Element main = querySelector('main');
     main.insertBefore(messageCodingTable, main.firstChild);
+    messageList = null;
   }
 }
 

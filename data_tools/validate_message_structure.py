@@ -15,11 +15,17 @@ def verify_JSON_path(messages_path):
     assert isinstance(messages, list)
 
     seen_message_ids = set()
+    seen_sequence_numbers = set()
 
     for message in messages:
         MessageID = message["MessageID"]
         assert MessageID not in seen_message_ids
         seen_message_ids.add(MessageID)
+
+        SequenceNumber = message["SequenceNumber"]
+        assert SequenceNumber not in seen_sequence_numbers
+        seen_sequence_numbers.add(SequenceNumber)
+
         verify_message(message)
 
     return messages
@@ -30,7 +36,11 @@ def verify_message(message):
     assert "MessageID" in message.keys()
     MessageID = message["MessageID"]
     check_string(MessageID)
-    
+
+    assert "SequenceNumber" in message.keys()
+    SequenceNumber = message["SequenceNumber"]
+    check_int(SequenceNumber)
+
     assert "Text" in message.keys()
     Text = message["Text"]
     check_string(Text)
