@@ -97,13 +97,13 @@ def verify_message(message):
         OriginType = Origin["OriginType"]
         check_string(OriginType)
 
-        assert "Metadata" in Origin.keys()
-        Metadata = Origin["Metadata"]
-        assert isinstance(Metadata, dict)
+        if "Metadata" in Origin.keys():
+            Metadata = Origin["Metadata"]
+            assert isinstance(Metadata, dict)
 
-        for key, value in Metadata:
-            check_string(key)
-            check_string(value)
+            for key, value in Metadata:
+                check_string(key)
+                check_string(value)
 
 
 def check_string(s):
