@@ -178,8 +178,8 @@ class Scheme {
           break;
         case 'Codes':
           codes = <Code>[];
-          for (Map codeMap in scheme['Codes']) {
-            codes.add(new Code.fromFirebaseMap(codeMap));
+          for (Map code in scheme['Codes']) {
+            codes.add(new Code.fromFirebaseMap(code));
           }
           break;
         case 'Documentation':
