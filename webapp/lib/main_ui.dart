@@ -53,7 +53,7 @@ class CodaUI {
         log.severe(jsonEncode({
           "messageType": "Error",
           "message" : e.message,
-          "stackTrace" : error is Error ? error.stackTrace : null,
+          "stackTrace" : error is Error ? error.stackTrace.toString() : null,
           "filename" : error is Error ? null : e.filename
         }));
       }
@@ -118,7 +118,7 @@ class CodaUI {
       log.severe(jsonEncode({
         "messageType": "Error",
         "message" : e.message,
-        "stackTrace" : error is Error ? error.stackTrace : null,
+        "stackTrace" : error is Error ? error.stackTrace.toString() : null,
         "filename" : error is Error ? null : e.filename
       }));
       loader.hideLoader();
