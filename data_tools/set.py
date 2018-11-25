@@ -26,7 +26,7 @@ if DATASET_ID not in dataset_ids:
 
 
 if CONTENT_TYPE not in ["users", "schemes", "messages"]:
-    print ("update target {} not known".format(TARGET))
+    print ("update content_type {} not known".format(CONTENT_TYPE))
     exit(1)
 
 
@@ -53,42 +53,3 @@ elif CONTENT_TYPE == "messages":
         id = message["MessageID"]
         message_ref = fcw.get_message_ref(DATASET_ID, id).set(message)
         print ("Updated: {}".format(id))
-
-        # id = scheme["SchemeID"]
-        # code_scheme_ref = fcw.get_code_scheme_ref(DATASET_ID, id).set(scheme)
-        # print ("Updated: {}".format(id))
-
-
-
-# elif CONTENT_TYPE == "messages":
-
-
-
-
-
-# if (len(sys.argv) == 4):
-#     CONTENT_TYPE = sys.argv[3].lower()
-
-# ALL = CONTENT_TYPE == "all"
-
-# if CONTENT_TYPE in ["all", "users"]:
-#     if ALL: 
-#         print ("Users:")
-#     print (json.dumps(fcw.get_user_ids(DATASET_ID), indent=2))
-
-# if CONTENT_TYPE in ["all", "schemes"]:
-#     if ALL:
-#         print ("Schemes:")
-#     schemes_map = {}
-#     for scheme in fcw.get_code_scheme_ids(DATASET_ID):
-#         schemes_map[scheme] = fcw.get_code_scheme(DATASET_ID, scheme)
-#     print (json.dumps(schemes_map, indent=2))
-
-# if CONTENT_TYPE in ["all", "messages"]:
-#     if ALL:
-#         print ("Messages:")
-#     messages_map = {}
-#     for message in fcw.get_all_messages(DATASET_ID):
-#         messages_map[message["MessageID"]] = message
-#     print (json.dumps(messages_map, indent=2))
-
