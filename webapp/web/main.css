@@ -203,9 +203,17 @@ main tbody {
   width: 50px;
 }
 
+
 .button.sort {
+  display: inline-block;
+  vertical-align: super;
   padding: 0 3px;
+  margin: 0 8px 0 0;
+}
+
+td.message-seq .button.sort { /* First sorting button is a bit different */
   margin: 0 0 0 8px;
+  vertical-align: initial;
 }
 
 .sort::after {
@@ -236,7 +244,7 @@ main tbody {
 
 .scheme-title .scheme-name,
 .scheme-title .scheme-id {
-  display: block;
+  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -249,7 +257,10 @@ main tbody {
   width: 200px;
 }
 
-.scheme-title .scheme-name,
+.scheme-title .scheme-name {
+  width: 140px;
+}
+
 .scheme-title .scheme-id,
 .input-group .code-selector {
   width: 160px;
