@@ -37,9 +37,9 @@ def verify_message(message):
     MessageID = message["MessageID"]
     check_string(MessageID)
 
-    assert "SequenceNumber" in message.keys()
-    SequenceNumber = message["SequenceNumber"]
-    check_int(SequenceNumber)
+    if "SequenceNumber" in message.keys():
+        SequenceNumber = message["SequenceNumber"]
+        check_int(SequenceNumber)
 
     assert "Text" in message.keys()
     Text = message["Text"]

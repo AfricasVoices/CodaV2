@@ -69,9 +69,20 @@ elif CONTENT_TYPE == "schemes":
 elif CONTENT_TYPE == "messages":
     added = 0
     skipped_existing = 0
+    all_messages = fcw.get_all_messages(DATASET_ID)
 
-    existing_ids = fcw.get_message_ids(DATASET_ID)
+    existing_ids = []
+    highest_seq_no = -1
+    for message in all_messages:
+        existing_ids.append(message["MessageID"])
+        if "SequenceNumber" in message.keys():
+            if message["SequenceNumber"] > highest_seq_no:
+                highest_seq_no = message["SequenceNumber"]
+
     print ("Existing Ids: {}".format(len(existing_ids)))
+    print ("Highest seen sequence number: {}".format(highest_seq_no))
+
+    next_seq_no = highest_seq_no + 1
 
     for message in json_data:
         validate_message_structure.verify_message(message)
@@ -79,6 +90,10 @@ elif CONTENT_TYPE == "messages":
         if id in existing_ids:
             skipped_existing += 1
             continue
+
+        if "SequenceNumber" not in message.keys():
+            message["SequenceNumber"] = next_seq_no
+            next_seq_no += 1
 
         message_ref = fcw.get_message_ref(DATASET_ID, id).set(message)
         print ("Written: {}".format(id))
