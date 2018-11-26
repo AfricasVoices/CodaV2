@@ -16,16 +16,17 @@ class MessageListViewModel {
   MessageListViewModel();
 
   String sortBySeqOrSchemeId = "seq";
+  Map<String, String> sortBySchemeCodes;
   bool sortAscending = true;
 
   int add(Dataset dataset, MessageViewModel messageViewModel) {
     messages.add(messageViewModel);
     messageMap[messageViewModel.message.id] = messageViewModel;
-    sort(dataset);
+    sort();
     return messages.indexOf(messageViewModel);
   }
 
-  void sort(Dataset dataset) {
+  void sort() {
     if (messages.length == 0) return;
 
     if (sortBySeqOrSchemeId == "seq") {
@@ -39,34 +40,83 @@ class MessageListViewModel {
       return;
     }
 
-    Scheme scheme = dataset.codeSchemes.singleWhere((s) => s.id == sortBySeqOrSchemeId);
     var codeCompare = <MessageViewModel, String>{};
     for (var message in messages) {
       String codeId = message.getLatestLabelForSchemeId(sortBySeqOrSchemeId)?.codeId;
-      String codeName;
-      if (codeId == null || codeId == Label.MANUALLY_UNCODED) {
-        codeName = '~';
-      } else {
-        codeName = scheme.codes.singleWhere((c) => c.id == codeId).displayText;
-      }
-      String sequenceNumber;
-      if (message.message.sequenceNumber == null) {
-        sequenceNumber = '~';
-      } else {
-        sequenceNumber = message.message.sequenceNumber.toString().padLeft(10, '0');
-      }
-      String compareString = '$codeName-$sequenceNumber';
-
-      codeCompare[message] = compareString;
+      codeCompare[message] = getCompareString(codeId, message.message);
     }
     messages.sort(
       (a, b) => sortAscending ? codeCompare[a].compareTo(codeCompare[b])
                               : codeCompare[b].compareTo(codeCompare[a]));
   }
 
-  labelMessage(Dataset dataset, String messageId, String schemeId, String selectedOption) {
-    messageMap[messageId].schemeCodeChanged(dataset, schemeId, selectedOption);
-    sort(dataset);
+  void sortTableView(Dataset dataset, TableSectionElement messageCodingTableBody) {
+    sort();
+
+    // Save the rows and then clear up the table
+    var rows = <String, Element>{};
+    for (var row in messageCodingTableBody.children) {
+      rows[row.attributes['message-id']] = row;
+    }
+    messageCodingTableBody.nodes.clear();
+
+    // Add row to the table in the right order
+    for (var message in messages) {
+      messageCodingTableBody.append(rows[message.message.id]);
+    }
+  }
+
+  labelMessage(Dataset dataset, String messageId, String schemeId, String codeId, bool continousSort) {
+    MessageViewModel message = messageMap[messageId];
+    message.schemeCodeChanged(dataset, schemeId, codeId);
+    if (continousSort == false) return;
+    if (sortBySeqOrSchemeId == 'seq') return;
+    if (sortBySeqOrSchemeId != schemeId) return;
+
+    updateMessagePosition(message, sortBySeqOrSchemeId, codeId);
+  }
+
+  void updateMessage(Dataset dataset, Message updatedMessage, bool continousSort) {
+    MessageViewModel message = messageMap[updatedMessage.id];
+    message.update(updatedMessage);
+    if (continousSort == false) return;
+    if (sortBySeqOrSchemeId == 'seq') return;
+
+    String codeId = message.getLatestLabelForSchemeId(sortBySeqOrSchemeId)?.codeId;
+    updateMessagePosition(message, sortBySeqOrSchemeId, codeId);
+  }
+
+  void updateMessagePosition(MessageViewModel message, String activeSchemeId, String selectedCodeId) {
+    String compareString = getCompareString(selectedCodeId, message.message);
+    int index = 0;
+    messages.remove(message);
+    for (index; index < messages.length; index++) {
+      String codeId = messages[index].getLatestLabelForSchemeId(activeSchemeId)?.codeId;
+      String otherCompareString = getCompareString(codeId, messages[index].message);
+      if (sortAscending && compareString.compareTo(otherCompareString) < 0) break;
+      if (!sortAscending && compareString.compareTo(otherCompareString) > 0) break;
+    }
+    messages.insert(index, message);
+
+    TableSectionElement body = message.viewElement.parent as TableSectionElement;
+    message.viewElement.remove();
+    body.nodes.insert(index, message.viewElement);
+  }
+
+  String getCompareString(String codeId, Message message) {
+    String codeName;
+    if (codeId == null || codeId == Label.MANUALLY_UNCODED) {
+      codeName = '~';
+    } else {
+      codeName = sortBySchemeCodes[codeId];
+    }
+    String sequenceNumber;
+    if (message.sequenceNumber == null) {
+      sequenceNumber = '~';
+    } else {
+      sequenceNumber = message.sequenceNumber.toString().padLeft(10, '0');
+    }
+    return '$codeName-$sequenceNumber';
   }
 }
 

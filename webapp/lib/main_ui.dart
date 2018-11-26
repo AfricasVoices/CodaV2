@@ -61,7 +61,7 @@ class CodaUI {
 
     continuousSortingCheckbox.onChange.listen((event) {
       if (continuousSorting) {
-        sortTableView();
+        messageList.sortTableView(dataset, messageCodingTable.tBodies.first);
       }
     });
   }
@@ -211,29 +211,10 @@ class CodaUI {
 
   void updateMessagesInView(List<Message> changedMessages) {
     changedMessages.forEach((message) {
-      messageList.messageMap[message.id].update(message);
+      messageList.updateMessage(dataset, message, continuousSorting);
       int index = dataset.messages.indexWhere((m) => m.id == message.id);
       dataset.messages[index] = message;
     });
-
-    if (continuousSorting) {
-      sortTableView();
-    }
-  }
-
-  void sortTableView() {
-    messageList.sort(dataset);
-
-    TableSectionElement body = messageCodingTable.tBodies.first;
-    var rows = <String, Element>{};
-    for (var row in body.children) {
-      rows[row.attributes['message-id']] = row;
-    }
-    body.nodes.clear();
-
-    for (var message in messageList.messages) {
-      body.append(rows[message.message.id]);
-    }
   }
 
   addListenersToMessageCodingTable() {
@@ -254,12 +235,9 @@ class CodaUI {
       if (target is SelectElement) { // change on dropdown select element
         CodeSelector codeSelector = message.getCodeSelectorForSchemeId(schemeID);
         CodeSelector.activeCodeSelector = codeSelector;
-        message.schemeCodeChanged(dataset, schemeID, codeSelector.selectedOption);
-        if (continuousSorting && messageList.sortBySeqOrSchemeId == schemeID) {
-          sortTableView();
-        }
-        codeSelector.hideWarning();
         selectNextCodeSelector(messageID, schemeID);
+        messageList.labelMessage(dataset, messageID, schemeID, codeSelector.selectedOption, continuousSorting);
+        codeSelector.hideWarning();
       }
     });
 
@@ -274,8 +252,12 @@ class CodaUI {
 
         if (clickedColumn.classes.contains('message-seq')) {
           messageList.sortBySeqOrSchemeId = 'seq';
+          messageList.sortBySchemeCodes = null;
         } else if (clickedColumn.classes.contains('message-code')) {
           messageList.sortBySeqOrSchemeId = clickedColumn.getAttribute('scheme-id');
+          Scheme scheme = dataset.codeSchemes.singleWhere((s) => s.id == messageList.sortBySeqOrSchemeId);
+          messageList.sortBySchemeCodes = {};
+          scheme.codes.forEach((code) => messageList.sortBySchemeCodes[code.id] = code.displayText);
         } else {
           return;
         }
@@ -292,7 +274,7 @@ class CodaUI {
           messageList.sortAscending = true;
         }
 
-        sortTableView();
+        messageList.sortTableView(dataset, messageCodingTable.tBodies.first);
         CodeSelector.activeCodeSelector.focus();
         return;
       }
@@ -356,10 +338,7 @@ class CodaUI {
         String messageId = row.attributes['message-id'];
         CodeSelector codeSelector = CodeSelector.activeCodeSelector;
         selectNextCodeSelector(messageId, codeSelector.scheme.id);
-        messageList.messageMap[messageId].schemeCodeChanged(dataset, codeSelector.scheme.id, codeSelector.selectedOption);
-        if (continuousSorting && messageList.sortBySeqOrSchemeId == codeSelector.scheme.id) {
-          sortTableView();
-        }
+        messageList.labelMessage(dataset, messageId, codeSelector.scheme.id, codeSelector.selectedOption, continuousSorting);
         CodeSelector.activeCodeSelector.focus();
         event.preventDefault();
         event.stopPropagation();
