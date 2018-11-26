@@ -180,9 +180,9 @@ class CodaUI {
           ..classes.add('scheme-title')
           ..append(new SpanElement()
             ..classes.add('scheme-name')
-            ..text = codeScheme.name
-            ..append(new SpanElement()
-            ..classes.addAll(['button', 'sort'])))
+            ..text = codeScheme.name)
+          ..append(new SpanElement()
+            ..classes.addAll(['button', 'sort']))
           ..append(new SpanElement()
             ..classes.add('scheme-id')
             ..text = codeScheme.id));
