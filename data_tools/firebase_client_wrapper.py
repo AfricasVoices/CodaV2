@@ -61,3 +61,6 @@ def get_message_ref(dataset_id, message_id):
 
 def push_coding_status(coding_status):
     client.document(u'metrics/coda').set(coding_status)
+
+def get_dataset_metrics(dataset_id):
+    return client.document(u'datasets/{}/metrics/messages'.format(dataset_id)).get().to_dict()

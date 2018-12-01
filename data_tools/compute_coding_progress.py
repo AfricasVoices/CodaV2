@@ -21,6 +21,13 @@ for id in ids:
     data['coding_progress'][id] = {}
     messages = []
     messages_with_labels = 0
+
+    # New scheme
+    metrics = fcw.get_dataset_metrics(id)
+    if metrics != None:
+        data['coding_progress'][id] = metrics   
+        continue
+        
     for message in fcw.get_all_messages(id):
         messages.append(message)
         if len(message["Labels"]) > 0:
