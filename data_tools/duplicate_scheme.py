@@ -8,7 +8,7 @@ import validate_message_structure
 import validate_user_list
 
 if (len(sys.argv) != 4):
-    print ("Usage python duolicate.py crypto_token dataset_id scheme_id")
+    print ("Usage python duplicate.py crypto_token dataset_id scheme_id")
     print ("Adds another duplication of the scheme if provided")
     exit(1)
 
