@@ -12,10 +12,14 @@ service cloud.firestore {
     	allow read: if userIsAllowed(resource)
 
       match /code_schemes/{scheme=**} {
-      	allow read, write: if userIsAllowed(getDatasetResource())
+      	allow read: if userIsAllowed(getDatasetResource())
       }
 
       match /messages/{message=**} {
+      	allow read, write: if userIsAllowed(getDatasetResource())
+      }
+
+      match /metrics/{metrics=**} {
       	allow read, write: if userIsAllowed(getDatasetResource())
       }
     }

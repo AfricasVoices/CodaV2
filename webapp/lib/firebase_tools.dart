@@ -49,6 +49,27 @@ updateMessage(Dataset dataset, Message msg) {
   _firestoreInstance.doc(docPath).set(msg.toFirebaseMap()).then((_) {
     log.trace("updateMessage", "Complete: ${msg.id}");
     log.perf("updateMessage", sw.elapsedMilliseconds);
+    updateDatasetStatus(dataset);
+  });
+}
+
+updateDatasetStatus(Dataset dataset) {
+  Stopwatch sw = new Stopwatch()..start();
+  log.trace("updateDatasetStatus", "${dataset.id}");
+
+  int messagesCount = dataset.messages.length;
+  int messagesWithLabel = dataset.messages.where((m) => m.labels.length > 0).length;
+
+  var stats = {
+    "messages_count" : messagesCount,
+    "messages_with_label" : messagesWithLabel
+  };
+
+  var docPath = "datasets/${dataset.id}/metrics/messages";
+
+_firestoreInstance.doc(docPath).set(stats).then((_) {
+    log.trace("updateDatasetStatus", "Complete: ${dataset.id}");
+    log.perf("updateDatasetStatus", sw.elapsedMilliseconds);
   });
 }
 
