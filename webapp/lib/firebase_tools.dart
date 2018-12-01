@@ -65,7 +65,7 @@ updateDatasetStatus(Dataset dataset) {
     "messages_with_label" : messagesWithLabel
   };
 
-  var docPath = "datasets/${dataset.id}/metrics/Messages";
+  var docPath = "datasets/${dataset.id}/metrics/messages";
 
 _firestoreInstance.doc(docPath).set(stats).then((_) {
     log.trace("updateDatasetStatus", "Complete: ${dataset.id}");
