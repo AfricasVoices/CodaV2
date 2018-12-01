@@ -10,6 +10,6 @@ if (len(sys.argv) != 3):
 DASHBOARD_CRYPTO_TOKEN_PATH = sys.argv[1]
 PROGRESS_FILE = sys.argv[2]
 
-fcw.init_client(DASHBOARD_CRYPTO_TOKEN_PATH, project_id="avf-dashboards")
+fcw.init_client(DASHBOARD_CRYPTO_TOKEN_PATH)
 data = json.load(open(PROGRESS_FILE, 'r'))
 fcw.push_coding_status(data)
