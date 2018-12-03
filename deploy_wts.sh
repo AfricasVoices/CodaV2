@@ -25,7 +25,6 @@ if grep "AIzaSyAVM9wsuKG0ANdKnkJjNN6lTmmH0fD_v68" public_wts/main.dart.js; then 
 if grep "fir-test-b0eb7" public_wts/main.dart.js; then echo "dev config found"; exit 1; fi
 
 # Predeploy verify that the prod strings are not present
-
 if grep "https://web-coda.firebaseio.com" public_wts/main.dart.js; then echo "prod config found"; exit 1; fi
 if grep "AIzaSyAdwgBTgdD2oNYP9VwyS9fQd6sf5roqLuA" public_wts/main.dart.js; then echo "prod config found"; exit 1; fi
 if grep "web-coda" public_wts/main.dart.js; then echo "prod config found"; exit 1; fi
