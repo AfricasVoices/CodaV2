@@ -25,9 +25,9 @@ if grep "AIzaSyAVM9wsuKG0ANdKnkJjNN6lTmmH0fD_v68" public_prod/main.dart.js; then
 if grep "fir-test-b0eb7" public_prod/main.dart.js; then echo "dev config found"; exit 1; fi
 
 # Predeploy verify that the wts strings are not present
-if grep "https://XXXXXXXXX.firebaseio.com" public_wts/main.dart.js; then echo "prod config not found"; exit 1; fi
-if grep "XXXXXXXXX" public_wts/main.dart.js; then echo "prod config not found"; exit 1; fi
-if grep "XXXXXXXXX" public_wts/main.dart.js; then echo "prod config not found"; exit 1; fi
+if grep "https://wts-experiments.firebaseio.com" public_wts/main.dart.js; then echo "prod config not found"; exit 1; fi
+if grep "AIzaSyAKxMisrwwy4bWTXuHPBV-CInpn9bjXYFY" public_wts/main.dart.js; then echo "prod config not found"; exit 1; fi
+if grep "wts-experiments" public_wts/main.dart.js; then echo "prod config not found"; exit 1; fi
 
 # # deploy
 firebase deploy --project web-coda --public public_prod
