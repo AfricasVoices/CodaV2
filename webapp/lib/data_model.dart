@@ -263,7 +263,7 @@ class Code {
           codeType = value;
           break;
         case 'ControlCode':
-          codeType = value;
+          controlCode = value;
           break;
         default:
           otherData[property] = value;
