@@ -171,6 +171,7 @@ main tbody {
 
 #message-coding-table {
   outline: none;
+  table-layout: fixed;
 }
 
 #message-coding-table td {
@@ -202,6 +203,9 @@ main tbody {
   width: 50px;
 }
 
+.message-text {
+  word-wrap: break-word;
+}
 
 .button.sort {
   display: inline-block;
@@ -211,7 +215,7 @@ main tbody {
 }
 
 td.message-seq .button.sort { /* First sorting button is a bit different */
-  margin: 0 0 0 8px;
+  margin: 0 0 0 6px;
   vertical-align: initial;
 }
 

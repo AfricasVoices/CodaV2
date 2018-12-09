@@ -166,7 +166,9 @@ class CodaUI {
     TableRowElement headerRow = header.addRow();
     headerRow.addCell()
       ..classes.add('message-seq')
-      ..text = 'Seq'
+      ..append(new SpanElement()
+        ..classes.add('seq-name')
+        ..text = 'Seq')
       ..append(new SpanElement()
         ..classes.addAll(['button', 'sort', 'asc']));
     headerRow.addCell()
