@@ -70,12 +70,14 @@ updateDatasetStatus(Dataset dataset) {
     schemesIdtoWScodeIds.putIfAbsent(s.id, () => new Set());
     schemesIdtoNCcodeIds.putIfAbsent(s.id, () => new Set());
 
-    String wsCodeId = s.codes.where(
-      (c) => c.codeType == Code.CODETYPE_CONTROL && c.controlCode == "WS").first?.id;
+    var wsCodeIdList = s.codes.where(
+      (c) => c.codeType == Code.CODETYPE_CONTROL && c.controlCode == "WS").toList();
+    String wsCodeId = wsCodeIdList.length != 0 ? wsCodeIdList.first.id : null;
     
-    String ncCodeId = s.codes.where(
-      (c) => c.codeType == Code.CODETYPE_CONTROL && c.controlCode == "NC").first?.id;
-    
+    var ncCodeIdList = s.codes.where(
+      (c) => c.codeType == Code.CODETYPE_CONTROL && c.controlCode == "NC").toList();
+    String ncCodeId = ncCodeIdList.length != 0 ? ncCodeIdList.first.id : null;
+
     if (wsCodeId != null) {
       schemesIdtoWScodeIds[s.id].add(wsCodeId);
     }
