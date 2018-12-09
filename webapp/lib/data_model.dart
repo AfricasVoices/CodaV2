@@ -219,12 +219,16 @@ class Scheme {
 }
 
 class Code {
+  static const CODETYPE_CONTROL = "Control";
+
   String id;
   String displayText;
   int numericValue;
   bool visibleInCoda;
   String shortcut;
   String color;
+  String codeType = null;
+  String controlCode = null;
   Map<String, dynamic> otherData;
 
   Code(this.id, this.displayText, this.numericValue, this.visibleInCoda) {
@@ -255,6 +259,12 @@ class Code {
         case 'Color':
           color = value;
           break;
+        case 'CodeType':
+          codeType = value;
+          break;
+        case 'ControlCode':
+          codeType = value;
+          break;
         default:
           otherData[property] = value;
       }
@@ -276,6 +286,16 @@ class Code {
     if (color != null) {
       result["Color"] = color;
     }
+
+    if (codeType != null) {
+      result["CodeType"] = codeType;
+    }
+
+    if (codeType != null) {
+      result["ControlCode"] = controlCode;
+    }
+
+
     otherData.forEach((property, value) => result[property] = value);
     return result;
   }
