@@ -59,10 +59,50 @@ updateDatasetStatus(Dataset dataset) {
 
   int messagesCount = dataset.messages.length;
   int messagesWithLabel = dataset.messages.where((m) => m.labels.length > 0).length;
+  int messagesWithWS = 0;
+  int messagesWithNC = 0;
 
+  // find the WS and NC Code scheme IDs
+  var schemesIdtoWScodeIds = <String, Set<String>>{};
+  var schemesIdtoNCcodeIds = <String, Set<String>>{};
+
+  for (Scheme s in dataset.codeSchemes) {
+    schemesIdtoWScodeIds.putIfAbsent(s.id, () => new Set());
+    schemesIdtoNCcodeIds.putIfAbsent(s.id, () => new Set());
+
+    String wsCodeId = s.codes.where(
+      (c) => c.codeType == Code.CODETYPE_CONTROL && c.controlCode == "WS").first?.id;
+    
+    String ncCodeId = s.codes.where(
+      (c) => c.codeType == Code.CODETYPE_CONTROL && c.controlCode == "NC").first?.id;
+    
+    if (wsCodeId != null) {
+      schemesIdtoWScodeIds[s.id].add(wsCodeId);
+    }
+    if (ncCodeId != null) {
+      schemesIdtoNCcodeIds[s.id].add(ncCodeId);
+    }
+  }
+
+  for (Message m in dataset.messages) {
+    for (Label l in m.labels) {
+      String schemeId = l.schemeId;
+      String codeId = l.codeId;
+
+      if (schemesIdtoWScodeIds[schemeId].contains(codeId)) {
+        messagesWithWS++;
+      }
+      if (schemesIdtoNCcodeIds[schemeId].contains(codeId)) {
+        messagesWithNC++;
+      }
+    }
+  }
+  
   var stats = {
     "messages_count" : messagesCount,
-    "messages_with_label" : messagesWithLabel
+    "messages_with_label" : messagesWithLabel,
+    "wrong_scheme_messages" : messagesWithWS,
+    "not_coded_messages" : messagesWithNC
   };
 
   var docPath = "datasets/${dataset.id}/metrics/messages";
