@@ -1,4 +1,5 @@
 import firebase_client_wrapper as fcw
+from compute_coding_progress import get_messages_ids_metrics
 
 import json
 import sys
@@ -100,5 +101,7 @@ elif CONTENT_TYPE == "messages":
         added += 1
     
     print ("Added: {}, Skipped: {}".format(added, skipped_existing))
+
+get_messages_ids_metrics()
 
 
