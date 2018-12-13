@@ -12,9 +12,16 @@ import json
 import csv
 import uuid
 import os
+import re
 
 def short_uuid():
     return str(uuid.uuid4()).split('-')[-1]
+
+def code_to_string_value(display_text):
+    txt = re.sub(' +', '_', display_text)
+    txt = re.sub('[^0-9a-zA-Z_]+', '', txt)
+    txt = txt.lower()
+    return txt
 
 def generate_scheme(header_name, codes):
     codes_list = []
@@ -25,6 +32,7 @@ def generate_scheme(header_name, codes):
                 "CodeID" : "code-{}".format(short_uuid()),
                 "DisplayText"    : code,
                 "NumericValue"   : i,
+                "StringValue"    : code_to_string_value(code),
                 "VisibleInCoda"  : True,
                 "CodeType"       : "Normal"
             }
