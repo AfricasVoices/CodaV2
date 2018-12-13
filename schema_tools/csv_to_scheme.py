@@ -44,32 +44,69 @@ def generate_scheme(header_name, codes):
     return scheme
 
 SPECIAL_CODES = [
-     {
-        "CodeID"        : "code-NA-f93d3eb7",
-        "DisplayText"    : "NA (missing)",
-        "ControlCode"    : "NA",
-        "CodeType"       : "Control",
-        "NumericValue"   : -10,
-        "VisibleInCoda"  : True
-      },
-      {
-        "CodeID"        : "code-NC-42f1d983",
-        "DisplayText"    : "NC (not coded)",	
-        "ControlCode"    : "NC",
-        "CodeType"       : "Control",
-        "NumericValue"   : -30,
-        "VisibleInCoda"  : True
-      },
-      {
-        "CodeID"        : "code-WS-adb25603b7af",
-        "DisplayText"    : "WS (wrong scheme)",	
-        "ControlCode"    : "WS",
-        "CodeType"       : "Control",
-        "NumericValue"   : -100,
-        "VisibleInCoda"  : True
-      },
-      
-
+    {
+      "CodeID": "code-NA-f93d3eb7",
+      "CodeType": "Control",
+      "ControlCode": "NA",
+      "DisplayText": "NA (missing)",
+      "NumericValue": -10,
+      "StringValue": "NA",
+      "VisibleInCoda": False
+    },
+    {
+      "CodeID": "code-NS-2c11b7c9",
+      "CodeType": "Control",
+      "ControlCode": "NS",
+      "DisplayText": "NS (skip)",
+      "NumericValue": -20,
+      "StringValue": "NS",
+      "VisibleInCoda": False
+    },
+    {
+      "CodeID": "code-NC-42f1d983",
+      "CodeType": "Control",
+      "ControlCode": "NC",
+      "DisplayText": "NC (not coded)",
+      "NumericValue": -30,
+      "StringValue": "NC",
+      "VisibleInCoda": True
+    },
+    {
+      "CodeID": "code-NR-5e3eee23",
+      "CodeType": "Control",
+      "ControlCode": "NR",
+      "DisplayText": "NR (not reviewed)",
+      "NumericValue": -40,
+      "StringValue": "NR",
+      "VisibleInCoda": False
+    },
+    {
+      "CodeID": "code-NIC-99631cb8",
+      "CodeType": "Control",
+      "ControlCode": "NIC",
+      "DisplayText": "NIC (not internally consistent)",
+      "NumericValue": -50,
+      "StringValue": "NIC",
+      "VisibleInCoda": False
+    },
+    {
+      "CodeID": "code-STOP-08b832a8",
+      "CodeType": "Control",
+      "ControlCode": "STOP",
+      "DisplayText": "STOP",
+      "NumericValue": -90,
+      "StringValue": "STOP",
+      "VisibleInCoda": True
+    },
+    {
+      "CodeID": "code-WS-adb25603b7af",
+      "CodeType": "Control",
+      "ControlCode": "WS",
+      "DisplayText": "WS (wrong scheme)",
+      "NumericValue": -100,
+      "StringValue": "WS",
+      "VisibleInCoda": True
+    }
 ]
 
 parser = argparse.ArgumentParser(description="Generate schema files")
@@ -114,7 +151,7 @@ for k in scheme_map.keys():
 
     scheme_path = os.path.join(OUTPUT_PATH, k) + ".json"
     open (scheme_path, 'w').write(
-        json.dumps(scheme, indent=2, sort_keys=True)
+        json.dumps(scheme, indent=2, sort_keys=True) + "\n"
     )
 
     print ("Written {} => {}".format(k, scheme_path))
