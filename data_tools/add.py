@@ -103,5 +103,6 @@ elif CONTENT_TYPE == "messages":
     print ("Added: {}, Skipped: {}".format(added, skipped_existing))
 
 get_messages_ids_metrics()
+    
 
 
