@@ -84,6 +84,8 @@ elif CONTENT_TYPE == "messages":
 
     next_seq_no = highest_seq_no + 1
 
+    messages_to_write = []
+
     for message in json_data:
         validate_message_structure.verify_message(message)
         id = message["MessageID"]
@@ -94,11 +96,13 @@ elif CONTENT_TYPE == "messages":
         if "SequenceNumber" not in message.keys():
             message["SequenceNumber"] = next_seq_no
             next_seq_no += 1
-
-        message_ref = fcw.get_message_ref(DATASET_ID, id).set(message)
-        print ("Written: {}".format(id))
+        
+        messages_to_write.append(message)
         added += 1
     
-    print ("Added: {}, Skipped: {}".format(added, skipped_existing))
+    print ("About to batch add: {}".format(added, skipped_existing))
+    fcw.set_messages_content_batch(dataset_id, message)
+    print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
+
 
 
