@@ -7,8 +7,6 @@ import validate_code_scheme
 import validate_message_structure
 import validate_user_list
 
-BATCH_SIZE = 500
-
 if (len(sys.argv) != 5):
     print ("Usage python add.py crypto_token dataset_id users|schemes|messages path")
     print ("add only adds data items that don't currently exist, by id. Existing data")
