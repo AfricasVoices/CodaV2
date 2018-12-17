@@ -99,7 +99,7 @@ elif CONTENT_TYPE == "messages":
         message_ref = fcw.get_message_ref(DATASET_ID, id).set(message)
         print ("Written: {}".format(id))
         added += 1
-    
+
     print ("Added: {}, Skipped: {}".format(added, skipped_existing))
 
 get_messages_ids_metrics()

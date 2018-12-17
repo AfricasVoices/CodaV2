@@ -11,16 +11,16 @@ if (len(sys.argv) != 2):
 CODA_CRYPTO_TOKEN_PATH = sys.argv[1]
 fcw.init_client(CODA_CRYPTO_TOKEN_PATH)
 
-def compute_coding_progress(ids, messages, metrics):
+def compute_coding_progress(dataset_ids, messages, metrics):
     """
-    Computes no of messages,labelled messages and last data update time
-    params ids: dataset unique identifiers
-    params messages: project messages 
-    params metrics: project message metrics(Messages,Labelled messages,Not Coded messages,Wrong Schemes)
+    Computes no. of messages,labelled messages and last data update time
+    params dataset_id: dataset unique identifiers
+    params messages: dataset messages 
+    params metrics: dataset message metrics(Messages,Labelled messages,Not Coded messages,Wrong Schemes)
     """
     data = {}
     data['coding_progress'] = {}
-    for id in ids:
+    for id in dataset_ids:
         data['coding_progress'][id] = {}  
         messages_with_labels = 0
         # New scheme
@@ -37,27 +37,28 @@ def compute_coding_progress(ids, messages, metrics):
 
 def get_messages_ids_metrics(): 
     """ 
-    Fetches messages, ids and metrics from firebase and computes
-    coding progess using compute_coding_progress().
+    Fetches dataset ids, messages and metrics for individual datasets and
+    computes coding progress through the compute_coding_progress() function.
+    params dataset_id: dataset unique identifiers.
+    params messages: dataset messages. 
+    params metrics: dataset message metrics(Messages,Labelled messages, Not Coded messages, Wrong Schemes)
     """
-    ids = fcw.get_dataset_ids()
+    dataset_ids = []
+    for dataset_id in fcw.get_dataset_ids():
+        dataset_ids.append(dataset_id)
 
-    metrics = fcw.get_dataset_metrics(id)
+    metrics = []
+    for metric in fcw.get_dataset_metrics(dataset_ids):
+        metrics.append(metric)
 
     messages = []
-    for message in fcw.get_all_messages(id):
+    for message in fcw.get_all_messages(dataset_ids):
         messages.append(message)
 
-    progress = compute_coding_progress(ids, messages, metrics)
+    progress = compute_coding_progress(dataset_ids, messages, metrics)
     return progress
 
 if __name__ == "__main__":
     get_messages_ids_metrics()
-    
-
-
-
-
-
-
+    print (json.dumps(data, indent=2))
     
