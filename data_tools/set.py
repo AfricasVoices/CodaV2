@@ -37,13 +37,13 @@ if CONTENT_TYPE == "users":
     validate_user_list.verify_JSON_path(PATH)
     users_list = json_data
     print ("Setting users for '{}': {}".format(DATASET_ID, users_list))
-    fcw.set_users(dataset_id, users_list)
+    fcw.set_users(DATASET_ID, users_list)
     print ("Done")
 elif CONTENT_TYPE == "schemes":
     for scheme in json_data:
         validate_code_scheme.verify_scheme(scheme)
         id = scheme["SchemeID"]
-        fcw.set_scheme(dataset_id, scheme)
+        fcw.set_scheme(DATASET_ID, scheme)
         
         print ("Updated: {}".format(id))
 elif CONTENT_TYPE == "messages":
@@ -51,5 +51,5 @@ elif CONTENT_TYPE == "messages":
         validate_message_structure.verify_message(message)
     
     messages = json_data
-    fcw.set_messages_content_batch(dataset_id, messages)
+    fcw.set_messages_content_batch(DATASET_ID, messages)
     print ("Updated messages")
