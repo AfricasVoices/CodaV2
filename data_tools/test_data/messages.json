@@ -1,0 +1,36 @@
+[
+  {
+      "MessageID": "m-1",
+      "SequenceNumber": 0,
+      "Text": "First message text",
+      "CreationDateTimeUTC": "2018-10-19T21:36:17.133956",
+      "Labels": []
+  },
+  {
+      "MessageID": "m-2",
+      "SequenceNumber": 1,
+      "Text": "Second message text",
+      "CreationDateTimeUTC": "2018-10-19T21:36:17.133980",
+      "Labels": []
+  },
+  {
+      "MessageID": "m-3",
+      "SequenceNumber": 2,
+      "Text": "Third message text",
+      "CreationDateTimeUTC": "2018-10-19T21:36:17.133984",
+      "Labels": []
+  },
+  {
+      "MessageID": "m-4",
+      "SequenceNumber": 3,
+      "Text": "Fourth message text",
+      "CreationDateTimeUTC": "2018-10-19T21:36:17.133988",
+      "Labels": []
+  },
+  {
+      "MessageID": "m-5",
+      "Text": "Fifth message text",
+      "CreationDateTimeUTC": "2018-10-19T21:36:17.133991",
+      "Labels": []
+  }
+]
