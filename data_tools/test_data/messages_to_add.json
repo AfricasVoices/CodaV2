@@ -29,6 +29,7 @@
   },
   {
       "MessageID": "m-5",
+      "SequenceNumber": 4,
       "Text": "Fifth message text",
       "CreationDateTimeUTC": "2018-10-19T21:36:17.133991",
       "Labels": []
