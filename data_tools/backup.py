@@ -10,10 +10,13 @@ if (len(sys.argv) < 2 or len(sys.argv) > 3):
 CRYPTO_TOKEN_PATH = sys.argv[1]
 fcw.init_client(CRYPTO_TOKEN_PATH)
 
+ids = fcw.get_dataset_ids()
+
 if len(sys.argv) == 3:
-    ids = [sys.argv[2]]
-else:
-    ids = fcw.get_dataset_ids()
+    id = sys.argv[2]
+    if id not in ids:
+        sys.exit("Dataset: {} not found".format(id))
+    ids = [id]
 
 data = {}
 
@@ -31,5 +34,5 @@ for id in ids:
 
     data[id]["messages"] = messages
 
-print (json.dumps(data, indent=2))
+print (json.dumps(data, indent=2, sort_keys=True))
 
