@@ -63,6 +63,9 @@ def push_coding_status(coding_status):
 def get_dataset_metrics(dataset_id):
     return client.document(u'datasets/{}/metrics/messages'.format(dataset_id)).get().to_dict()
 
+def set_dataset_metrics(dataset_id, metrics_map):
+    message_metrics_ref = client.document(u'datasets/{}/metrics/messages'.format(dataset_id))
+    message_metrics_ref.set(metrics_map)
 
 def set_users(dataset_id, users_list):
     dataset_ref = get_dataset_ref(dataset_id)

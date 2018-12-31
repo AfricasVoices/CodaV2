@@ -27,7 +27,7 @@ for id in ids:
     if metrics != None:
         data['coding_progress'][id] = metrics   
         continue
-        
+
     for message in fcw.get_all_messages(id):
         messages.append(message)
         if len(message["Labels"]) > 0:
@@ -35,6 +35,7 @@ for id in ids:
 
     data['coding_progress'][id]['messages_count'] = len(messages)
     data['coding_progress'][id]['messages_with_label'] = messages_with_labels
+    fcw.set_dataset_metrics(id, data['coding_progress'][id])
 
 data["last_update"] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
