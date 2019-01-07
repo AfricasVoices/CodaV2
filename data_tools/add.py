@@ -1,4 +1,5 @@
 import firebase_client_wrapper as fcw
+import compute_coding_progress as cp 
 
 import json
 import sys
@@ -103,3 +104,7 @@ elif CONTENT_TYPE == "messages":
     print ("About to batch add: {}".format(added, skipped_existing))
     fcw.set_messages_content_batch(DATASET_ID, messages_to_write)
     print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
+    
+    print('Updating Ops Dashboard')
+    cp.compute_coding_progress(id)
+    print('Done')
