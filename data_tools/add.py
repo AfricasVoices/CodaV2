@@ -106,5 +106,5 @@ elif CONTENT_TYPE == "messages":
     print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
     
     print('Updating Ops Dashboard')
-    cp.compute_coding_progress(id)
+    cp.compute_coding_progress(id,force_recount=True)
     print('Done')

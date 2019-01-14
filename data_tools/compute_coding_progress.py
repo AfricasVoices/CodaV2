@@ -4,7 +4,7 @@ import json
 import sys
 from time import gmtime, strftime
 
-def compute_coding_progress(id):
+def compute_coding_progress(id,force_recount=False):
     """Compute and return the progress metrics for a given dataset.
     This method will initialise the counts in Firestore if they do
     not already exist."""
@@ -13,22 +13,36 @@ def compute_coding_progress(id):
 
     # New scheme
     metrics = fcw.get_dataset_metrics(id)
-    if metrics != None:
+    if metrics != None: 
+        metrics = {}
+
+        for message in fcw.get_all_messages(id):
+            messages.append(message)
+            if len(message["Labels"]) > 0:
+                messages_with_labels += 1
+
+        metrics['messages_count'] = len(messages)
+        metrics['messages_with_label'] = messages_with_labels
+        
+        # Write the metrics back if they weren't stored
+        fcw.set_dataset_metrics(id, metrics)
         return metrics
-    metrics = {}
 
-    for message in fcw.get_all_messages(id):
-        messages.append(message)
-        if len(message["Labels"]) > 0:
-            messages_with_labels += 1
+    elif force_recount == True:
+        metrics = {}
 
-    metrics['messages_count'] = len(messages)
-    metrics['messages_with_label'] = messages_with_labels
-    
-    # Write the metrics back if they weren't stored
-    fcw.set_dataset_metrics(id, metrics)
-    return metrics
+        for message in fcw.get_all_messages(id):
+            messages.append(message)
+            if len(message["Labels"]) > 0:
+                messages_with_labels += 1
 
+        metrics['messages_count'] = len(messages)
+        metrics['messages_with_label'] = messages_with_labels
+        
+        # Write the metrics back if they weren't stored
+        fcw.set_dataset_metrics(id, metrics)
+        return metrics
+         
 if __name__ == "__main__":
     if (len(sys.argv) != 2):
         print ("Usage python compute_coding_progress.py coda_crypto_token")
