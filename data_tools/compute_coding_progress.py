@@ -4,7 +4,7 @@ import json
 import sys
 from time import gmtime, strftime
 
-def compute_coding_progress(id,force_recount=False):
+def compute_coding_progress(id, force_recount=False):
     """Compute and return the progress metrics for a given dataset.
     This method will initialise the counts in Firestore if they do
     not already exist."""
@@ -13,8 +13,10 @@ def compute_coding_progress(id,force_recount=False):
 
     # New scheme
     metrics = fcw.get_dataset_metrics(id)
-    if force_recount == True or metrics != None: 
-        metrics = {}
+    if force_recount == False and metrics != None:
+        return metrics 
+    
+    metrics = {}
 
     for message in fcw.get_all_messages(id):
         messages.append(message)
