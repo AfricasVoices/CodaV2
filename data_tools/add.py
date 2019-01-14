@@ -105,6 +105,6 @@ elif CONTENT_TYPE == "messages":
     fcw.set_messages_content_batch(DATASET_ID, messages_to_write)
     print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
     
-    print('Updating Ops Dashboard')
-    cp.compute_coding_progress(id, force_recount=True)
+    print('Updating Ops Dashboard for dataset: {}'.format(DATASET_ID))
+    cp.compute_coding_progress(DATASET_ID, force_recount=True)
     print('Done')
