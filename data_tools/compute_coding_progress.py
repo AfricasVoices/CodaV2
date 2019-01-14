@@ -19,7 +19,7 @@ def compute_coding_progress(id,force_recount=False):
         for message in fcw.get_all_messages(id):
             messages.append(message)
             if len(message["Labels"]) > 0:
-                messages_with_labels += 1
+                 messages_with_labels += 1
 
         metrics['messages_count'] = len(messages)
         metrics['messages_with_label'] = messages_with_labels
