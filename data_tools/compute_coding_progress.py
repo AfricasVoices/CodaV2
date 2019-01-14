@@ -13,36 +13,21 @@ def compute_coding_progress(id,force_recount=False):
 
     # New scheme
     metrics = fcw.get_dataset_metrics(id)
-    if metrics != None: 
+    if force_recount == True or metrics != None: 
         metrics = {}
 
-        for message in fcw.get_all_messages(id):
-            messages.append(message)
-            if len(message["Labels"]) > 0:
-                 messages_with_labels += 1
+    for message in fcw.get_all_messages(id):
+        messages.append(message)
+        if len(message["Labels"]) > 0:
+            messages_with_labels += 1
 
-        metrics['messages_count'] = len(messages)
-        metrics['messages_with_label'] = messages_with_labels
+    metrics['messages_count'] = len(messages)
+    metrics['messages_with_label'] = messages_with_labels
         
-        # Write the metrics back if they weren't stored
-        fcw.set_dataset_metrics(id, metrics)
-        return metrics
+    # Write the metrics back if they weren't stored
+    fcw.set_dataset_metrics(id, metrics)
+    return metrics
 
-    elif force_recount == True:
-        metrics = {}
-
-        for message in fcw.get_all_messages(id):
-            messages.append(message)
-            if len(message["Labels"]) > 0:
-                messages_with_labels += 1
-
-        metrics['messages_count'] = len(messages)
-        metrics['messages_with_label'] = messages_with_labels
-        
-        # Write the metrics back if they weren't stored
-        fcw.set_dataset_metrics(id, metrics)
-        return metrics
-         
 if __name__ == "__main__":
     if (len(sys.argv) != 2):
         print ("Usage python compute_coding_progress.py coda_crypto_token")
