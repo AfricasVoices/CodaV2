@@ -159,7 +159,7 @@ void main() {
     ui.addMessagesToView(messages);
 
     test("from empty", () async {
-      MessageViewModel message = ui.messages[0];
+      MessageViewModel message = ui.messageList.messages[0];
 
       expect(message.codeSelectors.length, 2);
       expect(message.message.id, "msg 0");
@@ -179,7 +179,7 @@ void main() {
     });
 
     test("recoding a code that is not part of the scheme", () async {
-      MessageViewModel message = ui.messages[5];
+      MessageViewModel message = ui.messageList.messages[5];
 
       expect(message.codeSelectors.length, 2);
       expect(message.message.id, "msg 5");

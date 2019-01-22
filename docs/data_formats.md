@@ -9,17 +9,19 @@ Code Scheme definition (JSON, named $Name-$Version)
 
 ```
 {
-  "SchemeID"            : String,     // Required, Globally unique format "Scheme-sUUID"
-  "Name"                : String,     // Required, Friendly name
-  "Version"             : String,     // Required, Semantic version code
-  "Codes"               : [           // Required
+  "SchemeID"            : String,       // Required, Globally unique format "Scheme-sUUID"
+  "Name"                : String,       // Required, Friendly name
+  "Version"             : String,       // Required, Semantic version code
+  "Codes"               : [             // Required
     {
-      "CodeID"          : String,     // Required, Unique in code scheme format "Scheme-???-sUUID"
-      "DisplayText"     : String,     // Required, Coda will display this
-      "Shortcut"        : String,     // Optional, Single character for shortcut
-      "NumericValue"    : Int,        // Required, Unique in code scheme
-      "VisibleInCoda"   : Bool,       // Required, Coda will display if true
-      "Color"           : String      // Optional
+      "CodeID"          : String,       // Required, Unique in code scheme format "Scheme-???-sUUID"
+      "DisplayText"     : String,       // Required, Coda will display this
+      "Shortcut"        : String,       // Optional, Single character for shortcut
+      "NumericValue"    : Int,          // Required, Unique in code scheme analysis output in numeric form
+      "StringValue"     : String,       // Required, Unique in code scheme analysis output in string form
+      "VisibleInCoda"   : Bool,         // Required, Coda will display if true
+      "Color"           : String,       // Optional
+      "MatchValues"     : List<String>  // Optional, List of strings that tools can use to automatically match this code
     }
   ],
   "Documentation" : {                 // Optional
@@ -36,6 +38,7 @@ Message definition (JSON, named $ID)
 ```
 {
   "MessageID"           : String,           // Required, Globally unique
+  "SequenceNumber"      : Int               // Required, Unique, but not necessarily consecutive
   "Text"                : String,           // Required
   "CreationDateTimeUTC" : ISO 8601 String,  // Required
   "Labels"              : [                 // Required

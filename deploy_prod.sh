@@ -2,6 +2,7 @@ set -e
 
 rm -rf public
 rm -rf public_prod
+rm -rf public_wts
 
 # # Move the dev constants
 mv webapp/lib/firebase_constants.dart webapp/lib/firebase_constants_dev.dart 
@@ -23,6 +24,10 @@ if grep "https://fir-test-b0eb7.firebaseio.com" public_prod/main.dart.js; then e
 if grep "AIzaSyAVM9wsuKG0ANdKnkJjNN6lTmmH0fD_v68" public_prod/main.dart.js; then echo "dev config found"; exit 1; fi
 if grep "fir-test-b0eb7" public_prod/main.dart.js; then echo "dev config found"; exit 1; fi
 
+# Predeploy verify that the wts strings are not present
+if grep "https://wts-experiments.firebaseio.com" public_prod/main.dart.js; then echo "wts config found"; exit 1; fi
+if grep "AIzaSyAKxMisrwwy4bWTXuHPBV-CInpn9bjXYFY" public_prod/main.dart.js; then echo "wts config found"; exit 1; fi
+if grep "wts-experiments" public_prod/main.dart.js; then echo "wts config found"; exit 1; fi
 
 # # deploy
 firebase deploy --project web-coda --public public_prod

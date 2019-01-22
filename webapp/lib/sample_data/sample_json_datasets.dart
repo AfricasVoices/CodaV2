@@ -4,6 +4,7 @@ Map jsonDatasetNoSchemes = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
@@ -17,12 +18,14 @@ Map jsonDatasetOneScheme = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
+      "SequenceNumber": 1,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -40,6 +43,7 @@ Map jsonDatasetOneScheme = {
     },
     {
       "MessageID": "msg 2",
+      "SequenceNumber": 2,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -57,6 +61,7 @@ Map jsonDatasetOneScheme = {
     },
     {
       "MessageID": "msg 3",
+      "SequenceNumber": 3,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -90,15 +95,17 @@ Map jsonDatasetOneScheme = {
       "Version": "0.0.0.1",
       "Codes": [
         {
-          "FriendlyName": "code 1",
+          "DisplayText": "code 1",
           "CodeID": "code 1",
+          "NumericValue": 20,
           "Color": "#f46241",
           "Shortcut": "1",
           "VisibleInCoda": true
         },
         {
-          "FriendlyName": "code 2",
+          "DisplayText": "code 2",
           "CodeID": "code 2",
+          "NumericValue": 30,
           "Shortcut": "2",
           "VisibleInCoda": true
         }
@@ -112,12 +119,14 @@ Map jsonDatasetTwoSchemes = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
+      "SequenceNumber": 1,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -135,6 +144,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 2",
+      "SequenceNumber": 2,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -152,6 +162,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 3",
+      "SequenceNumber": 3,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -179,6 +190,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 4",
+      "SequenceNumber": 4,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -206,6 +218,7 @@ Map jsonDatasetTwoSchemes = {
     },
     {
       "MessageID": "msg 5",
+      "SequenceNumber": 5,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": [
@@ -229,15 +242,17 @@ Map jsonDatasetTwoSchemes = {
       "Version": "0.0.0.1",
       "Codes": [
         {
-          "FriendlyName": "code 1",
+          "DisplayText": "code 1",
           "CodeID": "code 1",
+          "NumericValue": 20,
           "Color": "#f46241",
           "Shortcut": "1",
           "VisibleInCoda": true
         },
         {
-          "FriendlyName": "code 2",
+          "DisplayText": "code 2",
           "CodeID": "code 2",
+          "NumericValue": 30,
           "Shortcut": "2",
           "VisibleInCoda": true
         }
@@ -249,15 +264,17 @@ Map jsonDatasetTwoSchemes = {
       "Version": "0.0.0.1",
       "Codes": [
         {
-          "FriendlyName": "code 1",
+          "DisplayText": "code 1",
           "CodeID": "code 1",
+          "NumericValue": 10,
           "Color": "#f46241",
           "Shortcut": "a",
           "VisibleInCoda": true
         },
         {
-          "FriendlyName": "code 2",
+          "DisplayText": "code 2",
           "CodeID": "code 2",
+          "NumericValue": 20,
           "Shortcut": "b",
           "VisibleInCoda": true
         }
@@ -270,36 +287,42 @@ Map jsonDatasetTwoSchemesNoCodes = {
   "messages": [
     {
       "MessageID": "msg 0",
+      "SequenceNumber": 0,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 1",
+      "SequenceNumber": 1,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 2",
+      "SequenceNumber": 2,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 3",
+      "SequenceNumber": 3,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 4",
+      "SequenceNumber": 4,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
     },
     {
       "MessageID": "msg 5",
+      "SequenceNumber": 5,
       "Text": "message",
       "CreationDateTimeUTC": "2018-09-23T14:14:00Z",
       "Labels": []
@@ -312,15 +335,17 @@ Map jsonDatasetTwoSchemesNoCodes = {
       "Version": "0.0.0.1",
       "Codes": [
         {
-          "FriendlyName": "code 1",
+          "DisplayText": "code 1",
           "CodeID": "code 1",
+          "NumericValue": 20,
           "Color": "#f46241",
           "Shortcut": "1",
           "VisibleInCoda": true
         },
         {
-          "FriendlyName": "code 2",
+          "DisplayText": "code 2",
           "CodeID": "code 2",
+          "NumericValue": 30,
           "Shortcut": "2",
           "VisibleInCoda": true
         }
@@ -332,15 +357,17 @@ Map jsonDatasetTwoSchemesNoCodes = {
       "Version": "0.0.0.1",
       "Codes": [
         {
-          "FriendlyName": "code 1",
+          "DisplayText": "code 1",
           "CodeID": "code 1",
+          "NumericValue": 10,
           "Color": "#f46241",
           "Shortcut": "a",
           "VisibleInCoda": true
         },
         {
-          "FriendlyName": "code 2",
+          "DisplayText": "code 2",
           "CodeID": "code 2",
+          "NumericValue": 20,
           "Shortcut": "b",
           "VisibleInCoda": true
         }

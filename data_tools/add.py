@@ -1,4 +1,5 @@
 import firebase_client_wrapper as fcw
+import compute_coding_progress as cp 
 
 import json
 import sys
@@ -27,11 +28,11 @@ if DATASET_ID not in dataset_ids:
 
 
 if CONTENT_TYPE not in ["users", "schemes", "messages"]:
-    print ("update target {} not known".format(TARGET))
+    print ("update content type {} not known".format(CONTENT_TYPE))
     exit(1)
 
-if CONTENT_TYPE != "messages":
-    print ("Only messages are currently supported")
+if CONTENT_TYPE not in  ["messages", "schemes"]:
+    print ("Only messages and schemes are currently supported")
     exit(1)
 
 json_data = json.loads(open(PATH, 'r').read())
@@ -41,13 +42,50 @@ dataset_ref = fcw.get_dataset_ref(DATASET_ID)
 if CONTENT_TYPE == "users":
     pass # Not implemented
 elif CONTENT_TYPE == "schemes":
-    pass # Not implemented
-elif CONTENT_TYPE == "messages":
     added = 0
     skipped_existing = 0
 
-    existing_ids = fcw.get_message_ids(DATASET_ID)
+    existing_ids = fcw.get_code_scheme_ids(DATASET_ID)
     print ("Existing Ids: {}".format(len(existing_ids)))
+    if json_data is list:
+        schemes = json_data
+    else:
+        assert isinstance(json_data, dict)
+        schemes = [ json_data ]
+    
+    for scheme in schemes:
+        validate_code_scheme.verify_scheme(scheme)
+        id = scheme["SchemeID"]
+    
+        if id in existing_ids:
+            skipped_existing += 1
+            continue
+
+        fcw.get_code_scheme_ref(DATASET_ID, id).set(scheme)
+        print ("Written: {}".format(id))
+        added += 1
+    
+    print ("Added: {}, Skipped: {}".format(added, skipped_existing))
+
+elif CONTENT_TYPE == "messages":
+    added = 0
+    skipped_existing = 0
+    all_messages = fcw.get_all_messages(DATASET_ID)
+
+    existing_ids = []
+    highest_seq_no = -1
+    for message in all_messages:
+        existing_ids.append(message["MessageID"])
+        if "SequenceNumber" in message.keys():
+            if message["SequenceNumber"] > highest_seq_no:
+                highest_seq_no = message["SequenceNumber"]
+
+    print ("Existing Ids: {}".format(len(existing_ids)))
+    print ("Highest seen sequence number: {}".format(highest_seq_no))
+
+    next_seq_no = highest_seq_no + 1
+
+    messages_to_write = []
 
     for message in json_data:
         validate_message_structure.verify_message(message)
@@ -56,10 +94,17 @@ elif CONTENT_TYPE == "messages":
             skipped_existing += 1
             continue
 
-        message_ref = fcw.get_message_ref(DATASET_ID, id).set(message)
-        print ("Written: {}".format(id))
+        if "SequenceNumber" not in message.keys():
+            message["SequenceNumber"] = next_seq_no
+            next_seq_no += 1
+        
+        messages_to_write.append(message)
         added += 1
     
-    print ("Added: {}, Skipped: {}".format(added, skipped_existing))
-
-
+    print ("About to batch add: {}".format(added, skipped_existing))
+    fcw.set_messages_content_batch(DATASET_ID, messages_to_write)
+    print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
+    
+    print('Updating Ops Dashboard for dataset: {}'.format(DATASET_ID))
+    cp.compute_coding_progress(DATASET_ID, force_recount=True)
+    print('Done')
