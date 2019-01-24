@@ -1,0 +1,41 @@
+{
+    "SchemeID": "Scheme-c9b1a1d8",
+    "Name": "Binary Scheme",
+    "Version": "0.0.0.1",
+    "Codes": [
+    {
+        "CodeID": "code-8f1c2c4d",
+        "DisplayText": "Option 1",
+        "Shortcut": "1",	
+        "CodeType": "Normal",
+        "NumericValue": 1,
+        "VisibleInCoda": true
+    },
+    {
+        "CodeID": "code-298abe95",
+        "DisplayText": "Option 2",	
+        "Shortcut": "2",	
+        "CodeType": "Normal",
+        "NumericValue": 2,
+        "VisibleInCoda": true
+    },
+    {
+        "CodeID": "code-NA-f93d3eb7",
+        "CodeType": "Control",
+        "ControlCode": "NA",
+        "DisplayText": "NA (missing)",
+        "NumericValue": -10,
+        "StringValue": "NA",
+        "VisibleInCoda": false
+    },
+    {
+        "CodeID": "code-NC-42f1d983",
+        "CodeType": "Control",
+        "ControlCode": "NC",
+        "DisplayText": "NC (not coded)",
+        "NumericValue": -30,
+        "StringValue": "NC",
+        "VisibleInCoda": true
+    }
+    ]
+}
