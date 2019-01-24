@@ -18,8 +18,9 @@ part 'view_model.dart';
 CodaUI _codaUI;
 CodaUI get codaUI => _codaUI;
 
-void init() {
+void init() async {
   _codaUI = new CodaUI();
+  await _codaUI.init();
 }
 
 class CodaUI {
@@ -42,8 +43,10 @@ class CodaUI {
   // Cache main elements of the UI
   TableElement messageCodingTable;
 
-  CodaUI() {
-    fbt.init();
+  CodaUI();
+
+  init() async {
+    await fbt.init();
     auth.init();
     snackbar.init();
 
