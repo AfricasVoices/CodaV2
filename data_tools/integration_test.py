@@ -14,7 +14,7 @@ CRYPTO_TOKEN_PATH = sys.argv[1]
 fcw.init_client(CRYPTO_TOKEN_PATH)
 
 FIREBASE_PROJECT = 'coda-integration-test'
-DATASET_ID = 'integration-test-dataset'
+DATASET_ID = 'integration-test-dataset-e249ea3e-72a4-4fbe-9ed7-b82d847affb9'
 
 USERS_TO_SET_FILE = 'test_data/users_to_set.json'
 SCHEME_TO_ADD_FIRST_FILE = 'test_data/scheme_to_add_first.json'
