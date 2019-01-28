@@ -2,7 +2,7 @@ import 'package:http/browser_client.dart';
 import 'dart:convert';
 
 import "config.dart";
-import "firebase_constants.dart";
+import "firebase_constants.dart" as firebase_constants;
 import "authentication.dart" as auth;
 
 
@@ -55,9 +55,10 @@ _writeMap(Map m) {
   _logToServer(m);
 }
 
-_logToServer(Map m) {
+_logToServer(Map m) async {
   var client = new BrowserClient();
-  client.post(logUrl, body: json.encode(m));
+  await firebase_constants.init();
+  client.post(firebase_constants.logUrl, body: json.encode(m));
 }
 
 

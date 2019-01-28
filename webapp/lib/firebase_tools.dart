@@ -23,8 +23,10 @@ enum ChangeType {
 
 firestore.Firestore _firestoreInstance = firebase.firestore();
 
-init() {
+init() async {
   if (TEST_MODE) return;
+
+  await firebase_constants.init();
 
   firebase.initializeApp(
       apiKey: firebase_constants.apiKey,
