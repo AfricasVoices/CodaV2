@@ -1,0 +1,9 @@
+{
+  "apiKey" : "AIzaSyDxAVbE5sx-DCPiVtkpBh1k5UsNg3bx_CU",
+  "authDomain" : "coda-interview.firebaseapp.com",
+  "databaseURL" : "https://coda-interview.firebaseio.com",
+  "projectId" : "coda-interview",
+  "storageBucket" : "coda-interview.appspot.com",
+  "messagingSenderId" : "1065479654993",
+  "logUrl" : "https://us-central1-coda-interview.cloudfunctions.net/Log"
+}

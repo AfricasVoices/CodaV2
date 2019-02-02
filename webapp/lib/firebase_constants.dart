@@ -1,9 +1,22 @@
 library firebase.constants;
 
-const String apiKey = "AIzaSyAVM9wsuKG0ANdKnkJjNN6lTmmH0fD_v68";
-const String authDomain = "fir-test-b0eb7.firebaseapp.com";
-const String databaseURL = "https://fir-test-b0eb7.firebaseio.com";
-const String projectId = "fir-test-b0eb7";
-const String storageBucket = "fir-test-b0eb7.appspot.com";
-const String messagingSenderId = "587699758467";
-const String logUrl = "https://us-central1-fir-test-b0eb7.cloudfunctions.net/Log";
+import 'dart:convert';
+import 'dart:html';
+
+void init() async {
+  if (_constants != null) return;
+
+  var constantsJson = await HttpRequest.getString(_constantsFilePath);
+  _constants = (json.decode(constantsJson) as Map).map<String, String>((key, value) => new MapEntry(key.toString(), value.toString()));
+}
+
+String _constantsFilePath = 'assets/firebase_constants.json';
+Map<String, String> _constants;
+
+String get apiKey => _constants['apiKey'];
+String get authDomain => _constants['authDomain'];
+String get databaseURL => _constants['databaseURL'];
+String get projectId => _constants['projectId'];
+String get storageBucket => _constants['storageBucket'];
+String get messagingSenderId => _constants['messagingSenderId'];
+String get logUrl => _constants['logUrl'];

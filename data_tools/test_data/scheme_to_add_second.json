@@ -1,0 +1,58 @@
+{
+    "SchemeID": "Scheme-a562ef41",
+    "Name": "Ternary Scheme",
+    "Version": "0.0.0.1",
+    "Codes": [
+    {
+        "CodeID": "code-1268d00a",
+        "DisplayText": "Option 1",
+        "Shortcut": "1",	
+        "CodeType": "Normal",
+        "NumericValue": 1,
+        "VisibleInCoda": true
+    },
+    {
+        "CodeID": "code-e640bc71",
+        "DisplayText": "Option 2",	
+        "Shortcut": "2",	
+        "CodeType": "Normal",
+        "NumericValue": 2,
+        "VisibleInCoda": true
+    },
+    {
+        "CodeID": "code-69e1a281",
+        "DisplayText": "Option 3",	
+        "Shortcut": "3",	
+        "CodeType": "Normal",
+        "NumericValue": 3,
+        "VisibleInCoda": true
+    },
+    {
+        "CodeID": "code-NA-f93d3eb7",
+        "CodeType": "Control",
+        "ControlCode": "NA",
+        "DisplayText": "NA (missing)",
+        "NumericValue": -10,
+        "StringValue": "NA",
+        "VisibleInCoda": false
+    },
+    {
+        "CodeID": "code-NS-2c11b7c9",
+        "CodeType": "Control",
+        "ControlCode": "NS",
+        "DisplayText": "NS (skip)",
+        "NumericValue": -20,
+        "StringValue": "NS",
+        "VisibleInCoda": false
+    },
+    {
+        "CodeID": "code-NC-42f1d983",
+        "CodeType": "Control",
+        "ControlCode": "NC",
+        "DisplayText": "NC (not coded)",
+        "NumericValue": -30,
+        "StringValue": "NC",
+        "VisibleInCoda": true
+    }
+    ]
+}

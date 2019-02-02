@@ -1,0 +1,9 @@
+{
+  "apiKey": "AIzaSyAKxMisrwwy4bWTXuHPBV-CInpn9bjXYFY",
+  "authDomain": "wts-experiments.firebaseapp.com",
+  "databaseURL": "https://wts-experiments.firebaseio.com",
+  "projectId": "wts-experiments",
+  "storageBucket": "wts-experiments.appspot.com",
+  "messagingSenderId": "432633619985",
+  "logUrl": "https://us-central1-wts-experiments.cloudfunctions.net/Log"
+}

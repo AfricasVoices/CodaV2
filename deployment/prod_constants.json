@@ -1,0 +1,9 @@
+{
+  "apiKey": "AIzaSyAdwgBTgdD2oNYP9VwyS9fQd6sf5roqLuA",
+  "authDomain": "web-coda.firebaseapp.com",
+  "databaseURL": "https://web-coda.firebaseio.com",
+  "projectId": "web-coda",
+  "storageBucket": "web-coda.appspot.com",
+  "messagingSenderId": "329672882311",
+  "logUrl": "https://us-central1-web-coda.cloudfunctions.net/Log"
+}
