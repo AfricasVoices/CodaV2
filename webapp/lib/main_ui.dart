@@ -361,6 +361,7 @@ class CodaUI {
 
       if (activeShortcuts.keys.contains(event.key)) {
         CodeSelector.activeCodeSelector.selectedOption = activeShortcuts[event.key];
+        CodeSelector.activeCodeSelector.manualLabel = true;
         CodeSelector.activeCodeSelector.hideWarning();
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageId = row.attributes['message-id'];

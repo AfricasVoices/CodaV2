@@ -175,6 +175,13 @@ class MessageViewModel {
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
+      if (label.codeId == Label.AUTOMATIC) {
+        codeSelector.manualLabel = false;
+        codeSelector.confidence = label.confidence;
+        codeSelector.origin = '${label.labelOrigin.name} - ${label.confidence} conf.';
+        return;
+      }
+      codeSelector.manualLabel = true;
       codeSelector.origin = label.labelOrigin.name;
       return;
     }
@@ -277,6 +284,19 @@ class CodeSelector {
     } else {
       option.selected = true;
     }
+  }
+
+  set manualLabel(bool isManualLabel) {
+    if (isManualLabel) {
+      dropdown.style.background = '';
+      return;
+    }
+    dropdown.style.background = 'hsl(50, 100%, 50%)';
+  }
+
+  set confidence(double confidence) {
+    int luminosity = 50 + confidence * 100 ~/ 2;
+    dropdown.style.background = 'hsl(50, 100%, $luminosity%)';
   }
 
   String get selectedOption => dropdown.selectedOptions[0].attributes['valueid'];
