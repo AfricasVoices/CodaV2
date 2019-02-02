@@ -175,7 +175,7 @@ class MessageViewModel {
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
-      if (label.codeId == Label.AUTOMATIC) {
+      if (label.labelOrigin.originType == Label.AUTOMATIC) {
         codeSelector.manualLabel = false;
         codeSelector.confidence = label.confidence;
         codeSelector.origin = '${label.labelOrigin.name} - ${label.confidence} conf.';
