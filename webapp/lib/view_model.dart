@@ -70,6 +70,16 @@ class MessageListViewModel {
   }
 }
 
+int codedMessagesCounter = 0;
+
+incrementCodedMessagesCounter() {
+  codedMessagesCounter++;
+  if (codedMessagesCounter % 100 == 0) {
+    // Example on how to set up pubsub:
+    // https://github.com/dart-lang/gcloud/blob/master/lib/pubsub.dart#L59
+  }
+}
+
 /// A ViewModel for a message, corresponding to a table row in the UI.
 class MessageViewModel {
   Message message;

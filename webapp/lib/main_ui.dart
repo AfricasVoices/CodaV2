@@ -7,6 +7,8 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:math' as math;
 
+import 'package:gcloud/pubsub.dart' as pubsub;
+
 import 'logger.dart' as log;
 import 'data_model.dart';
 import 'snackbar_ui.dart' as snackbar;
