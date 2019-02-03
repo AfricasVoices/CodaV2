@@ -5,6 +5,7 @@ library coda.ui;
 
 import 'dart:convert';
 import 'dart:html';
+import 'dart:math' as math;
 
 import 'logger.dart' as log;
 import 'data_model.dart';

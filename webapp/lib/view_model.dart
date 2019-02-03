@@ -175,10 +175,10 @@ class MessageViewModel {
     if (label != null) {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
-      if (label.labelOrigin.originType == Label.AUTOMATIC) {
+      if (label.labelOrigin.originType == Label.AUTOMATIC_ORIGIN_TYPE) {
         codeSelector.manualLabel = false;
         codeSelector.confidence = label.confidence;
-        codeSelector.origin = '${label.labelOrigin.name} - ${label.confidence} conf.';
+        codeSelector.origin = '${label.labelOrigin.name} (${label.confidence})';
         return;
       }
       codeSelector.manualLabel = true;
@@ -220,6 +220,9 @@ class CodeSelector {
   }
 
   static const EMPTY_CODE_VALUE = 'unassign';
+  static const MIN_CONFIDENCE_LIMIT = 0.6;
+  static const BASE_LUMINOSITY = 50;
+  static const MAX_LUMINOSITY_LIMIT = 90;
 
   Scheme scheme;
 
@@ -294,8 +297,17 @@ class CodeSelector {
     dropdown.style.background = 'hsl(50, 100%, 50%)';
   }
 
+  /// Sets the confidence of the code in the UI.
+  /// Expected range: 0.0 - 1.0
   set confidence(double confidence) {
-    int luminosity = 50 + confidence * 100 ~/ 2;
+    if (confidence < 0.0 || confidence > 1.0) {
+      log.severe('Unexpected confidence value $confidence for scheme id ${scheme.id}');
+    }
+    confidence = math.max(confidence, MIN_CONFIDENCE_LIMIT);
+    // Normalize the confidence
+    double normalized_confidence = (confidence - MIN_CONFIDENCE_LIMIT) /  (1.0 - MIN_CONFIDENCE_LIMIT);
+    // Compute the luminosity between BASE_LUMINOSITY (0 confidence) and MAX_LUMINOSITY_LIMIT (100% confidence)
+    int luminosity = BASE_LUMINOSITY + (normalized_confidence * (MAX_LUMINOSITY_LIMIT - BASE_LUMINOSITY)).toInt();
     dropdown.style.background = 'hsl(50, 100%, $luminosity%)';
   }
 
