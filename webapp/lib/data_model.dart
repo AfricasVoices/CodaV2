@@ -98,6 +98,7 @@ class Label {
   Map<String, dynamic> otherData;
 
   static const MANUALLY_UNCODED = 'SPECIAL-MANUALLY_UNCODED';
+  static const AUTOMATIC_ORIGIN_TYPE = 'Automatic';
 
   Label(this.schemeId, this.dateTime, this.codeId, this.labelOrigin, {this.confidence = 1.0, this.checked = true}) {
     otherData = {};

@@ -5,6 +5,7 @@ library coda.ui;
 
 import 'dart:convert';
 import 'dart:html';
+import 'dart:math' as math;
 
 import 'logger.dart' as log;
 import 'data_model.dart';
@@ -361,6 +362,7 @@ class CodaUI {
 
       if (activeShortcuts.keys.contains(event.key)) {
         CodeSelector.activeCodeSelector.selectedOption = activeShortcuts[event.key];
+        CodeSelector.activeCodeSelector.isManualLabel = true;
         CodeSelector.activeCodeSelector.hideWarning();
         TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
         String messageId = row.attributes['message-id'];
