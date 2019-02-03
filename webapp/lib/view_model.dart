@@ -176,12 +176,12 @@ class MessageViewModel {
       codeSelector.selectedOption = label.codeId == Label.MANUALLY_UNCODED ? CodeSelector.EMPTY_CODE_VALUE : label.codeId;
       codeSelector.checked = label.checked;
       if (label.labelOrigin.originType == Label.AUTOMATIC_ORIGIN_TYPE) {
-        codeSelector.manualLabel = false;
+        codeSelector.isManualLabel = false;
         codeSelector.confidence = label.confidence;
         codeSelector.origin = '${label.labelOrigin.name} (${label.confidence})';
         return;
       }
-      codeSelector.manualLabel = true;
+      codeSelector.isManualLabel = true;
       codeSelector.origin = label.labelOrigin.name;
       return;
     }
@@ -289,7 +289,7 @@ class CodeSelector {
     }
   }
 
-  set manualLabel(bool isManualLabel) {
+  set isManualLabel(bool isManualLabel) {
     if (isManualLabel) {
       dropdown.style.background = '';
       return;
