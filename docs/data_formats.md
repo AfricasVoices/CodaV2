@@ -47,7 +47,7 @@ Message definition (JSON, named $ID)
       "CodeID"          : String,           // Required
       "DateTimeUTC"     : ISO 8601 String,  // Required
       "Checked"         : Bool,             // Optional
-      "Confidence"      : Double,           // Optional
+      "Confidence"      : Number,           // Optional ( 0 <= Confidence <= 1 )
       "LabelSet"        : Int,              // Optional, used to group multiple labels together in future UI
       "Origin"          : {                 // Required
         "OriginID"      : String,           // Required
