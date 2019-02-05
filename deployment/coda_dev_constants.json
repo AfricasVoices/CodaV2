@@ -1,0 +1,9 @@
+{
+  "apiKey" : "AIzaSyCW4X9wZiQ9C3I6thrIE8kohqiputNlXtA",
+  "authDomain" : "coda-dev-229611.firebaseapp.com",
+  "databaseURL" : "https://coda-dev-229611.firebaseio.com",
+  "projectId" : "coda-dev-229611",
+  "storageBucket" : "coda-dev-229611.appspot.com",
+  "messagingSenderId" : "951917536160",
+  "logUrl" : "https://us-central1-coda-dev-229611.cloudfunctions.net/Log"
+}
