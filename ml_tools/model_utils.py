@@ -103,29 +103,32 @@ def build_and_evaluate(messages, labels):
         messages_test = [messages[i] for i in test_indices]
         labels_test = [labels[i] for i in test_indices]
 
-        log("Building model...")
+        # log("Building model...")
         model = build_model(messages_train, labels_train)
-        log("Model built")
+        # log("Model built")
 
         predicted_labels = model.predict(messages_test)
-        log("Classification report:\n" + classification_report(labels_test, predicted_labels))
+        # log("Classification report:\n" + classification_report(labels_test, predicted_labels))
 
-        related_model_score, unrelated_model_score = compute_model_score(labels_test, predicted_labels)
+        seen_labels = set(labels)
+        print (seen_labels)
 
-        if related_model_score["fscore"] > best_fscore:
-            best_model = model
-            best_model_index = i
+        scores = compute_model_score(labels_test, predicted_labels)
 
-        model_score["related"] = related_model_score
-        model_score["unrelated"] = unrelated_model_score
-        model_score["best-model"] = False
-        model_score["time-taken-ms"] = (datetime.datetime.now() - start_time).microseconds / 1000
+        # if related_model_score["fscore"] > best_fscore:
+            # best_model = model
+            # best_model_index = i
 
-        model_scores.append(model_score)
+        # model_score["related"] = related_model_score
+        # model_score["unrelated"] = unrelated_model_score
+        # scores["best-model"] = False
+        # scores["time-taken-ms"] = (datetime.datetime.now() - start_time).microseconds / 1000
 
-    model_scores[best_model_index]["best-model"] = True
+        model_scores.append(scores)
 
-    return best_model, model_scores
+    # model_scores[best_model_index]["best-model"] = True
+
+    return model, model_scores
 
 
 def compute_model_score(correct_labels, predicted_labels):
@@ -139,23 +142,21 @@ def compute_model_score(correct_labels, predicted_labels):
     :return: related and unrelated scores in dicts
     :rtype: tuple(dict[str, float])
     """
-    precision, recall, fscore, support = precision_recall_fscore_support(correct_labels, predicted_labels, labels=["related", "unrelated"])
 
-    related_model_scores = {
-        "precision": precision[0],
-        "recall": recall[0],
-        "fscore": fscore[0],
-        "support": float(support[0])
-    }
+    seen_labels = list(set(correct_labels))
 
-    unrelated_model_scores = {
-        "precision": precision[1],
-        "recall": recall[1],
-        "fscore": fscore[1],
-        "support": float(support[1])
-    }
+    precision, recall, fscore, support = precision_recall_fscore_support(correct_labels, predicted_labels, labels=seen_labels)
 
-    return (related_model_scores, unrelated_model_scores)
+    scores = {}
+    for i in range(0, len(seen_labels)):
+        scores[seen_labels[i]] = {
+            "precision": precision[i],
+            "recall": recall[i],
+            "fscore": fscore[i],
+            "support": float(support[i])
+        }
+
+    return scores
 
 
 def check_token(token, stopwords_set, punctuation_set):
