@@ -5,6 +5,13 @@ name = "pypi"
 
 [packages]
 sklearn = "*"
+nltk = "*"
+firebase_admin = "*"
+google-cloud-firestore = "*"
+CoreDataModules = {editable = true, ref = "36e011fea22431ec1222c7cf325f949b4b48acd7", git = "https://www.github.com/AfricasVoices/CoreDataModules"}
+PipelineInfrastructure = {editable = true, ref = "2390ad8af87edca38d71ea5666a8758a0c4c124f", git = "https://www.github.com/AfricasVoices/PipelineInfrastructure"}
+pytz = "*"
+python-dateutil = "*"
 
 [dev-packages]
 
