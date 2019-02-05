@@ -344,10 +344,30 @@ class CodaUI {
     messageCodingTable.onKeyDown.listen((event) {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
+      CodeSelector activeCodeSelector = CodeSelector.activeCodeSelector;
+      TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
+      String messageId = row.attributes['message-id'];
+      
       if (event.key == 'Tab') {
-        TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
-        String messageID = row.attributes['message-id'];
-        selectNextCodeSelector(messageID, CodeSelector.activeCodeSelector.scheme.id);
+        selectNextCodeSelector(messageId, activeCodeSelector.scheme.id);
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      if (event.key == 'Enter') {
+        InputElement checkbox = activeCodeSelector.checkbox;
+
+        if (checkbox.checked) { // Nothing to do here, move onto the next code selector
+          selectNextCodeSelector(messageId, activeCodeSelector.scheme.id);
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+
+        checkbox.checked = true;
+        messageList.messageMap[messageId].schemeCheckChanged(dataset, activeCodeSelector.scheme.id, checkbox.checked);
+        selectNextCodeSelector(messageId, activeCodeSelector.scheme.id);
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -361,15 +381,12 @@ class CodaUI {
       activeShortcuts[' '] = CodeSelector.EMPTY_CODE_VALUE; // add space as shortcut for unassigning a code
 
       if (activeShortcuts.keys.contains(event.key)) {
-        CodeSelector.activeCodeSelector.selectedOption = activeShortcuts[event.key];
-        CodeSelector.activeCodeSelector.isManualLabel = true;
-        CodeSelector.activeCodeSelector.hideWarning();
-        TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
-        String messageId = row.attributes['message-id'];
-        CodeSelector codeSelector = CodeSelector.activeCodeSelector;
-        selectNextCodeSelector(messageId, codeSelector.scheme.id);
-        messageList.messageMap[messageId].schemeCodeChanged(dataset, codeSelector.scheme.id, codeSelector.selectedOption);
-        if (continuousSorting && messageList.sortBySeqOrSchemeId == codeSelector.scheme.id) {
+        activeCodeSelector.selectedOption = activeShortcuts[event.key];
+        activeCodeSelector.isManualLabel = true;
+        activeCodeSelector.hideWarning();
+        selectNextCodeSelector(messageId, activeCodeSelector.scheme.id);
+        messageList.messageMap[messageId].schemeCodeChanged(dataset, activeCodeSelector.scheme.id, activeCodeSelector.selectedOption);
+        if (continuousSorting && messageList.sortBySeqOrSchemeId == activeCodeSelector.scheme.id) {
           sortTableView();
         }
         CodeSelector.activeCodeSelector.focus();
