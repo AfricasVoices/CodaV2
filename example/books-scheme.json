@@ -1,39 +1,86 @@
 {
-    "SchemeID"      :  "Scheme-b3030c7f",
-    "Name"          :  "Books",
-    "Version"       :  "0.0.0.1",
-    "Codes"        :  [         
-      {
-        "CodeID"        : "code-8f1c2c4d",
-        "DisplayText"    : "Pride and Prejudice",
-        "Shortcut"       : "p",	
-        "CodeType"       : "Normal",
-        "NumericValue"   : 1,
-        "VisibleInCoda"  : true
-      },
-      {
-        "CodeID"        : "code-cdb1a128",
-        "DisplayText"    : "Alice in Wonderland",	
-        "Shortcut"       : "a",	
-        "CodeType"       : "Normal",
-        "NumericValue"   : 2,
-        "VisibleInCoda"  : true
-      },
-      {
-        "CodeID"        : "code-NA-f93d3eb7",
-        "DisplayText"    : "NA (missing)",
-        "ControlCode"    : "NA",
-        "CodeType"       : "Control",
-        "NumericValue"   : -10,
-        "VisibleInCoda"  : true
-      },
-      {
-        "CodeID"        : "code-NC-42f1d983",
-        "DisplayText"    : "NC (not coded)",	
-        "ControlCode"    : "NC",
-        "CodeType"       : "Control",
-        "NumericValue"   : -30,
-        "VisibleInCoda"  : true
-      }
-    ]
-  }
+  "Codes": [
+    {
+      "CodeID": "code-f0bf8762503e",
+      "CodeType": "Normal",
+      "DisplayText": "Pride and Prejudice",
+      "NumericValue": 0,
+      "StringValue": "pride_and_prejudice",
+      "VisibleInCoda": true
+    },
+    {
+      "CodeID": "code-1943468ce51e",
+      "CodeType": "Normal",
+      "DisplayText": "Alice in Wonderland",
+      "NumericValue": 1,
+      "StringValue": "alice_in_wonderland",
+      "VisibleInCoda": true
+    },
+    {
+      "CodeID": "code-NA-f93d3eb7",
+      "CodeType": "Control",
+      "ControlCode": "NA",
+      "DisplayText": "NA (missing)",
+      "NumericValue": -10,
+      "StringValue": "NA",
+      "VisibleInCoda": false
+    },
+    {
+      "CodeID": "code-NS-2c11b7c9",
+      "CodeType": "Control",
+      "ControlCode": "NS",
+      "DisplayText": "NS (skip)",
+      "NumericValue": -20,
+      "StringValue": "NS",
+      "VisibleInCoda": false
+    },
+    {
+      "CodeID": "code-NC-42f1d983",
+      "CodeType": "Control",
+      "ControlCode": "NC",
+      "DisplayText": "NC (not coded)",
+      "NumericValue": -30,
+      "StringValue": "NC",
+      "VisibleInCoda": true
+    },
+    {
+      "CodeID": "code-NR-5e3eee23",
+      "CodeType": "Control",
+      "ControlCode": "NR",
+      "DisplayText": "NR (not reviewed)",
+      "NumericValue": -40,
+      "StringValue": "NR",
+      "VisibleInCoda": false
+    },
+    {
+      "CodeID": "code-NIC-99631cb8",
+      "CodeType": "Control",
+      "ControlCode": "NIC",
+      "DisplayText": "NIC (not internally consistent)",
+      "NumericValue": -50,
+      "StringValue": "NIC",
+      "VisibleInCoda": false
+    },
+    {
+      "CodeID": "code-STOP-08b832a8",
+      "CodeType": "Control",
+      "ControlCode": "STOP",
+      "DisplayText": "STOP",
+      "NumericValue": -90,
+      "StringValue": "STOP",
+      "VisibleInCoda": true
+    },
+    {
+      "CodeID": "code-WS-adb25603b7af",
+      "CodeType": "Control",
+      "ControlCode": "WS",
+      "DisplayText": "WS (wrong scheme)",
+      "NumericValue": -100,
+      "StringValue": "WS",
+      "VisibleInCoda": true
+    }
+  ],
+  "Name": "Books",
+  "SchemeID": "Scheme-fea2a8aec630",
+  "Version": "0.0.0.1"
+}

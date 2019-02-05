@@ -2,7 +2,46 @@ import nltk.data
 
 import json
 import random
-import datetime
+from datetime import datetime
+import pytz
+import hashlib
+
+class SHAUtils(object):
+    @staticmethod
+    def sha_string(string):
+        """
+        Hashes the provided string using the SHA-256 algorithm.
+        :param string: String to hash.
+        :type string: string
+        :return: SHA-256 hashed string.
+        :rtype: string
+        """
+        return hashlib.sha256(string.encode("utf-8")).hexdigest()
+
+    @classmethod
+    def stringify_dict(cls, d):
+        """
+        Converts a dict to a JSON string.
+        Dictionaries with the same (key, value) pairs are guaranteed to serialize to the same string,
+        irrespective of the order in which the keys were added.
+        :param d: Dictionary to convert to JSON.
+        :type d: dict
+        :return: JSON serialization of the given dict.
+        :rtype: string
+        """
+        return json.dumps(d, sort_keys=True)
+
+    @classmethod
+    def sha_dict(cls, d):
+        """
+        Hashes the provided dict using the SHA-256 algorithm.
+        :param d: Dictionary to hash.
+        :type d: dict
+        :return: SHA-256 hashed dict.
+        :rtype: string
+        """
+        return cls.sha_string(cls.stringify_dict(d))
+
 
 tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 fp = open("original_texts/AliceInWonderland.txt")
@@ -42,14 +81,16 @@ for t in filtered_tokens:
     t = t.replace("\n", " ")
     msgs.append(
         {
-            "MessageID" : "m-{}".format(i),
+            "MessageID" : "{}".format(SHAUtils.sha_string(str(t))),
             "Text" : str(t),
-            "CreationDateTimeUTC" : datetime.datetime.now().isoformat(),
-            "Labels" : []
+            "CreationDateTimeUTC" : pytz.utc.localize(datetime.utcnow()).isoformat(timespec="microseconds"),
+            "Labels" : [],
+            "SequenceNumber" : i
         }
     )
 
-mp = {
-    "messages" : msgs
-}
-print (json.dumps(mp, ensure_ascii=True, indent=2))
+print (json.dumps(msgs, ensure_ascii=True, indent=2))
+
+
+
+
