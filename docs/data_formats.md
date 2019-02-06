@@ -61,3 +61,5 @@ Message definition (JSON, named $ID)
   ]
 }
 ```
+
+The ordering of the labels is important. Labels with a lower index represent a more recent opinion than labels with a higher index, and should in general should be chosen in preference.
