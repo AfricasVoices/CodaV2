@@ -19,7 +19,7 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import classification_report, precision_recall_fscore_support
 
 KFOLD = 5
-NUMBER_OF_FEATURES = 100
+NUMBER_OF_FEATURES = 'all'
 
 def identity(arg):
     """
@@ -111,7 +111,7 @@ def build_and_evaluate(messages, labels):
         # log("Classification report:\n" + classification_report(labels_test, predicted_labels))
 
         seen_labels = set(labels)
-        print (seen_labels)
+        # print (seen_labels)
 
         scores = compute_model_score(labels_test, predicted_labels)
 
