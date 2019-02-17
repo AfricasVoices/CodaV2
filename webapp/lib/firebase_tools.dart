@@ -178,7 +178,6 @@ void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListe
 }
 
 void setupListenerForAutocodingUpdates(Dataset dataset, AutocodingProgressUpdatesListener listener) {
-  Stopwatch sw = new Stopwatch()..start();
   log.trace("setupListenerForAutocodingUpdates", "Setup autocode watcher for: ${dataset.id}");
 
   var updateDocumentRoot = "/datasets/${dataset.id}/metrics/autolabel";
