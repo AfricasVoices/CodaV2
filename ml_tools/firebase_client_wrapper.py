@@ -67,6 +67,14 @@ def set_dataset_metrics(dataset_id, metrics_map):
     message_metrics_ref = client.document(u'datasets/{}/metrics/messages'.format(dataset_id))
     message_metrics_ref.set(metrics_map)
 
+def set_dataset_autolabel_complete(dataset_id, fraction_complete):
+    message_metrics_ref = client.document(u'datasets/{}/metrics/autolabel'.format(dataset_id))
+    message_metrics_ref.set(
+        {
+            "fractionComplete" : fraction_complete
+        }
+    )
+
 def set_users(dataset_id, users_list):
     dataset_ref = get_dataset_ref(dataset_id)
     dataset_ref.set({
