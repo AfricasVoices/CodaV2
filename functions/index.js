@@ -24,6 +24,7 @@ exports.Log = functions.https.onRequest((request, response) => {
 });
 
 exports.Publish = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
     console.log(`Execution of publish starting`);
     console.log(`Request body ${req.body}`);
     data = JSON.parse(req.body);
@@ -64,7 +65,7 @@ exports.Publish = functions.https.onRequest((req, res) => {
     publisher = topic.publisher();
   
     // Publishes a message
-    return publisher
+    publisher
       .publish(Buffer.from(JSON.stringify(message)))
       .then(() => res.status(200).send('Message published.'))
       .catch(err => {
@@ -72,4 +73,5 @@ exports.Publish = functions.https.onRequest((req, res) => {
         res.status(500).send(err);
         return Promise.reject(err);
       });
+    });
   });
