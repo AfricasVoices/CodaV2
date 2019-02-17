@@ -5,5 +5,6 @@
   "projectId" : "fir-test-b0eb7",
   "storageBucket" : "fir-test-b0eb7.appspot.com",
   "messagingSenderId" : "587699758467",
-  "logUrl" : "https://us-central1-fir-test-b0eb7.cloudfunctions.net/Log"
+  "logUrl" : "https://us-central1-fir-test-b0eb7.cloudfunctions.net/Log",
+  "publishUrl" : "https://us-central1-fir-test-b0eb7.cloudfunctions.net/Publish"
 }

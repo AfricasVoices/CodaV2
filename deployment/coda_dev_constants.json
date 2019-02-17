@@ -5,5 +5,6 @@
   "projectId" : "coda-dev-229611",
   "storageBucket" : "coda-dev-229611.appspot.com",
   "messagingSenderId" : "951917536160",
-  "logUrl" : "https://us-central1-coda-dev-229611.cloudfunctions.net/Log"
+  "logUrl" : "https://us-central1-coda-dev-229611.cloudfunctions.net/Log",
+  "publishUrl" : "https://us-central1-coda-dev-229611.cloudfunctions.net/Publish"
 }

@@ -5,5 +5,6 @@
   "projectId": "web-coda",
   "storageBucket": "web-coda.appspot.com",
   "messagingSenderId": "329672882311",
-  "logUrl": "https://us-central1-web-coda.cloudfunctions.net/Log"
+  "logUrl": "https://us-central1-web-coda.cloudfunctions.net/Log",
+  "publishUrl": "https://us-central1-web-coda.cloudfunctions.net/Publish"
 }
