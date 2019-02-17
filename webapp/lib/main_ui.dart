@@ -81,7 +81,7 @@ class CodaUI {
 
     autoCodeButton.onClick.listen((event) {
       updateFractionAutocode(0);
-      data_services.triggerAutoLabelling();
+      data_services.triggerAutoLabelling(dataset.id);
     });
   }
 
@@ -165,10 +165,12 @@ class CodaUI {
   void updateFractionAutocode(double fraction) {
     if (fraction == 1) {
       querySelector("#autocode_progress").hidden = true;
+      (querySelector("#autocode") as ButtonElement).disabled = false;
       return;
     }
     String progress = (fraction * 100).toStringAsFixed(2);
-
+    
+    (querySelector("#autocode") as ButtonElement).disabled = true;
     querySelector("#autocode_progress")
       ..hidden = false
       ..text = "( $progress% )";
