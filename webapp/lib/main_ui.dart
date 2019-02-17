@@ -80,7 +80,7 @@ class CodaUI {
     });
 
     autoCodeButton.onClick.listen((event) {
-      updateFractionAutocode(0);
+      updateFractionAutocode(0.0);
       data_services.triggerAutoLabelling(dataset.id);
     });
   }
