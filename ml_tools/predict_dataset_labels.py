@@ -15,11 +15,8 @@ import pytz
 def predict_labels_for_dataset(dataset_id):
     DATASET_ID = dataset_id
     fcw.set_dataset_autolabel_complete(DATASET_ID, 0.0)
-
     log(f"Predicting labels for: {DATASET_ID}")
-
     code_scheme_ids = fcw.get_code_scheme_ids(DATASET_ID)
-
     log(f"Code_Scheme_IDs for: {code_scheme_ids}")
 
     code_schemes = {}

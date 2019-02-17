@@ -4,7 +4,7 @@ import 'firebase_constants.dart';
 import 'dart:convert';
 import 'dart:async';
 
-const _AUTOCODE_CONTROL_TOPIC_POSTFIX = "-test-topic";
+const _AUTOCODE_CONTROL_TOPIC_POSTFIX = "-autocode-topic";
 
 Future triggerAutoLabelling(String datasetId) async {
   log.trace("triggerAutoLabelling", "triggering labelling for $datasetId");

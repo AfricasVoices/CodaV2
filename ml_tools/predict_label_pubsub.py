@@ -13,10 +13,8 @@ CRYPTO_TOKEN_PATH = sys.argv[1]
 fcw.init_client(CRYPTO_TOKEN_PATH)
 
 project_id = json.load(open(CRYPTO_TOKEN_PATH))["project_id"]
-TOPIC= project_id + "-test-topic"
-SUBSCRIPTION= project_id + "-test-subscription"
-
-
+TOPIC= project_id + "-autocode-topic"
+SUBSCRIPTION= project_id + "-autocode-subscription"
 
 subscriber = pubsub_v1.SubscriberClient.from_service_account_json(CRYPTO_TOKEN_PATH)
 topic_name = 'projects/{project_id}/topics/{topic}'.format(
@@ -29,7 +27,6 @@ subscription_name = 'projects/{project_id}/subscriptions/{sub}'.format(
 )
 
 # Setup
-
 publisher = pubsub_v1.PublisherClient.from_service_account_json(CRYPTO_TOKEN_PATH)
 
 try:
@@ -48,7 +45,6 @@ print ("Setup complete")
     
 def callback(message):
     print (f"Processing: {message}")
-
     # Processing: Message {
     #     data: b'{"data":{"message":"books2"}}'
     #     attributes: {}
