@@ -42,6 +42,14 @@ class MessageListViewModel {
     Scheme scheme = dataset.codeSchemes.singleWhere((s) => s.id == sortBySeqOrSchemeId);
     var codeCompare = <MessageViewModel, String>{};
     for (var message in messages) {
+      bool checked = message.getLatestLabelForSchemeId(sortBySeqOrSchemeId)?.checked;
+      String checkedAsString;
+      if (checked == null) {
+        checkedAsString = "2";
+      } else {
+        checkedAsString = checked ? "0" : "1"; 
+      }
+
       String codeId = message.getLatestLabelForSchemeId(sortBySeqOrSchemeId)?.codeId;
       String codeName;
       if (codeId == null || codeId == Label.MANUALLY_UNCODED) {
@@ -55,7 +63,9 @@ class MessageListViewModel {
       } else {
         sequenceNumber = message.message.sequenceNumber.toString().padLeft(10, '0');
       }
-      String compareString = '$codeName-$sequenceNumber';
+
+      // Group all checked answers together, then by code, then sequence number
+      String compareString = '$checkedAsString-$codeName-$sequenceNumber';
 
       codeCompare[message] = compareString;
     }
