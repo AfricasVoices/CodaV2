@@ -41,7 +41,6 @@ class CodaUI {
 
   static ButtonElement autoCodeButton = querySelector('#autocode');
 
-
   Dataset dataset;
   MessageListViewModel messageList;
 
