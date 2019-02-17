@@ -48,7 +48,13 @@ print ("Setup complete")
     
 def callback(message):
     print (f"Processing: {message}")
-    dataset_id = message.data.decode('utf-8')
+
+    # Processing: Message {
+    #     data: b'{"data":{"message":"books2"}}'
+    #     attributes: {}
+    # }
+
+    dataset_id = json.loads(message.data.decode('utf-8'))["data"]["message"]
 
     print (f"About to predict labels for {dataset_id}")
     predict_dataset_labels.predict_labels_for_dataset(dataset_id)
