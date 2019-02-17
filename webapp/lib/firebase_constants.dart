@@ -20,3 +20,4 @@ String get projectId => _constants['projectId'];
 String get storageBucket => _constants['storageBucket'];
 String get messagingSenderId => _constants['messagingSenderId'];
 String get logUrl => _constants['logUrl'];
+String get publishUrl => _constants['publishUrl'];
