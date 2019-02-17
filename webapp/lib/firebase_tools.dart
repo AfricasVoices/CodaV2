@@ -21,6 +21,8 @@ enum ChangeType {
   modified
 }
 
+typedef AutocodingProgressUpdatesListener(double updateFraction);
+
 firestore.Firestore _firestoreInstance = firebase.firestore();
 
 init() async {
@@ -172,6 +174,26 @@ void setupListenerForFirebaseMessageUpdates(Dataset dataset, MessageUpdatesListe
 
     listener(added, ChangeType.added);
     listener(modified, ChangeType.modified);
+  });
+}
+
+void setupListenerForAutocodingUpdates(Dataset dataset, AutocodingProgressUpdatesListener listener) {
+  Stopwatch sw = new Stopwatch()..start();
+  log.trace("setupListenerForAutocodingUpdates", "Setup autocode watcher for: ${dataset.id}");
+
+  var updateDocumentRoot = "/datasets/${dataset.id}/metrics/autolabel";
+  log.trace("setupListenerForAutocodingUpdates", "Root of query: $updateDocumentRoot");
+
+  _firestoreInstance.doc(updateDocumentRoot).onSnapshot.listen((querySnapshot) {
+    // No need to process local writes to Firebase
+    if (querySnapshot.metadata.hasPendingWrites) {
+      log.trace("setupListenerForAutocodingUpdates", "Skipping processing of local messages");
+      return;
+    }
+
+    log.trace("setupListenerForAutocodingUpdates", "Starting processing ${querySnapshot.data()}.");
+    var fractionComplete = querySnapshot.data()["fractionComplete"];
+    listener(fractionComplete);
   });
 }
 
