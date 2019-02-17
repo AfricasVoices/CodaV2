@@ -31,10 +31,7 @@ def predict_labels_for_dataset(dataset_id):
 
     messages_fb = fcw.get_all_messages(DATASET_ID)
     messages = []
-
     seq_num_map = {}
-
-
     for message_fb in messages_fb:
         seq_num_map[message_fb["MessageID"]] = message_fb["SequenceNumber"]
         # Work around interpretation with firebase rewriting '1.0' to '1'
@@ -80,7 +77,7 @@ def predict_labels_for_dataset(dataset_id):
             i = i + 1
             if i % 100 == 0:
                 fcw.set_dataset_autolabel_complete(DATASET_ID, i / len(messages))
-                # print (f"{i} messages / {len(messages)} processed")
+                print (f"{i} messages / {len(messages)} processed")
 
             if len(message.labels) != 0:
                 continue
@@ -102,8 +99,6 @@ def predict_labels_for_dataset(dataset_id):
                     fcw.set_messages_content_batch(DATASET_ID, message_update_batch)
                     log (f"Messages updated {len(message_update_batch)}")
                     message_update_batch.clear()
-
-                # fcw.set_messages_content(DATASET_ID, [firebase_map])
 
         fcw.set_messages_content_batch(DATASET_ID, message_update_batch)
         log (f"Messages updated {len(message_update_batch)}")
