@@ -14,6 +14,7 @@ import pytz
 
 def predict_labels_for_dataset(dataset_id):
     DATASET_ID = dataset_id
+    fcw.set_dataset_autolabel_complete(DATASET_ID, 0.0)
 
     log(f"Predicting labels for: {DATASET_ID}")
 
@@ -77,8 +78,9 @@ def predict_labels_for_dataset(dataset_id):
         i = 0
         for message in messages:
             i = i + 1
-            if i % 500 == 0:
-                print (f"{i} messages / {len(messages)} processed")
+            if i % 100 == 0:
+                fcw.set_dataset_autolabel_complete(DATASET_ID, i / len(messages))
+                # print (f"{i} messages / {len(messages)} processed")
 
             if len(message.labels) != 0:
                 continue
@@ -105,4 +107,5 @@ def predict_labels_for_dataset(dataset_id):
 
         fcw.set_messages_content_batch(DATASET_ID, message_update_batch)
         log (f"Messages updated {len(message_update_batch)}")
+        fcw.set_dataset_autolabel_complete(DATASET_ID, 1.0)
 
