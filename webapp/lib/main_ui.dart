@@ -13,6 +13,7 @@ import 'snackbar_ui.dart' as snackbar;
 import 'loader_ui.dart' as loader;
 import 'authentication.dart' as auth;
 import 'firebase_tools.dart' as fbt;
+import 'data_services.dart' as data_services;
 
 part 'view_model.dart';
 
@@ -37,6 +38,9 @@ class CodaUI {
 
   static InputElement jumpToNextUncodedCheckbox = querySelector('#jump-to-next-uncoded');
   static bool get jumpToNextUncoded => jumpToNextUncodedCheckbox.checked;
+
+  static ButtonElement autoCodeButton = querySelector('#autocode');
+
 
   Dataset dataset;
   MessageListViewModel messageList;
@@ -73,6 +77,11 @@ class CodaUI {
       if (continuousSorting) {
         sortTableView();
       }
+    });
+
+    autoCodeButton.onClick.listen((event) {
+      updateFractionAutocode(0);
+      data_services.triggerAutoLabelling();
     });
   }
 
@@ -147,6 +156,22 @@ class CodaUI {
       }
       loader.hideLoader();
     });
+
+    fbt.setupListenerForAutocodingUpdates(dataset, (double updateFraction) {
+      updateFractionAutocode(updateFraction);
+    });
+  }
+
+  void updateFractionAutocode(double fraction) {
+    if (fraction == 1) {
+      querySelector("#autocode_progress").hidden = true;
+      return;
+    }
+    String progress = (fraction * 100).toStringAsFixed(2);
+
+    querySelector("#autocode_progress")
+      ..hidden = false
+      ..text = "( $progress% )";
   }
 
   displayDatasetHeadersView(Dataset dataset) {
