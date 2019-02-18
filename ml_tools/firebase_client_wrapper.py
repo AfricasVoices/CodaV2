@@ -26,6 +26,9 @@ def get_all_messages(dataset_id):
         messages.append(message.to_dict())
     return messages
 
+def get_message_ref(dataset_id, message_id):	
+    return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id))
+
 def set_dataset_autolabel_complete(dataset_id, fraction_complete):
     message_metrics_ref = client.document(u'datasets/{}/metrics/autolabel'.format(dataset_id))
     message_metrics_ref.set(
