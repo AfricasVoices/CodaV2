@@ -52,11 +52,13 @@ def callback(message):
     #     attributes: {}
     # }
 
+    print (f"Acking message {message}")
+    message.ack()
+
     dataset_id = json.loads(message.data.decode('utf-8'))["data"]["message"]
 
     print (f"About to predict labels for {dataset_id}")
     predict_dataset_labels.predict_labels_for_dataset(dataset_id)
-    message.ack()
 
 future = subscriber.subscribe(subscription_name, callback)
 
