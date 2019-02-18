@@ -30,8 +30,10 @@ subscription_name = 'projects/{project_id}/subscriptions/{sub}'.format(
 publisher = pubsub_v1.PublisherClient.from_service_account_json(CRYPTO_TOKEN_PATH)
 
 try:
-    response = client.create_topic(topic_name)
+    response = publisher.create_topic(topic_name)
     print (f"topic created: {topic_name}")
+except NameError as e:
+    print (f"Error on topic creation for: {topic_name}, {e}")
 except:
     print (f"Error on topic creation for {topic_name}: {sys.exc_info()[0]}")
 
