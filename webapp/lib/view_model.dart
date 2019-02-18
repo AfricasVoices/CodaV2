@@ -230,7 +230,7 @@ class CodeSelector {
   }
 
   static const EMPTY_CODE_VALUE = 'unassign';
-  static const MIN_CONFIDENCE_LIMIT = 0.6;
+  static const MIN_CONFIDENCE_LIMIT = 0.8;
   static const BASE_LUMINOSITY = 50;
   static const MAX_LUMINOSITY_LIMIT = 90;
 
