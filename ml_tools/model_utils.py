@@ -53,7 +53,7 @@ def build_model(messages, labels, print_feature_names=False):
         ('tfidf transformer', TfidfTransformer()),
         ('scaler', MaxAbsScaler()),
         ('feature selector', SelectKBest(chi2, k=NUMBER_OF_FEATURES)),
-        ('classifier', SGDClassifier(max_iter=1000, tol=1e-3))
+        ('classifier', SGDClassifier(loss="log", max_iter=1000, tol=1e-3))
     ])
 
     model.fit(messages, labels)

@@ -76,16 +76,15 @@ def predict_labels_for_dataset(dataset_id):
                 fcw.set_dataset_autolabel_complete(DATASET_ID, i / len(messages))
                 print (f"{i} messages / {len(messages)} processed")
 
-            if len(message.labels) != 0:
+            if len(message.labels) != 0 and message.labels[0].checked:
                 continue
             msg = message.text
 
             pred_label = model.predict([msg])[0]
             pred_distance = model.decision_function([msg])[0]
+            max_confidence = max(model.predict_proba([msg])[0])
 
-            max_distance = max(pred_distance)
-            max_confidence = (max_distance + 100) / 200
-            if (max_confidence > 0.6):
+            if (max_confidence > 0.8):
                 label = Label(scheme_id, pred_label, dt_time, origin, confidence=max_confidence)
                 message.labels = [label]
                 firebase_map = message.to_firebase_map()
