@@ -188,7 +188,7 @@ class MessageViewModel {
       if (label.labelOrigin.originType == Label.AUTOMATIC_ORIGIN_TYPE) {
         codeSelector.isManualLabel = false;
         codeSelector.confidence = label.confidence;
-        codeSelector.origin = '${label.labelOrigin.name} (${label.confidence})';
+        codeSelector.origin = '${label.labelOrigin.name} (${label.confidence.toStringAsFixed(3)})';
         return;
       }
       codeSelector.isManualLabel = true;
