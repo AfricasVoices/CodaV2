@@ -33,7 +33,8 @@ def predict_labels_for_dataset(dataset_id):
         seq_num_map[message_fb["MessageID"]] = message_fb["SequenceNumber"]
         # Work around interpretation with firebase rewriting '1.0' to '1'
         for label_map in message_fb["Labels"]:
-            label_map["Confidence"] = float(label_map["Confidence"])
+            if "Confidence" in label_map:
+                label_map["Confidence"] = float(label_map["Confidence"])
 
         messages.append(Message.from_firebase_map(message_fb))
 
