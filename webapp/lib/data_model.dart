@@ -33,6 +33,7 @@ class Message {
   DateTime creationDateTime;
   List<Label> labels;
   Map<String, dynamic> otherData;
+  bool logicalConsistencyWarning = false;
 
   Message(this.id, this.sequenceNumber, this.text, this.creationDateTime) {
     labels = [];
@@ -61,6 +62,13 @@ class Message {
           for (Map labelMap in value) {
             labels.add(new Label.fromFirebaseMap(labelMap));
           }
+          break;
+        case 'LogicalConsistencyWarning':
+          if (value is! bool) {
+            throw "Couldn't parse property $property $value";
+          }
+
+          this.logicalConsistencyWarning = value as bool;
           break;
         default:
           otherData[property] = value;

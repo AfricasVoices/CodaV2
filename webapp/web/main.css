@@ -199,6 +199,10 @@ main tbody {
   padding-top: 18px;
 }
 
+.warning {
+  background: lightcoral;
+}
+
 .message-seq {
   width: 50px;
 }

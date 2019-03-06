@@ -90,6 +90,7 @@ class MessageViewModel {
     viewElement = new TableRowElement();
     viewElement.classes.add('message-row');
     viewElement.setAttribute('message-id', '${message.id}');
+    viewElement.setAttribute('warning', '${message.logicalConsistencyWarning}');
     viewElement.addCell()
       ..classes.add('message-seq')
       ..text = '${message.sequenceNumber == null ? "N/A" : message.sequenceNumber}';
@@ -166,6 +167,8 @@ class MessageViewModel {
       log.log("updateMessage: Warning! The text of the updated message differs from the ID of the existing message (message-seq=${message.id})");
     }
     this.message = newMessage;
+
+    viewElement.setAttribute('warning', '${message.logicalConsistencyWarning}');
     codeSelectors.forEach((codeSelector) => displayLatestLabelForCodeSelector(codeSelector));
   }
 
