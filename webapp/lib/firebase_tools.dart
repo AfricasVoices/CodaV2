@@ -190,8 +190,15 @@ void setupListenerForAutocodingUpdates(Dataset dataset, AutocodingProgressUpdate
       return;
     }
 
-    log.trace("setupListenerForAutocodingUpdates", "Starting processing ${querySnapshot.data()}.");
-    var fractionComplete = querySnapshot.data()["fractionComplete"];
+    var snapshotData = querySnapshot.data();
+
+    log.trace("setupListenerForAutocodingUpdates", "Starting processing ${snapshotData}.");
+
+    double fractionComplete = 0.0;
+    if (snapshotData != null) {
+      fractionComplete = querySnapshot.data()["fractionComplete"];
+    }
+    
     listener(fractionComplete);
   });
 }
