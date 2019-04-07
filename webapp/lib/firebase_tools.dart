@@ -191,7 +191,6 @@ void setupListenerForAutocodingUpdates(Dataset dataset, AutocodingProgressUpdate
     }
 
     var snapshotData = querySnapshot.data();
-
     log.trace("setupListenerForAutocodingUpdates", "Starting processing ${snapshotData}.");
 
     double fractionComplete = 0.0;
