@@ -114,6 +114,15 @@ SPECIAL_CODES = [
       "NumericValue": -100,
       "StringValue": "WS",
       "VisibleInCoda": True
+    },
+    {
+      "CodeID": "code-CE-016c1e22",
+      "CodeType": "Control",
+      "ControlCode": "CE",
+      "DisplayText": "CE (coding error)",
+      "NumericValue": -110,
+      "StringValue": "CE",
+      "VisibleInCoda": False
     }
 ]
 
