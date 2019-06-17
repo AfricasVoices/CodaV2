@@ -98,6 +98,15 @@ SPECIAL_CODES = [
       "VisibleInCoda": False
     },
     {
+      "CodeID": "code-NOC-e38423ed",
+      "CodeType": "Control",
+      "ControlCode": "NOC",
+      "DisplayText": "NOC (Noise Other Channel)",
+      "NumericValue": -70,
+      "StringValue": "NOC",
+      "VisibleInCoda": True
+    },
+    {
       "CodeID": "code-STOP-08b832a8",
       "CodeType": "Control",
       "ControlCode": "STOP",
