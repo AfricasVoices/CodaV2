@@ -32,17 +32,21 @@ def compute_coding_progress(dataset_id, force_recount=False):
         latest_labels = dict()  # of scheme id -> label
         for label in message["Labels"]:
             if label["SchemeID"] not in latest_labels:
-                latest_labels["SchemeID"] = label
+                latest_labels[label["SchemeID"]] = label
 
         # Test if any of the latest labels are either WS or NC
         message_has_ws = False
         message_has_nc = False
         for label in latest_labels.values():
+            if label["CodeID"] == "SPECIAL-MANUALLY_UNCODED":
+                continue
+
             scheme_for_label = schemes[label["SchemeID"]]
             code_for_label = None
             for code in scheme_for_label["Codes"]:
                 if label["CodeID"] == code["CodeID"]:
                     code_for_label = code
+            assert code_for_label is not None
 
             if code_for_label["CodeType"] == "Control":
                 if code_for_label["ControlCode"] == "WS":
