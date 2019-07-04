@@ -33,9 +33,9 @@ def get_code_scheme_ids(dataset_id):
     return ids
 
 def get_all_code_schemes(dataset_id):
-    # TODO: Rewrite to not make so many Firestore calls?
-    scheme_ids = get_code_scheme_ids(dataset_id)
-    schemes = [get_code_scheme(dataset_id, scheme_id) for scheme_id in scheme_ids]
+    schemes = []
+    for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
+        schemes.append(scheme.to_dict())
     return schemes
 
 def get_code_scheme(dataset_id, scheme_id):
