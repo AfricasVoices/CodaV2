@@ -28,7 +28,7 @@ def compute_coding_progress(dataset_id, force_recount=False):
         if len(message["Labels"]) > 0:
             messages_with_labels += 1
 
-        # Get the latest label under each scheme
+        # Get the latest label from each scheme
         latest_labels = dict()  # of scheme id -> label
         for label in message["Labels"]:
             if label["SchemeID"] not in latest_labels:
