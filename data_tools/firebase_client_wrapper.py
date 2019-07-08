@@ -32,6 +32,12 @@ def get_code_scheme_ids(dataset_id):
         ids.append(scheme.id)
     return ids
 
+def get_all_code_schemes(dataset_id):
+    schemes = []
+    for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
+        schemes.append(scheme.to_dict())
+    return schemes
+
 def get_code_scheme(dataset_id, scheme_id):
     return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
 
