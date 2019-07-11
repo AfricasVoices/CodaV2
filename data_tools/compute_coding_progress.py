@@ -32,16 +32,16 @@ def compute_coding_progress(dataset_id, force_recount=False):
             if label["SchemeID"] not in latest_labels:
                 latest_labels[label["SchemeID"]] = label
 
-        # Test if the message has a label that isn't SPECIAL-MANUALLY_UNCODED, and
+        # Test if the message has a label (that isn't SPECIAL-MANUALLY_UNCODED), and
         # if any of the latest labels are either WS or NC
-        message_has_only_manually_uncoded = True
+        message_has_label = False
         message_has_ws = False
         message_has_nc = False
         for label in latest_labels.values():
             if label["CodeID"] == "SPECIAL-MANUALLY_UNCODED":
                 continue
 
-            message_has_only_manually_uncoded = False
+            message_has_label = True
             scheme_for_label = schemes[label["SchemeID"]]
             code_for_label = None
             for code in scheme_for_label["Codes"]:
@@ -56,7 +56,7 @@ def compute_coding_progress(dataset_id, force_recount=False):
                     message_has_nc = True
 
         # Update counts appropriately
-        if not message_has_only_manually_uncoded:
+        if message_has_label:
             messages_with_labels += 1
         if message_has_ws:
             wrong_scheme_messages += 1
