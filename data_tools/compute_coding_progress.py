@@ -25,8 +25,6 @@ def compute_coding_progress(dataset_id, force_recount=False):
 
     for message in fcw.get_all_messages(dataset_id):
         messages.append(message)
-        if len(message["Labels"]) > 0:
-            messages_with_labels += 1
 
         # Get the latest label from each scheme
         latest_labels = dict()  # of scheme id -> label
@@ -34,13 +32,16 @@ def compute_coding_progress(dataset_id, force_recount=False):
             if label["SchemeID"] not in latest_labels:
                 latest_labels[label["SchemeID"]] = label
 
-        # Test if any of the latest labels are either WS or NC
+        # Test if the message has a label (that isn't SPECIAL-MANUALLY_UNCODED), and
+        # if any of the latest labels are either WS or NC
+        message_has_label = False
         message_has_ws = False
         message_has_nc = False
         for label in latest_labels.values():
             if label["CodeID"] == "SPECIAL-MANUALLY_UNCODED":
                 continue
 
+            message_has_label = True
             scheme_for_label = schemes[label["SchemeID"]]
             code_for_label = None
             for code in scheme_for_label["Codes"]:
@@ -55,6 +56,8 @@ def compute_coding_progress(dataset_id, force_recount=False):
                     message_has_nc = True
 
         # Update counts appropriately
+        if message_has_label:
+            messages_with_labels += 1
         if message_has_ws:
             wrong_scheme_messages += 1
         if message_has_nc:
