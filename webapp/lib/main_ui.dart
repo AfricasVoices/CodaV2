@@ -230,13 +230,11 @@ class CodaUI {
     newMessages.forEach((message) {
       dataset.messages.add(message);
       MessageViewModel messageViewModel = new MessageViewModel(message, dataset);
-      int index = messageList.add(dataset, messageViewModel);
-      if (index == body.children.length) {
-        body.append(messageViewModel.viewElement);
-        return;
-      }
-      body.insertBefore(messageViewModel.viewElement, body.children[index]);
+      messageList.add(dataset, messageViewModel);
+      body.append(messageViewModel.viewElement);
     });
+
+    sortTableView();
 
     // It's the first time we're adding messages to the table, select the first code selector
     if (CodeSelector.activeCodeSelector == null) {
@@ -257,7 +255,11 @@ class CodaUI {
   }
 
   void sortTableView() {
+    log.verbose("sortTableView");
+    Stopwatch sw = new Stopwatch()..start();
+
     messageList.sort(dataset);
+    log.perf("messageList Sort", sw.elapsedMilliseconds);
 
     TableSectionElement body = messageCodingTable.tBodies.first;
     var rows = <String, Element>{};
@@ -269,6 +271,8 @@ class CodaUI {
     for (var message in messageList.messages) {
       body.append(rows[message.message.id]);
     }
+
+    log.perf("sortTableView", sw.elapsedMilliseconds);
   }
 
   addListenersToMessageCodingTable() {

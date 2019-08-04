@@ -21,7 +21,6 @@ class MessageListViewModel {
   int add(Dataset dataset, MessageViewModel messageViewModel) {
     messages.add(messageViewModel);
     messageMap[messageViewModel.message.id] = messageViewModel;
-    sort(dataset);
     return messages.indexOf(messageViewModel);
   }
 
