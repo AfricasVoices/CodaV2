@@ -255,7 +255,11 @@ class CodaUI {
   }
 
   void sortTableView() {
+    log.verbose("sortTableView");
+    Stopwatch sw = new Stopwatch()..start();
+
     messageList.sort(dataset);
+    log.perf("messageList Sort", sw.elapsedMilliseconds);
 
     TableSectionElement body = messageCodingTable.tBodies.first;
     var rows = <String, Element>{};
@@ -267,6 +271,8 @@ class CodaUI {
     for (var message in messageList.messages) {
       body.append(rows[message.message.id]);
     }
+
+    log.perf("sortTableView", sw.elapsedMilliseconds);
   }
 
   addListenersToMessageCodingTable() {
