@@ -137,7 +137,7 @@ SPECIAL_CODES = [
       "CodeID" : "code-PB-a434a800",
       "DisplayText"    : "push back",
       "NumericValue"   : -100000,
-      "StringValue"    : "push_back"
+      "StringValue"    : "push_back",
       "VisibleInCoda"  : True,
       "CodeType"       : "Meta"
     },
@@ -145,7 +145,7 @@ SPECIAL_CODES = [
       "CodeID" : "code-Q-a5d3700d",
       "DisplayText"    : "question",
       "NumericValue"   : -100010,
-      "StringValue"    : "question"
+      "StringValue"    : "question",
       "VisibleInCoda"  : True,
       "CodeType"       : "Meta"
     }
