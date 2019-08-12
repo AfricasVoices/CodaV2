@@ -38,10 +38,10 @@ def generate_scheme(header_name, codes):
             }
         )
         i += 1
-    
+
     for code in SPECIAL_CODES:
         codes_list.append(code)
-    
+
     scheme = {
         "SchemeID"      :  "Scheme-{}".format(short_uuid()),
         "Name"          :  header_name,
@@ -53,102 +53,110 @@ def generate_scheme(header_name, codes):
 
 SPECIAL_CODES = [
     {
-      "CodeID": "code-NA-f93d3eb7",
-      "CodeType": "Control",
-      "ControlCode": "NA",
-      "DisplayText": "NA (missing)",
-      "NumericValue": -10,
-      "StringValue": "NA",
-      "VisibleInCoda": False
+        "CodeID": "code-NA-f93d3eb7",
+        "CodeType": "Control",
+        "ControlCode": "NA",
+        "DisplayText": "NA (missing)",
+        "NumericValue": -10,
+        "StringValue": "NA",
+        "VisibleInCoda": False
     },
     {
-      "CodeID": "code-NS-2c11b7c9",
-      "CodeType": "Control",
-      "ControlCode": "NS",
-      "DisplayText": "NS (skip)",
-      "NumericValue": -20,
-      "StringValue": "NS",
-      "VisibleInCoda": False
+        "CodeID": "code-NS-2c11b7c9",
+        "CodeType": "Control",
+        "ControlCode": "NS",
+        "DisplayText": "NS (skip)",
+        "NumericValue": -20,
+        "StringValue": "NS",
+        "VisibleInCoda": False
     },
     {
-      "CodeID": "code-NC-42f1d983",
-      "CodeType": "Control",
-      "ControlCode": "NC",
-      "DisplayText": "NC (not coded)",
-      "NumericValue": -30,
-      "StringValue": "NC",
-      "VisibleInCoda": True
+        "CodeID": "code-NC-42f1d983",
+        "CodeType": "Control",
+        "ControlCode": "NC",
+        "DisplayText": "NC (not coded)",
+        "NumericValue": -30,
+        "StringValue": "NC",
+        "VisibleInCoda": True
     },
     {
-      "CodeID": "code-NR-5e3eee23",
-      "CodeType": "Control",
-      "ControlCode": "NR",
-      "DisplayText": "NR (not reviewed)",
-      "NumericValue": -40,
-      "StringValue": "NR",
-      "VisibleInCoda": False
+        "CodeID": "code-NR-5e3eee23",
+        "CodeType": "Control",
+        "ControlCode": "NR",
+        "DisplayText": "NR (not reviewed)",
+        "NumericValue": -40,
+        "StringValue": "NR",
+        "VisibleInCoda": False
     },
     {
-      "CodeID": "code-NIC-99631cb8",
-      "CodeType": "Control",
-      "ControlCode": "NIC",
-      "DisplayText": "NIC (not internally consistent)",
-      "NumericValue": -50,
-      "StringValue": "NIC",
-      "VisibleInCoda": False
+        "CodeID": "code-NIC-99631cb8",
+        "CodeType": "Control",
+        "ControlCode": "NIC",
+        "DisplayText": "NIC (not internally consistent)",
+        "NumericValue": -50,
+        "StringValue": "NIC",
+        "VisibleInCoda": False
     },
     {
-      "CodeID": "code-NOC-e38423ed",
-      "CodeType": "Control",
-      "ControlCode": "NOC",
-      "DisplayText": "NOC (Noise Other Channel)",
-      "NumericValue": -70,
-      "StringValue": "NOC",
-      "VisibleInCoda": True
+        "CodeID": "code-NOC-e38423ed",
+        "CodeType": "Control",
+        "ControlCode": "NOC",
+        "DisplayText": "NOC (Noise Other Channel)",
+        "NumericValue": -70,
+        "StringValue": "NOC",
+        "VisibleInCoda": True
     },
     {
-      "CodeID": "code-STOP-08b832a8",
-      "CodeType": "Control",
-      "ControlCode": "STOP",
-      "DisplayText": "STOP",
-      "NumericValue": -90,
-      "StringValue": "STOP",
-      "VisibleInCoda": True
+        "CodeID": "code-STOP-08b832a8",
+        "CodeType": "Control",
+        "ControlCode": "STOP",
+        "DisplayText": "STOP",
+        "NumericValue": -90,
+        "StringValue": "STOP",
+        "VisibleInCoda": True
     },
     {
-      "CodeID": "code-WS-adb25603b7af",
-      "CodeType": "Control",
-      "ControlCode": "WS",
-      "DisplayText": "WS (wrong scheme)",
-      "NumericValue": -100,
-      "StringValue": "WS",
-      "VisibleInCoda": True
+        "CodeID": "code-WS-adb25603b7af",
+        "CodeType": "Control",
+        "ControlCode": "WS",
+        "DisplayText": "WS (wrong scheme)",
+        "NumericValue": -100,
+        "StringValue": "WS",
+        "VisibleInCoda": True
     },
     {
-      "CodeID": "code-CE-016c1e22",
-      "CodeType": "Control",
-      "ControlCode": "CE",
-      "DisplayText": "CE (coding error)",
-      "NumericValue": -110,
-      "StringValue": "CE",
-      "VisibleInCoda": False
+        "CodeID": "code-CE-016c1e22",
+        "CodeType": "Control",
+        "ControlCode": "CE",
+        "DisplayText": "CE (coding error)",
+        "NumericValue": -110,
+        "StringValue": "CE",
+        "VisibleInCoda": False
     },
     {
-      "CodeID" : "code-PB-a434a800",
-      "DisplayText"    : "push back",
-      "NumericValue"   : -100000,
-      "StringValue"    : "push_back"
-      "VisibleInCoda"  : True,
-      "CodeType"       : "Meta"
+        "CodeID": "code-PB-a434a800",
+        "DisplayText": "push back",
+        "NumericValue": -100000,
+        "StringValue": "push_back",
+        "VisibleInCoda": True,
+        "CodeType": "Meta"
     },
     {
-      "CodeID" : "code-Q-a5d3700d",
-      "DisplayText"    : "question",
-      "NumericValue"   : -100010,
-      "StringValue"    : "question"
-      "VisibleInCoda"  : True,
-      "CodeType"       : "Meta"
-    }
+        "CodeID": "code-Q-a5d3700d",
+        "DisplayText": "question",
+        "NumericValue": -100010,
+        "StringValue": "question",
+        "VisibleInCoda": True,
+        "CodeType": "Meta"
+    },
+    {
+        "CodeID": "code-G-97cb3199",
+        "DisplayText": "greeting",
+        "NumericValue": -100020,
+        "StringValue": "greeting",
+        "VisibleInCoda": True,
+        "CodeType": "Meta"
+    },
 ]
 
 parser = argparse.ArgumentParser(description="Generate schema files")
