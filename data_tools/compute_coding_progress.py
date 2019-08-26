@@ -41,6 +41,9 @@ def compute_coding_progress(dataset_id, force_recount=False):
             if label["CodeID"] == "SPECIAL-MANUALLY_UNCODED":
                 continue
 
+            if not label["Checked"]:
+                continue
+
             message_has_label = True
             scheme_for_label = schemes[label["SchemeID"]]
             code_for_label = None
