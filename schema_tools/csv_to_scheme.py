@@ -150,6 +150,14 @@ SPECIAL_CODES = [
         "CodeType": "Meta"
     },
     {
+        "CodeID": "code-SQ-5e8f0122",
+        "DisplayText": "showtime question",
+        "NumericValue": -100030,
+        "StringValue": "showtime_question",
+        "VisibleInCoda": True,
+        "CodeType": "Meta"
+    },
+    {
         "CodeID": "code-G-97cb3199",
         "DisplayText": "greeting",
         "NumericValue": -100020,
