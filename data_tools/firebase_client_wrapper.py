@@ -64,8 +64,7 @@ def get_shard_messages(dataset_name, shard_index=None):
 
 def get_all_messages(dataset_name):
     shard_count = get_shard_count(dataset_name)
-    #TODO tool for handling missing shard count
-    if shard_count == 1:
+    if shard_count is None or shard_count == 1:
         return get_shard_messages(dataset_name)
     else:
         messages = []
@@ -177,7 +176,10 @@ def _delete_collection(coll_ref, batch_size):
         return _delete_collection(coll_ref, batch_size)
 
 def get_shard_count(dataset_id):
-    return client.document(f'shard_counts/{dataset_id}').get().to_dict()["shard_count"]
+    shard_count_doc = client.document(f'shard_counts/{dataset_id}').get().to_dict()
+    if shard_count_doc is None:
+        return None
+    return shard_count_doc["shard_count"]
 
 def create_next_dataset_shard(dataset_id):
     shard_count = get_shard_count(dataset_id)
@@ -189,3 +191,5 @@ def create_next_dataset_shard(dataset_id):
 
     users = get_user_ids(current_shard_id)
     set_users(next_shard_id, users)
+
+
