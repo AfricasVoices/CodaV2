@@ -51,11 +51,25 @@ def get_message_ids(dataset_id):
     return ids
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
-def get_all_messages(dataset_id):
+def get_shard_messages(dataset_name, shard_index=None):
+    if shard_index is not None:
+        dataset_name += f'_{shard_index}'
+
     messages = []
-    for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
+    for message in client.collection(u'datasets/{}/messages'.format(dataset_name)).get():
         messages.append(message.to_dict())
     return messages
+
+def get_all_messages(dataset_name):
+    shard_count = get_shard_count(dataset_name)
+    #TODO tool for handling missing shard count
+    if shard_count == 1:
+        return get_shard_messages(dataset_name)
+    else:
+        messages = []
+        for shard_index in range(1, shard_count + 1):
+            messages.extend(get_shard_messages(dataset_name, shard_index))
+        return messages
 
 def get_message(dataset_id, message_id):
     return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id)).get().to_dict()
@@ -132,7 +146,6 @@ def delete_dataset(dataset_id):
 def _delete_collection(coll_ref, batch_size):
     docs = coll_ref.limit(batch_size).get()
     deleted = 0
-
     for doc in docs:
         print(u'Deleting doc {} => {}'.format(doc.id, doc.to_dict()))
         doc.reference.delete()
@@ -140,3 +153,7 @@ def _delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return _delete_collection(coll_ref, batch_size)
+
+def get_shard_count(dataset_id):
+    return client.document(f'shard_counts/{dataset_id}').get().to_dict()["shard_count"]
+
