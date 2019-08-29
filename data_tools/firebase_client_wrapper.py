@@ -4,6 +4,8 @@ from firebase_admin import firestore
 
 client = None
 
+MAX_SHARD_SIZE = 400
+
 def init_client(crypto_token_path):
     global client
     cred = credentials.Certificate(crypto_token_path)
@@ -99,6 +101,11 @@ def set_scheme(dataset_id, scheme):
     get_code_scheme_ref(dataset_id, scheme_id).set(scheme)
     print ("Written scheme: {}".format(scheme_id))
 
+def set_all_code_schemes(dataset_id, schemes):
+    # TODO: Implement more efficiently:
+    for scheme in schemes:
+        set_scheme(dataset_id, scheme)
+
 
 def set_messages_content(dataset_id, messages):
     for message in messages:
@@ -107,7 +114,10 @@ def set_messages_content(dataset_id, messages):
         print ("Written message: {}".format(message_id))
 
 
-def set_messages_content_batch(dataset_id, messages, batch_size=500):
+def set_shard_messages_content_batch(dataset_id, messages, shard_index=None, batch_size=500):
+    if shard_index is not None:
+        dataset_id += f'_{shard_index}'
+
     total_messages_count = len(messages)
     i = 0
     batch_counter = 0
@@ -129,6 +139,18 @@ def set_messages_content_batch(dataset_id, messages, batch_size=500):
 
     print ("Written {} messages".format(i))
 
+def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
+    next_batch_to_write = []
+    current_shard_size = len(get_shard_messages(dataset_id, get_shard_count(dataset_id)))
+    for message in messages:
+        if current_shard_size >= MAX_SHARD_SIZE:
+            set_shard_messages_content_batch(dataset_id, messages, shard_index=get_shard_count(dataset_id))
+            next_batch_to_write = []
+            create_next_dataset_shard(dataset_id)
+            current_shard_size = 0
+        next_batch_to_write.append(message)
+
+    set_shard_messages_content_batch(dataset_id, messages, shard_index=get_shard_count(dataset_id))
 
 def delete_dataset(dataset_id):
     # Delete Code schemes
@@ -157,3 +179,13 @@ def _delete_collection(coll_ref, batch_size):
 def get_shard_count(dataset_id):
     return client.document(f'shard_counts/{dataset_id}').get().to_dict()["shard_count"]
 
+def create_next_dataset_shard(dataset_id):
+    shard_count = get_shard_count(dataset_id)
+    current_shard_id = f"{dataset_id}_{shard_count}"
+    next_shard_id = f"{dataset_id}_{shard_count + 1}"
+
+    code_schemes = get_all_code_schemes(current_shard_id)
+    set_all_code_schemes(next_shard_id, code_schemes)
+
+    users = get_user_ids(current_shard_id)
+    set_users(next_shard_id, users)
