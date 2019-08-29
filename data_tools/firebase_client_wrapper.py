@@ -4,7 +4,7 @@ from firebase_admin import firestore
 
 client = None
 
-MAX_SHARD_SIZE = 170
+MAX_SHARD_SIZE = 4000
 
 def init_client(crypto_token_path):
     global client
@@ -62,14 +62,14 @@ def get_shard_messages(dataset_id, shard_index=None):
         messages.append(message.to_dict())
     return messages
 
-def get_all_messages(dataset_name):
-    shard_count = get_shard_count(dataset_name)
+def get_all_messages(dataset_id):
+    shard_count = get_shard_count(dataset_id)
     if shard_count is None or shard_count == 1:
-        return get_shard_messages(dataset_name)
+        return get_shard_messages(dataset_id)
     else:
         messages = []
         for shard_index in range(1, shard_count + 1):
-            messages.extend(get_shard_messages(dataset_name, shard_index))
+            messages.extend(get_shard_messages(dataset_id, shard_index))
         return messages
 
 def get_message(dataset_id, message_id):
@@ -193,9 +193,11 @@ def create_next_dataset_shard(dataset_id):
     if shard_count is None:
         current_shard_id = f"{dataset_id}"
         next_shard_id = f"{dataset_id}_2"
+        next_shard_count = 2
     else:
         current_shard_id = f"{dataset_id}_{shard_count}"
         next_shard_id = f"{dataset_id}_{shard_count + 1}"
+        next_shard_count = shard_count + 1
 
     print(f"Creating next dataset shard with id {next_shard_id}")
 
@@ -205,6 +207,6 @@ def create_next_dataset_shard(dataset_id):
     users = get_user_ids(current_shard_id)
     set_users(next_shard_id, users)
 
-    set_shard_count(dataset_id, next_shard_id)
+    set_shard_count(dataset_id, next_shard_count)
 
 
