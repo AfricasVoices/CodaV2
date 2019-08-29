@@ -5,10 +5,13 @@ import sys
 from time import gmtime, strftime
 
 
-def compute_coding_progress(dataset_id, force_recount=False):
+def compute_shard_coding_progress(dataset_id, shard_index=None, force_recount=False):
     """Compute and return the progress metrics for a given dataset.
     This method will initialise the counts in Firestore if they do
     not already exist."""
+    if shard_index is not None and shard_index != 1:
+        dataset_id += f'_{shard_index}'
+
     messages = []
     messages_with_labels = 0
     wrong_scheme_messages = 0
@@ -71,6 +74,15 @@ def compute_coding_progress(dataset_id, force_recount=False):
     # Write the metrics back if they weren't stored
     fcw.set_dataset_metrics(dataset_id, metrics)
     return metrics
+
+
+def compute_coding_progress(dataset_id, force_recount=False):
+    shard_count = fcw.get_shard_count(dataset_id)
+    if shard_count is None or shard_count == 1:
+        compute_shard_coding_progress(dataset_id, force_recount=force_recount)
+    else:
+        for shard_index in range(1, shard_count + 1):
+            compute_shard_coding_progress(dataset_id, shard_index=shard_index, force_recount=force_recount)
 
 
 if __name__ == "__main__":
