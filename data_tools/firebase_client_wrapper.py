@@ -54,7 +54,7 @@ def get_message_ids(dataset_id):
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
 def get_shard_messages(dataset_id, shard_index=None):
-    if shard_index is not None:
+    if shard_index is not None and shard_index != 1:
         dataset_id += f'_{shard_index}'
 
     messages = []
@@ -114,7 +114,7 @@ def set_messages_content(dataset_id, messages):
 
 
 def set_shard_messages_content_batch(dataset_id, messages, shard_index=None, batch_size=500):
-    if shard_index is not None:
+    if shard_index is not None and shard_index != 1:
         dataset_id += f'_{shard_index}'
 
     total_messages_count = len(messages)
