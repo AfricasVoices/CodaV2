@@ -26,7 +26,7 @@ def compute_shard_coding_progress(dataset_id, shard_index=None, force_recount=Fa
 
     schemes = {scheme["SchemeID"]: scheme for scheme in fcw.get_all_code_schemes(dataset_id)}
 
-    for message in fcw.get_all_messages(dataset_id):
+    for message in fcw.get_shard_messages(dataset_id):
         messages.append(message)
 
         # Get the latest label from each scheme
