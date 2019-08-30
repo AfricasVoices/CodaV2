@@ -44,6 +44,9 @@ def compute_shard_coding_progress(dataset_id, shard_index=None, force_recount=Fa
             if label["CodeID"] == "SPECIAL-MANUALLY_UNCODED":
                 continue
 
+            if not label["Checked"]:
+                continue
+
             message_has_label = True
             scheme_for_label = schemes[label["SchemeID"]]
             code_for_label = None
