@@ -1,8 +1,13 @@
+import time
+
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
 client = None
+
+# TODO: Set from a program argument
+MAX_SEGMENT_SIZE = 2500
 
 def init_client(crypto_token_path):
     global client
@@ -51,11 +56,30 @@ def get_message_ids(dataset_id):
     return ids
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
-def get_all_messages(dataset_id):
+def get_segment_messages(dataset_id, segment_index=None):
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
+
     messages = []
     for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
         messages.append(message.to_dict())
     return messages
+
+def get_all_messages(dataset_id):
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        return get_segment_messages(dataset_id)
+    else:
+        messages = []
+        for segment_index in range(1, segment_count + 1):
+            messages.extend(get_segment_messages(dataset_id, segment_index))
+
+        message_ids = set()
+        for message in messages:
+            assert message["MessageID"] not in message_ids, "Duplicate message found"
+            message_ids.add(message["MessageID"])
+
+        return messages
 
 def get_message(dataset_id, message_id):
     return client.document(u'datasets/{}/messages/{}'.format(dataset_id, message_id)).get().to_dict()
@@ -85,6 +109,12 @@ def set_scheme(dataset_id, scheme):
     get_code_scheme_ref(dataset_id, scheme_id).set(scheme)
     print ("Written scheme: {}".format(scheme_id))
 
+def set_all_code_schemes(dataset_id, schemes):
+    # TODO: Implement more efficiently
+    # TODO: Rename this (and all other set functions that don't really set) to add_and_update...
+    for scheme in schemes:
+        set_scheme(dataset_id, scheme)
+
 
 def set_messages_content(dataset_id, messages):
     for message in messages:
@@ -93,7 +123,10 @@ def set_messages_content(dataset_id, messages):
         print ("Written message: {}".format(message_id))
 
 
-def set_messages_content_batch(dataset_id, messages, batch_size=500):
+def set_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
+
     total_messages_count = len(messages)
     i = 0
     batch_counter = 0
@@ -108,19 +141,35 @@ def set_messages_content_batch(dataset_id, messages, batch_size=500):
             print ("Batch of {} messages committed, progress: {} / {}".format(batch_counter, i, total_messages_count))
             batch_counter = 0
             batch = client.batch()
-    
+
     if batch_counter > 0:
         batch.commit()
         print ("Final batch of {} messages committed".format(batch_counter))
 
     print ("Written {} messages".format(i))
 
+def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
+    next_batch_to_write = []
+    latest_segment_index = get_segment_count(dataset_id)
+    latest_segment_size = len(get_segment_messages(dataset_id, latest_segment_index))
+    for message in messages:
+        if latest_segment_size >= MAX_SEGMENT_SIZE:
+            set_segment_messages_content_batch(
+                dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
+            next_batch_to_write = []
+            create_next_dataset_segment(dataset_id)
+            latest_segment_size = 0
+        next_batch_to_write.append(message)
+        latest_segment_size += 1
+
+    set_segment_messages_content_batch(
+        dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
 
 def delete_dataset(dataset_id):
     # Delete Code schemes
     _delete_collection(
         client.collection("datasets/{}/code_schemes".format(dataset_id)), 10)
-    
+
     # Delete Messages
     _delete_collection(
         client.collection("datasets/{}/messages".format(dataset_id)), 10)
@@ -132,7 +181,6 @@ def delete_dataset(dataset_id):
 def _delete_collection(coll_ref, batch_size):
     docs = coll_ref.limit(batch_size).get()
     deleted = 0
-
     for doc in docs:
         print(u'Deleting doc {} => {}'.format(doc.id, doc.to_dict()))
         doc.reference.delete()
@@ -140,3 +188,41 @@ def _delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return _delete_collection(coll_ref, batch_size)
+
+def get_segment_count(dataset_id):
+    segment_count_doc = client.document(f'segment_counts/{dataset_id}').get().to_dict()
+    if segment_count_doc is None:
+        return None
+    return segment_count_doc["segment_count"]
+
+def set_segment_count(dataset_id, segment_count):
+    client.document(f'segment_counts/{dataset_id}').set({"segment_count": segment_count})
+
+def create_next_dataset_segment(dataset_id):
+    segment_count = get_segment_count(dataset_id)
+
+    if segment_count is None:
+        current_segment_id = f"{dataset_id}"
+        next_segment_id = f"{dataset_id}_2"
+        next_segment_count = 2
+    else:
+        current_segment_id = f"{dataset_id}_{segment_count}"
+        next_segment_id = f"{dataset_id}_{segment_count + 1}"
+        next_segment_count = segment_count + 1
+
+    print(f"Creating next dataset segment with id {next_segment_id}")
+
+    code_schemes = get_all_code_schemes(current_segment_id)
+    set_all_code_schemes(next_segment_id, code_schemes)
+
+    users = get_user_ids(current_segment_id)
+    set_users(next_segment_id, users)
+
+    set_segment_count(dataset_id, next_segment_count)
+
+    for x in range(0, 10):
+        if get_segment_count(dataset_id) == next_segment_count:
+            return
+        print("New segment count not yet committed, waiting 1s before retrying")
+        time.sleep(1)
+    assert False, "Server segment count did not update to the newest count fast enough"

@@ -5,10 +5,15 @@ import sys
 from time import gmtime, strftime
 
 
-def compute_coding_progress(dataset_id, force_recount=False):
+def compute_segment_coding_progress(dataset_id, segment_index=None, force_recount=False):
     """Compute and return the progress metrics for a given dataset.
     This method will initialise the counts in Firestore if they do
     not already exist."""
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
+
+    print(f"Updating metrics for segment {dataset_id}...")
+
     messages = []
     messages_with_labels = 0
     wrong_scheme_messages = 0
@@ -23,7 +28,7 @@ def compute_coding_progress(dataset_id, force_recount=False):
 
     schemes = {scheme["SchemeID"]: scheme for scheme in fcw.get_all_code_schemes(dataset_id)}
 
-    for message in fcw.get_all_messages(dataset_id):
+    for message in fcw.get_segment_messages(dataset_id):
         messages.append(message)
 
         # Get the latest label from each scheme
@@ -74,6 +79,15 @@ def compute_coding_progress(dataset_id, force_recount=False):
     # Write the metrics back if they weren't stored
     fcw.set_dataset_metrics(dataset_id, metrics)
     return metrics
+
+
+def compute_coding_progress(dataset_id, force_recount=False):
+    segment_count = fcw.get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        compute_segment_coding_progress(dataset_id, force_recount=force_recount)
+    else:
+        for segment_index in range(1, segment_count + 1):
+            compute_segment_coding_progress(dataset_id, segment_index=segment_index, force_recount=force_recount)
 
 
 if __name__ == "__main__":

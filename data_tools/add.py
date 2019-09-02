@@ -1,12 +1,10 @@
-import firebase_client_wrapper as fcw
-import compute_coding_progress as cp 
-
 import json
 import sys
 
+import compute_coding_progress as cp
+import firebase_client_wrapper as fcw
 import validate_code_scheme
 import validate_message_structure
-import validate_user_list
 
 if (len(sys.argv) != 5):
     print ("Usage python add.py crypto_token dataset_id users|schemes|messages path")
@@ -66,7 +64,6 @@ elif CONTENT_TYPE == "schemes":
         added += 1
     
     print ("Added: {}, Skipped: {}".format(added, skipped_existing))
-
 elif CONTENT_TYPE == "messages":
     added = 0
     skipped_existing = 0
@@ -102,9 +99,9 @@ elif CONTENT_TYPE == "messages":
         added += 1
     
     print ("About to batch add: {}".format(added, skipped_existing))
-    fcw.set_messages_content_batch(DATASET_ID, messages_to_write)
+    fcw.set_dataset_messages_content_batch(DATASET_ID, messages_to_write)
     print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
     
-    print('Updating Ops Dashboard for dataset: {}'.format(DATASET_ID))
+    print('Updating metrics for dataset: {}'.format(DATASET_ID))
     cp.compute_coding_progress(DATASET_ID, force_recount=True)
     print('Done')
