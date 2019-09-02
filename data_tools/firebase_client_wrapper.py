@@ -109,7 +109,8 @@ def set_scheme(dataset_id, scheme):
     print ("Written scheme: {}".format(scheme_id))
 
 def set_all_code_schemes(dataset_id, schemes):
-    # TODO: Implement more efficiently:
+    # TODO: Implement more efficiently
+    # TODO: Rename this (and all other set functions that don't really set) to add_and_update...
     for scheme in schemes:
         set_scheme(dataset_id, scheme)
 
