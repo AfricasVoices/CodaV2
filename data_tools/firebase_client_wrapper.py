@@ -1,3 +1,5 @@
+import time
+
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -215,4 +217,9 @@ def create_next_dataset_shard(dataset_id):
 
     set_shard_count(dataset_id, next_shard_count)
 
-
+    for x in range(0, 10):
+        if get_shard_count(dataset_id) == next_shard_count:
+            return
+        print("New shard count not yet committed, waiting 1s before retrying")
+        time.sleep(1)
+    assert False, "Server shard count did not update to the newest count fast enough"
