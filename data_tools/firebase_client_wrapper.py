@@ -15,6 +15,11 @@ def init_client(crypto_token_path):
     firebase_admin.initialize_app(cred)
     client = firestore.client()
 
+def id_for_segment(dataset_id, segment_index=None):
+    if segment_index is None or segment_index == 1:
+        return dataset_id
+    return dataset_id + f'_{segment_index}'
+
 def get_dataset_ids():
     ids = []
     for dataset in client.collection(u'datasets').get():
@@ -57,8 +62,7 @@ def get_message_ids(dataset_id):
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
 def get_segment_messages(dataset_id, segment_index=None):
-    if segment_index is not None and segment_index != 1:
-        dataset_id += f'_{segment_index}'
+    dataset_id = id_for_segment(dataset_id, segment_index)
 
     messages = []
     for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
@@ -98,8 +102,7 @@ def set_dataset_metrics(dataset_id, metrics_map):
     message_metrics_ref.set(metrics_map)
 
 def set_segment_user_ids(dataset_id, user_ids, segment_index=None):
-    if segment_index is not None and segment_index != 1:
-        dataset_id += f'_{segment_index}'
+    dataset_id = id_for_segment(dataset_id, segment_index)
 
     print(f"Writing users to segment {dataset_id}...")
     dataset_ref = get_dataset_ref(dataset_id)
@@ -136,8 +139,7 @@ def set_messages_content(dataset_id, messages):
 
 
 def set_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
-    if segment_index is not None and segment_index != 1:
-        dataset_id += f'_{segment_index}'
+    dataset_id = id_for_segment(dataset_id, segment_index)
 
     total_messages_count = len(messages)
     i = 0
