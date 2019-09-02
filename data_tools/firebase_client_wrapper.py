@@ -70,6 +70,12 @@ def get_all_messages(dataset_id):
         messages = []
         for shard_index in range(1, shard_count + 1):
             messages.extend(get_shard_messages(dataset_id, shard_index))
+
+        message_ids = set()
+        for message in messages:
+            assert message["MessageID"] not in message_ids, "Duplicate message found"
+            message_ids.add(message["MessageID"])
+
         return messages
 
 def get_message(dataset_id, message_id):
