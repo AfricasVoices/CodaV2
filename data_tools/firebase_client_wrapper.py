@@ -97,12 +97,24 @@ def set_dataset_metrics(dataset_id, metrics_map):
     message_metrics_ref = client.document(u'datasets/{}/metrics/messages'.format(dataset_id))
     message_metrics_ref.set(metrics_map)
 
-def set_users(dataset_id, users_list):
+def set_segment_user_ids(dataset_id, user_ids, segment_index=None):
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
+
+    print(f"Writing users to segment {dataset_id}...")
     dataset_ref = get_dataset_ref(dataset_id)
     dataset_ref.set({
-        'users': users_list
+        "users": user_ids
     })
-    print ("Written users")
+
+def set_dataset_user_ids(dataset_id, user_ids):
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        set_segment_user_ids(dataset_id, user_ids)
+    else:
+        for segment_index in range(1, segment_count + 1):
+            set_segment_user_ids(dataset_id, user_ids, segment_index=segment_index)
+    print(f"Wrote users to dataset {dataset_id}")
 
 def set_scheme(dataset_id, scheme):
     scheme_id = scheme["SchemeID"]
@@ -216,7 +228,7 @@ def create_next_dataset_segment(dataset_id):
     set_all_code_schemes(next_segment_id, code_schemes)
 
     users = get_user_ids(current_segment_id)
-    set_users(next_segment_id, users)
+    set_dataset_user_ids(next_segment_id, users)
 
     set_segment_count(dataset_id, next_segment_count)
 

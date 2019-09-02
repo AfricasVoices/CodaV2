@@ -26,9 +26,9 @@ if len(existing_ids) > 0:
 
 for dataset_id in data.keys():
     print ("Starting to restore {}".format(dataset_id))
-    fcw.set_users(dataset_id, data[dataset_id]["users"])
+    fcw.set_dataset_user_ids(dataset_id, data[dataset_id]["users"])
     for scheme in data[dataset_id]["schemes"]:
         fcw.set_scheme(dataset_id, scheme)
-    fcw.set_messages_content_batch(dataset_id, data[dataset_id]["messages"])
+    fcw.set_dataset_messages_content_batch(dataset_id, data[dataset_id]["messages"])
     print ("Restore complete: {}".format(dataset_id))
 
