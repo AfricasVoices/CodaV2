@@ -6,6 +6,7 @@ from firebase_admin import firestore
 
 client = None
 
+# TODO: Set from a program argument
 MAX_SEGMENT_SIZE = 2500
 
 def init_client(crypto_token_path):
