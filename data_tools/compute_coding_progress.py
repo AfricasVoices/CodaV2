@@ -12,6 +12,8 @@ def compute_segment_coding_progress(dataset_id, segment_index=None, force_recoun
     if segment_index is not None and segment_index != 1:
         dataset_id += f'_{segment_index}'
 
+    print(f"Updating metrics for segment {dataset_id}...")
+
     messages = []
     messages_with_labels = 0
     wrong_scheme_messages = 0
