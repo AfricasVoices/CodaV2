@@ -6,7 +6,7 @@ from firebase_admin import firestore
 
 client = None
 
-MAX_SHARD_SIZE = 4000
+MAX_SEGMENT_SIZE = 4000
 
 def init_client(crypto_token_path):
     global client
@@ -55,9 +55,9 @@ def get_message_ids(dataset_id):
     return ids
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
-def get_shard_messages(dataset_id, shard_index=None):
-    if shard_index is not None and shard_index != 1:
-        dataset_id += f'_{shard_index}'
+def get_segment_messages(dataset_id, segment_index=None):
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
 
     messages = []
     for message in client.collection(u'datasets/{}/messages'.format(dataset_id)).get():
@@ -65,13 +65,13 @@ def get_shard_messages(dataset_id, shard_index=None):
     return messages
 
 def get_all_messages(dataset_id):
-    shard_count = get_shard_count(dataset_id)
-    if shard_count is None or shard_count == 1:
-        return get_shard_messages(dataset_id)
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        return get_segment_messages(dataset_id)
     else:
         messages = []
-        for shard_index in range(1, shard_count + 1):
-            messages.extend(get_shard_messages(dataset_id, shard_index))
+        for segment_index in range(1, segment_count + 1):
+            messages.extend(get_segment_messages(dataset_id, segment_index))
 
         message_ids = set()
         for message in messages:
@@ -121,9 +121,9 @@ def set_messages_content(dataset_id, messages):
         print ("Written message: {}".format(message_id))
 
 
-def set_shard_messages_content_batch(dataset_id, messages, shard_index=None, batch_size=500):
-    if shard_index is not None and shard_index != 1:
-        dataset_id += f'_{shard_index}'
+def set_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
 
     total_messages_count = len(messages)
     i = 0
@@ -139,7 +139,7 @@ def set_shard_messages_content_batch(dataset_id, messages, shard_index=None, bat
             print ("Batch of {} messages committed, progress: {} / {}".format(batch_counter, i, total_messages_count))
             batch_counter = 0
             batch = client.batch()
-    
+
     if batch_counter > 0:
         batch.commit()
         print ("Final batch of {} messages committed".format(batch_counter))
@@ -148,25 +148,25 @@ def set_shard_messages_content_batch(dataset_id, messages, shard_index=None, bat
 
 def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
     next_batch_to_write = []
-    current_shard_size = len(get_shard_messages(dataset_id, get_shard_count(dataset_id)))
+    current_segment_size = len(get_segment_messages(dataset_id, get_segment_count(dataset_id)))
     for message in messages:
-        if current_shard_size >= MAX_SHARD_SIZE:
-            set_shard_messages_content_batch(
-                dataset_id, next_batch_to_write, shard_index=get_shard_count(dataset_id), batch_size=batch_size)
+        if current_segment_size >= MAX_SEGMENT_SIZE:
+            set_segment_messages_content_batch(
+                dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
             next_batch_to_write = []
-            create_next_dataset_shard(dataset_id)
-            current_shard_size = 0
+            create_next_dataset_segment(dataset_id)
+            current_segment_size = 0
         next_batch_to_write.append(message)
-        current_shard_size += 1
+        current_segment_size += 1
 
-    set_shard_messages_content_batch(
-        dataset_id, next_batch_to_write, shard_index=get_shard_count(dataset_id), batch_size=batch_size)
+    set_segment_messages_content_batch(
+        dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
 
 def delete_dataset(dataset_id):
     # Delete Code schemes
     _delete_collection(
         client.collection("datasets/{}/code_schemes".format(dataset_id)), 10)
-    
+
     # Delete Messages
     _delete_collection(
         client.collection("datasets/{}/messages".format(dataset_id)), 10)
@@ -186,40 +186,40 @@ def _delete_collection(coll_ref, batch_size):
     if deleted >= batch_size:
         return _delete_collection(coll_ref, batch_size)
 
-def get_shard_count(dataset_id):
-    shard_count_doc = client.document(f'shard_counts/{dataset_id}').get().to_dict()
-    if shard_count_doc is None:
+def get_segment_count(dataset_id):
+    segment_count_doc = client.document(f'segment_counts/{dataset_id}').get().to_dict()
+    if segment_count_doc is None:
         return None
-    return shard_count_doc["shard_count"]
+    return segment_count_doc["segment_count"]
 
-def set_shard_count(dataset_id, shard_count):
-    client.document(f'shard_counts/{dataset_id}').set({"shard_count": shard_count})
+def set_segment_count(dataset_id, segment_count):
+    client.document(f'segment_counts/{dataset_id}').set({"segment_count": segment_count})
 
-def create_next_dataset_shard(dataset_id):
-    shard_count = get_shard_count(dataset_id)
+def create_next_dataset_segment(dataset_id):
+    segment_count = get_segment_count(dataset_id)
 
-    if shard_count is None:
-        current_shard_id = f"{dataset_id}"
-        next_shard_id = f"{dataset_id}_2"
-        next_shard_count = 2
+    if segment_count is None:
+        current_segment_id = f"{dataset_id}"
+        next_segment_id = f"{dataset_id}_2"
+        next_segment_count = 2
     else:
-        current_shard_id = f"{dataset_id}_{shard_count}"
-        next_shard_id = f"{dataset_id}_{shard_count + 1}"
-        next_shard_count = shard_count + 1
+        current_segment_id = f"{dataset_id}_{segment_count}"
+        next_segment_id = f"{dataset_id}_{segment_count + 1}"
+        next_segment_count = segment_count + 1
 
-    print(f"Creating next dataset shard with id {next_shard_id}")
+    print(f"Creating next dataset segment with id {next_segment_id}")
 
-    code_schemes = get_all_code_schemes(current_shard_id)
-    set_all_code_schemes(next_shard_id, code_schemes)
+    code_schemes = get_all_code_schemes(current_segment_id)
+    set_all_code_schemes(next_segment_id, code_schemes)
 
-    users = get_user_ids(current_shard_id)
-    set_users(next_shard_id, users)
+    users = get_user_ids(current_segment_id)
+    set_users(next_segment_id, users)
 
-    set_shard_count(dataset_id, next_shard_count)
+    set_segment_count(dataset_id, next_segment_count)
 
     for x in range(0, 10):
-        if get_shard_count(dataset_id) == next_shard_count:
+        if get_segment_count(dataset_id) == next_segment_count:
             return
-        print("New shard count not yet committed, waiting 1s before retrying")
+        print("New segment count not yet committed, waiting 1s before retrying")
         time.sleep(1)
-    assert False, "Server shard count did not update to the newest count fast enough"
+    assert False, "Server segment count did not update to the newest count fast enough"

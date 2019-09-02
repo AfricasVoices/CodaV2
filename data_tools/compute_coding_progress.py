@@ -5,12 +5,12 @@ import sys
 from time import gmtime, strftime
 
 
-def compute_shard_coding_progress(dataset_id, shard_index=None, force_recount=False):
+def compute_segment_coding_progress(dataset_id, segment_index=None, force_recount=False):
     """Compute and return the progress metrics for a given dataset.
     This method will initialise the counts in Firestore if they do
     not already exist."""
-    if shard_index is not None and shard_index != 1:
-        dataset_id += f'_{shard_index}'
+    if segment_index is not None and segment_index != 1:
+        dataset_id += f'_{segment_index}'
 
     messages = []
     messages_with_labels = 0
@@ -26,7 +26,7 @@ def compute_shard_coding_progress(dataset_id, shard_index=None, force_recount=Fa
 
     schemes = {scheme["SchemeID"]: scheme for scheme in fcw.get_all_code_schemes(dataset_id)}
 
-    for message in fcw.get_shard_messages(dataset_id):
+    for message in fcw.get_segment_messages(dataset_id):
         messages.append(message)
 
         # Get the latest label from each scheme
@@ -80,12 +80,12 @@ def compute_shard_coding_progress(dataset_id, shard_index=None, force_recount=Fa
 
 
 def compute_coding_progress(dataset_id, force_recount=False):
-    shard_count = fcw.get_shard_count(dataset_id)
-    if shard_count is None or shard_count == 1:
-        compute_shard_coding_progress(dataset_id, force_recount=force_recount)
+    segment_count = fcw.get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        compute_segment_coding_progress(dataset_id, force_recount=force_recount)
     else:
-        for shard_index in range(1, shard_count + 1):
-            compute_shard_coding_progress(dataset_id, shard_index=shard_index, force_recount=force_recount)
+        for segment_index in range(1, segment_count + 1):
+            compute_segment_coding_progress(dataset_id, segment_index=segment_index, force_recount=force_recount)
 
 
 if __name__ == "__main__":
