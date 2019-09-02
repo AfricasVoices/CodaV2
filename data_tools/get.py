@@ -44,5 +44,6 @@ if CONTENT_TYPE in ["all", "messages"]:
     messages = []
     for message in fcw.get_all_messages(DATASET_ID):
         messages.append(message)
+    messages.sort(key=lambda msg: msg["SequenceNumber"])
     print (json.dumps(messages, indent=2))
 
