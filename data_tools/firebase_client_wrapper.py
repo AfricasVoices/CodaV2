@@ -148,16 +148,17 @@ def set_segment_messages_content_batch(dataset_id, messages, segment_index=None,
 
 def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
     next_batch_to_write = []
-    current_segment_size = len(get_segment_messages(dataset_id, get_segment_count(dataset_id)))
+    latest_segment_index = get_segment_count(dataset_id)
+    latest_segment_size = len(get_segment_messages(dataset_id, latest_segment_index))
     for message in messages:
-        if current_segment_size >= MAX_SEGMENT_SIZE:
+        if latest_segment_size >= MAX_SEGMENT_SIZE:
             set_segment_messages_content_batch(
                 dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
             next_batch_to_write = []
             create_next_dataset_segment(dataset_id)
-            current_segment_size = 0
+            latest_segment_size = 0
         next_batch_to_write.append(message)
-        current_segment_size += 1
+        latest_segment_size += 1
 
     set_segment_messages_content_batch(
         dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
