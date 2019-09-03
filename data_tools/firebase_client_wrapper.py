@@ -102,8 +102,19 @@ def get_all_code_schemes(dataset_id):
 
 
 def get_code_scheme(dataset_id, scheme_id):
-    # TODO: Consistency check
-    return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
+    scheme = client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
+
+    # Perform a consistency check on the other segments if they exist
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is not None and segment_count > 1:
+        for segment_index in range(2, segment_count + 1):
+            segment_id = id_for_segment(dataset_id, segment_index)
+            segment_scheme = client.document(u'datasets/{}/code_schemes/{}'.format(segment_id, scheme_id)).get().to_dict()
+
+            assert json.dumps(scheme, sort_keys=True) == json.dumps(segment_scheme, sort_keys=True), \
+                f"Segment {segment_id} has a different scheme {scheme['SchemeID']} to the first segment {dataset_id}"
+
+    return scheme
 
 
 def get_segment_code_scheme_ref(segment_id, scheme_id):
