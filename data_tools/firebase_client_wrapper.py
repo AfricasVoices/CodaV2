@@ -1,3 +1,4 @@
+import json
 import time
 
 import firebase_admin
@@ -56,15 +57,15 @@ def get_segment_user_ids(segment_id):
 
 
 def get_user_ids(dataset_id):
-    segment_count = get_segment_count(dataset_id)
     users = get_segment(dataset_id).get("users")
 
     # Perform a consistency check on the other segments if they exist
+    segment_count = get_segment_count(dataset_id)
     if segment_count is not None and segment_count > 1:
         for segment_index in range(2, segment_count + 1):
             segment_id = id_for_segment(dataset_id, segment_index)
             assert set(get_segment_user_ids(segment_id)) == set(users), \
-                f"Segment {segment_id} had different users to the first segment {dataset_id}"
+                f"Segment {segment_id} has different users to the first segment {dataset_id}"
 
     return users
 
@@ -77,14 +78,36 @@ def get_all_code_schemes(dataset_id):
     schemes = []
     for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
         schemes.append(scheme.to_dict())
+
+    # Perform a consistency check on the other segments if they exist
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is not None and segment_count > 1:
+        for segment_index in range(2, segment_count + 1):
+            segment_id = id_for_segment(dataset_id, segment_index)
+
+            segment_schemes = []
+            for scheme in client.collection(u'datasets/{}/code_schemes'.format(segment_id)).get():
+                segment_schemes.append(scheme.to_dict())
+
+            assert len(schemes) == len(segment_schemes), \
+                f"Segment {segment_id} has a different number of schemes to the first segment {dataset_id}"
+
+            schemes.sort(key=lambda s: s["SchemeID"])
+            segment_schemes.sort(key=lambda s: s["SchemeID"])
+            for x, y in zip(schemes, segment_schemes):
+                assert json.dumps(x, sort_keys=True) == json.dumps(y, sort_keys=True), \
+                    f"Segment {segment_id} has different schemes to the first segment {dataset_id}"
+
     return schemes
 
 
 def get_code_scheme(dataset_id, scheme_id):
+    # TODO: Consistency check
     return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
 
 
 def get_code_scheme_ref(dataset_id, scheme_id):
+    # TODO: Consistency check
     return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id))
 
 
