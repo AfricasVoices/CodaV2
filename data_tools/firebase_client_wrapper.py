@@ -168,11 +168,6 @@ def get_segment_metrics(segment_id):
     return client.document(u'datasets/{}/metrics/messages'.format(segment_id)).get().to_dict()
 
 
-def get_dataset_metrics(dataset_id):
-    #  TODO
-    pass
-
-
 def set_segment_metrics(dataset_id, metrics_map):
     message_metrics_ref = client.document(u'datasets/{}/metrics/messages'.format(dataset_id))
     message_metrics_ref.set(metrics_map)
