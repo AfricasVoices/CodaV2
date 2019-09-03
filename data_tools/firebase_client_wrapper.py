@@ -106,9 +106,8 @@ def get_code_scheme(dataset_id, scheme_id):
     return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
 
 
-def get_code_scheme_ref(dataset_id, scheme_id):
-    # TODO: Consistency check
-    return client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id))
+def get_segment_code_scheme_ref(segment_id, scheme_id):
+    return client.document(u'datasets/{}/code_schemes/{}'.format(segment_id, scheme_id))
 
 
 def get_segment_message_ids(segment_id):
@@ -197,11 +196,11 @@ def set_code_scheme(dataset_id, scheme):
     segment_count = get_segment_count(dataset_id)
     batch = client.batch()
     if segment_count is None or segment_count == 1:
-        batch.set(get_code_scheme_ref(dataset_id, scheme_id), scheme)
+        batch.set(get_segment_code_scheme_ref(dataset_id, scheme_id), scheme)
     else:
         for segment_index in range(1, segment_count + 1):
             segment_id = id_for_segment(dataset_id, segment_index)
-            batch.set(get_code_scheme_ref(segment_id, scheme_id), scheme)
+            batch.set(get_segment_code_scheme_ref(segment_id, scheme_id), scheme)
     batch.commit()
     print("Wrote scheme: {}".format(scheme_id))
 
