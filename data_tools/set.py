@@ -31,19 +31,18 @@ if CONTENT_TYPE not in ["users", "schemes", "messages"]:
 
 
 json_data = json.loads(open(PATH, 'r').read())
-dataset_ref = fcw.get_dataset_ref(DATASET_ID)
 
 if CONTENT_TYPE == "users":
     validate_user_list.verify_JSON_path(PATH)
     users_list = json_data
     print ("Setting users for '{}': {}".format(DATASET_ID, users_list))
-    fcw.set_dataset_user_ids(DATASET_ID, users_list)
+    fcw.set_user_ids(DATASET_ID, users_list)
     print ("Done")
 elif CONTENT_TYPE == "schemes":
     for scheme in json_data:
         validate_code_scheme.verify_scheme(scheme)
         id = scheme["SchemeID"]
-        fcw.set_scheme(DATASET_ID, scheme)
+        fcw.set_code_scheme(DATASET_ID, scheme)
         
         print ("Updated: {}".format(id))
 elif CONTENT_TYPE == "messages":
