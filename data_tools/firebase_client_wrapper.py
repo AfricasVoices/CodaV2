@@ -51,8 +51,22 @@ def get_segment_ref(segment_id):
     return client.document(u'datasets/{}'.format(segment_id))
 
 
+def get_segment_user_ids(segment_id):
+    return get_segment(segment_id).get("users")
+
+
 def get_user_ids(dataset_id):
-    return get_segment(dataset_id).get("users")
+    segment_count = get_segment_count(dataset_id)
+    users = get_segment(dataset_id).get("users")
+
+    # Perform a consistency check on the other segments if they exist
+    if segment_count is not None and segment_count > 1:
+        for segment_index in range(2, segment_count + 1):
+            segment_id = id_for_segment(dataset_id, segment_index)
+            assert set(get_segment_user_ids(segment_id)) == set(users), \
+                f"Segment {segment_id} had different users to the first segment {dataset_id}"
+
+    return users
 
 
 def get_code_scheme_ids(dataset_id):
