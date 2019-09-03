@@ -58,7 +58,7 @@ elif CONTENT_TYPE == "schemes":
             skipped_existing += 1
             continue
 
-        fcw.get_code_scheme_ref(DATASET_ID, id).set(scheme)
+        fcw.set_code_scheme(DATASET_ID, scheme)
         print ("Written: {}".format(id))
         added += 1
     

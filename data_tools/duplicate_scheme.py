@@ -38,7 +38,7 @@ next_scheme_id = existing_scheme_count # Schemes are zero indexded
 scheme = fcw.get_code_scheme(DATASET_ID, SCHEME_ID)
 new_scheme_id = SCHEME_ID + "-{}".format(next_scheme_id)
 scheme["SchemeID"] = new_scheme_id
-fcw.get_code_scheme_ref(DATASET_ID, new_scheme_id).set(scheme)
+fcw.set_code_scheme(DATASET_ID, scheme)
 
 print ("Added: {}".format(new_scheme_id))
 
