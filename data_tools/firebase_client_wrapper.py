@@ -223,21 +223,29 @@ def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
 
 
 def delete_segment(segment_id):
-    # Delete Code schemes
-    _delete_collection(
-        client.collection("datasets/{}/code_schemes".format(segment_id)), 10)
+    # Delete code schemes
+    segment_code_schemes_path = f"datasets/{segment_id}/code_schemes"
+    print(f"Deleting {segment_code_schemes_path}...")
+    _delete_collection(client.collection(segment_code_schemes_path), 10)
 
-    # Delete Messages
-    _delete_collection(
-        client.collection("datasets/{}/messages".format(segment_id)), 10)
+    # Delete messages
+    segment_messages_path = f"datasets/{segment_id}/messages"
+    print(f"Deleting {segment_messages_path}...")
+    _delete_collection(client.collection(segment_messages_path), 10)
 
-    # Delete dataset
+    # Delete metrics
+    segment_metrics_path = f"datasets/{segment_id}/metrics"
+    print(f"Deleting {segment_metrics_path}...")
+    _delete_collection(client.collection(segment_metrics_path), 10)
+
+    # Delete segment
     get_segment_ref(segment_id).delete()
 
     print(f"Deleted segment {segment_id}")
 
 
 def delete_dataset(dataset_id):
+    # Delete segments
     segment_count = get_segment_count(dataset_id)
     if segment_count is None or segment_count == 1:
         delete_segment(dataset_id)
@@ -245,6 +253,10 @@ def delete_dataset(dataset_id):
         for segment_index in range(1, segment_count + 1):
             segment_id = id_for_segment(dataset_id, segment_index)
             delete_segment(segment_id)
+
+    # Delete segment count record if it exists
+    client.document(f"segment_counts/{dataset_id}").delete()
+
     print(f"Deleted dataset {dataset_id}")
 
 
