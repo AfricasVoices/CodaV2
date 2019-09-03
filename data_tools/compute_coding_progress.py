@@ -17,7 +17,7 @@ def compute_segment_coding_progress(segment_id, force_recount=False):
     not_coded_messages = 0
 
     # New scheme
-    metrics = fcw.get_dataset_metrics(segment_id)
+    metrics = fcw.get_segment_metrics(segment_id)
     if not force_recount and metrics is not None:
         return metrics
 
