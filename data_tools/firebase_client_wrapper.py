@@ -31,7 +31,16 @@ def get_segment_ids():
 
 
 def get_dataset_ids():
-    pass  # TODO
+    # Get the dataset ids by retrieving all the segment ids then removing those that are not the first segment.
+    dataset_ids = set(get_segment_ids())
+
+    for dataset_id in get_segmented_dataset_ids():
+        segment_count = get_segment_count(dataset_id)
+        if segment_count is not None and segment_count > 1:
+            for segment_index in range(2, segment_count + 1):
+                dataset_ids.remove(id_for_segment(dataset_id, segment_index))
+
+    return dataset_ids
 
 
 def get_segment(segment_id):
@@ -249,6 +258,15 @@ def _delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return _delete_collection(coll_ref, batch_size)
+
+
+def get_segmented_dataset_ids():
+    # Return the ids of datasets which have been segmented i.e. which have a definition
+    # in the /segment_counts collection
+    segmented_dataset_ids = []
+    for x in client.collection("segment_counts").get():
+        segmented_dataset_ids.append(x.id)
+    return segmented_dataset_ids
 
 
 def get_segment_count(dataset_id):
