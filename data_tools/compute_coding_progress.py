@@ -84,7 +84,7 @@ def compute_coding_progress(dataset_id, force_recount=False):
         compute_segment_coding_progress(dataset_id, force_recount=force_recount)
     else:
         for segment_index in range(1, segment_count + 1):
-            segment_id = fcw.id_for_segment(segment_index)
+            segment_id = fcw.id_for_segment(dataset_id, segment_index)
             compute_segment_coding_progress(segment_id, force_recount=force_recount)
 
 
