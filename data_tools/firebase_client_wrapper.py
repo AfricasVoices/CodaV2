@@ -70,10 +70,7 @@ def get_user_ids(dataset_id):
 
 
 def get_code_scheme_ids(dataset_id):
-    ids = []
-    for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
-        ids.append(scheme.id)
-    return ids
+    return [scheme["SchemeID"] for scheme in get_all_code_schemes(dataset_id)]
 
 
 def get_all_code_schemes(dataset_id):
