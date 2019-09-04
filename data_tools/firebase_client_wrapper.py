@@ -269,7 +269,7 @@ def delete_segment(segment_id):
     # Delete messages
     segment_messages_path = f"datasets/{segment_id}/messages"
     print(f"Deleting {segment_messages_path}...")
-    _delete_collection(client.collection(segment_messages_path), 10)
+    _delete_collection(client.collection(segment_messages_path), 500)
 
     # Delete metrics
     segment_metrics_path = f"datasets/{segment_id}/metrics"
@@ -301,10 +301,18 @@ def delete_dataset(dataset_id):
 def _delete_collection(coll_ref, batch_size):
     docs = coll_ref.limit(batch_size).get()
     deleted = 0
+    batch = client.batch()
+    first_id = None
+    last_id = None
     for doc in docs:
-        print(u'Deleting doc {} => {}'.format(doc.id, doc.to_dict()))
-        doc.reference.delete()
+        if first_id is None:
+            first_id = doc.id
+        last_id = doc.id
+
+        batch.delete(doc.reference)
         deleted = deleted + 1
+    batch.commit()
+    print(f"Deleted {deleted} objects ({first_id} to {last_id})")
 
     if deleted >= batch_size:
         return _delete_collection(coll_ref, batch_size)
