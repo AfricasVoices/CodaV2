@@ -29,6 +29,6 @@ for dataset_id in data.keys():
     fcw.set_user_ids(dataset_id, data[dataset_id]["users"])
     for scheme in data[dataset_id]["schemes"]:
         fcw.set_code_scheme(dataset_id, scheme)
-    fcw.set_dataset_messages_content_batch(dataset_id, data[dataset_id]["messages"])
+    fcw.add_and_update_dataset_messages_content_batch(dataset_id, data[dataset_id]["messages"])
     print ("Restore complete: {}".format(dataset_id))
 

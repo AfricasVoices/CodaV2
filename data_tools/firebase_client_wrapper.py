@@ -211,14 +211,13 @@ def set_code_scheme(dataset_id, scheme):
     print("Wrote scheme: {}".format(scheme_id))
 
 
-def set_all_code_schemes(dataset_id, schemes):
+def add_and_update_code_schemes(dataset_id, schemes):
     # TODO: Implement more efficiently
-    # TODO: Rename this (and all other set functions that don't really set) to add_and_update...
     for scheme in schemes:
         set_code_scheme(dataset_id, scheme)
 
 
-def set_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
+def add_and_update_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
     dataset_id = id_for_segment(dataset_id, segment_index)
 
     total_messages_count = len(messages)
@@ -243,13 +242,13 @@ def set_segment_messages_content_batch(dataset_id, messages, segment_index=None,
     print("Written {} messages".format(i))
 
 
-def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
+def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
     next_batch_to_write = []
     latest_segment_index = get_segment_count(dataset_id)
     latest_segment_size = len(get_segment_messages(id_for_segment(dataset_id, latest_segment_index)))
     for message in messages:
         if latest_segment_size >= MAX_SEGMENT_SIZE:
-            set_segment_messages_content_batch(
+            add_and_update_segment_messages_content_batch(
                 dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
             next_batch_to_write = []
             create_next_segment(dataset_id)
@@ -257,7 +256,7 @@ def set_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
         next_batch_to_write.append(message)
         latest_segment_size += 1
 
-    set_segment_messages_content_batch(
+    add_and_update_segment_messages_content_batch(
         dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
 
 
@@ -346,7 +345,7 @@ def create_next_segment(dataset_id):
     print(f"Creating next dataset segment with id {next_segment_id}")
 
     code_schemes = get_all_code_schemes(current_segment_id)
-    set_all_code_schemes(next_segment_id, code_schemes)
+    add_and_update_code_schemes(next_segment_id, code_schemes)
 
     users = get_user_ids(current_segment_id)
     set_user_ids(next_segment_id, users)
