@@ -165,6 +165,14 @@ SPECIAL_CODES = [
         "VisibleInCoda": True,
         "CodeType": "Meta"
     },
+    {
+        "CodeID": "code-OI-c5f1d054",
+        "DisplayText": "opt-in",
+        "NumericValue": -100040,
+        "StringValue": "opt_in",
+        "VisibleInCoda": True,
+        "CodeType": "Meta"
+    }
 ]
 
 parser = argparse.ArgumentParser(description="Generate schema files")
