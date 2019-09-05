@@ -15,6 +15,9 @@ Code Scheme definition (JSON, named $Name-$Version)
   "Codes"               : [             // Required
     {
       "CodeID"          : String,       // Required, Unique in code scheme format "Scheme-???-sUUID"
+      "CodeType"        : String,       // Required, One of "Normal", "Control", or "Meta"
+      "ControlCode"     : String,       // Required if "CodeType" is "Control", Standard control code this code represents e.g. "NA"
+      "MetaCode"        : String,       // Required if "CodeType" is "Meta", Standard meta code this code represents e.g. "greeting"
       "DisplayText"     : String,       // Required, Coda will display this
       "Shortcut"        : String,       // Optional, Single character for shortcut
       "NumericValue"    : Int,          // Required, Unique in code scheme analysis output in numeric form
@@ -24,7 +27,7 @@ Code Scheme definition (JSON, named $Name-$Version)
       "MatchValues"     : List<String>  // Optional, List of strings that tools can use to automatically match this code
     }
   ],
-  "Documentation" : {                 // Optional
+  "Documentation" : {                   // Optional
      "URI" :  String
   }
 }
@@ -38,7 +41,7 @@ Message definition (JSON, named $ID)
 ```
 {
   "MessageID"           : String,           // Required, Globally unique
-  "SequenceNumber"      : Int               // Required, Unique, but not necessarily consecutive
+  "SequenceNumber"      : Int,              // Required, Unique, but not necessarily consecutive
   "Text"                : String,           // Required
   "CreationDateTimeUTC" : ISO 8601 String,  // Required
   "Labels"              : [                 // Required
