@@ -312,7 +312,7 @@ def _delete_collection(coll_ref, batch_size):
         batch.delete(doc.reference)
         deleted = deleted + 1
     batch.commit()
-    print(f"Deleted {deleted} objects ({first_id} to {last_id})")
+    print(f"Deleted {deleted} objects ({first_id} to {last_id})")  # Useful because Firebase get()s sort by id
 
     if deleted >= batch_size:
         return _delete_collection(coll_ref, batch_size)
