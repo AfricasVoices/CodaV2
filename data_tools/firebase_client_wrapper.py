@@ -198,6 +198,7 @@ def delete_unchecked_messages_in_segment(dataset_id, segment_index=None):
 
     messages = get_segment_messages(dataset_id, segment_index)
     messages.sort(key=lambda msg: msg["SequenceNumber"])
+    deleted_count = 0
     for msg in messages:
         # Get the latest label from each scheme
         latest_labels = dict()  # of scheme id -> label
@@ -214,6 +215,8 @@ def delete_unchecked_messages_in_segment(dataset_id, segment_index=None):
         if not manually_coded:
             print(f"Deleting message with sequence number: {msg['SequenceNumber']}")
             client.document(f"datasets/{segment_id}/messages/{msg['MessageID']}").delete()
+            deleted_count += 1
+    print(f"Deleted {deleted_count} messages from segment {segment_id}")
 
 
 def delete_unchecked_messages(dataset_id):
