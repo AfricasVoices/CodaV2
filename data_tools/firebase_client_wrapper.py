@@ -209,6 +209,7 @@ def delete_unchecked_messages_in_segment(dataset_id, segment_index=None):
         for label in latest_labels.values():
             if label["Checked"]:
                 manually_coded = True
+                break
 
         if not manually_coded:
             print(f"Deleting message with sequence number: {msg['SequenceNumber']}")
