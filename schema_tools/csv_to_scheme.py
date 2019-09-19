@@ -139,7 +139,8 @@ SPECIAL_CODES = [
         "NumericValue": -100000,
         "StringValue": "push_back",
         "VisibleInCoda": True,
-        "CodeType": "Meta"
+        "CodeType": "Meta",
+        "MetaCode": "push_back"
     },
     {
         "CodeID": "code-Q-a5d3700d",
@@ -147,7 +148,8 @@ SPECIAL_CODES = [
         "NumericValue": -100010,
         "StringValue": "question",
         "VisibleInCoda": True,
-        "CodeType": "Meta"
+        "CodeType": "Meta",
+        "MetaCode": "question"
     },
     {
         "CodeID": "code-SQ-5e8f0122",
@@ -155,7 +157,8 @@ SPECIAL_CODES = [
         "NumericValue": -100030,
         "StringValue": "showtime_question",
         "VisibleInCoda": True,
-        "CodeType": "Meta"
+        "CodeType": "Meta",
+        "MetaCode": "showtime_question"
     },
     {
         "CodeID": "code-G-97cb3199",
@@ -163,8 +166,18 @@ SPECIAL_CODES = [
         "NumericValue": -100020,
         "StringValue": "greeting",
         "VisibleInCoda": True,
-        "CodeType": "Meta"
+        "CodeType": "Meta",
+        "MetaCode": "greeting"
     },
+    {
+        "CodeID": "code-OI-c5f1d054",
+        "DisplayText": "opt-in",
+        "NumericValue": -100040,
+        "StringValue": "opt_in",
+        "VisibleInCoda": True,
+        "CodeType": "Meta",
+        "MetaCode": "opt_in"
+    }
 ]
 
 parser = argparse.ArgumentParser(description="Generate schema files")
