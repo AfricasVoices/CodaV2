@@ -308,6 +308,41 @@ def _delete_collection(coll_ref, batch_size):
         return _delete_collection(coll_ref, batch_size)
 
 
+def delete_unchecked_messages_in_segment(segment_id):
+    messages = get_segment_messages(segment_id)
+    messages.sort(key=lambda msg: msg["SequenceNumber"])
+    
+    deleted_count = 0
+    for msg in messages:
+        # Get the latest label from each scheme
+        latest_labels = dict()  # of scheme id -> label
+        for label in msg["Labels"]:
+            if label["SchemeID"] not in latest_labels:
+                latest_labels[label["SchemeID"]] = label
+
+        manually_coded = False
+        for label in latest_labels.values():
+            if label["Checked"]:
+                manually_coded = True
+                break
+
+        if not manually_coded:
+            print(f"Deleting message with sequence number: {msg['SequenceNumber']}")
+            client.document(f"datasets/{segment_id}/messages/{msg['MessageID']}").delete()
+            deleted_count += 1
+    print(f"Deleted {deleted_count} messages from segment {segment_id}")
+
+
+def delete_unchecked_messages(dataset_id):
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        delete_unchecked_messages_in_segment(dataset_id)
+    else:
+        for segment_index in range(1, segment_count + 1):
+            segment_id = id_for_segment(dataset_id, segment_index)
+            delete_unchecked_messages_in_segment(segment_id)
+
+
 def get_segmented_dataset_ids():
     # Return the ids of datasets which have been segmented i.e. which have a definition
     # in the /segment_counts collection
