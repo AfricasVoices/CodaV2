@@ -311,14 +311,10 @@ def _delete_collection(coll_ref, batch_size):
         return _delete_collection(coll_ref, batch_size)
 
 
-def delete_unchecked_messages_in_segment(dataset_id, segment_index=None):
-    if segment_index is not None and segment_index != 1:
-        segment_id = f'{dataset_id}_{segment_index}'
-    else:
-        segment_id = dataset_id
-
-    messages = get_segment_messages(dataset_id, segment_index)
+def delete_unchecked_messages_in_segment(segment_id):
+    messages = get_segment_messages(segment_id)
     messages.sort(key=lambda msg: msg["SequenceNumber"])
+    
     deleted_count = 0
     for msg in messages:
         # Get the latest label from each scheme
@@ -346,7 +342,9 @@ def delete_unchecked_messages(dataset_id):
         delete_unchecked_messages_in_segment(dataset_id)
     else:
         for segment_index in range(1, segment_count + 1):
-            delete_unchecked_messages_in_segment(dataset_id, segment_index)
+            segment_id = id_for_segment(dataset_id, segment_index)
+            delete_unchecked_messages_in_segment(segment_id)
+
 
 def get_segmented_dataset_ids():
     # Return the ids of datasets which have been segmented i.e. which have a definition
