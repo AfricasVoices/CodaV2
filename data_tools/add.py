@@ -10,7 +10,8 @@ import validate_message_structure
 parser = argparse.ArgumentParser(description="Adds data items that don't currently exist, by id. "
                                              "Existing data items remain untouched")
 
-parser.add_argument("--max-segment-size", type=int, required=False, help="", default=sys.maxsize)
+parser.add_argument("--max-segment-size", type=int, required=False, default=sys.maxsize,
+                    help="Maximum number of messages to upload to each segment before creating the next")
 parser.add_argument("crypto_token_path", metavar="crypto-token-path",
                     help="Path to the Firestore credentials file")
 parser.add_argument("dataset_id", metavar="dataset-id", help="Id of dataset to add data to")
