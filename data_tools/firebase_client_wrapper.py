@@ -267,17 +267,17 @@ def delete_segment(segment_id):
     # Delete code schemes
     segment_code_schemes_path = f"datasets/{segment_id}/code_schemes"
     print(f"Deleting {segment_code_schemes_path}...")
-    _delete_collection(client.collection(segment_code_schemes_path), 10)
+    _delete_collection(client.collection(segment_code_schemes_path), 500)
 
     # Delete messages
     segment_messages_path = f"datasets/{segment_id}/messages"
     print(f"Deleting {segment_messages_path}...")
-    _delete_collection(client.collection(segment_messages_path), 10)
+    _delete_collection(client.collection(segment_messages_path), 500)
 
     # Delete metrics
     segment_metrics_path = f"datasets/{segment_id}/metrics"
     print(f"Deleting {segment_metrics_path}...")
-    _delete_collection(client.collection(segment_metrics_path), 10)
+    _delete_collection(client.collection(segment_metrics_path), 500)
 
     # Delete segment
     get_segment_ref(segment_id).delete()
