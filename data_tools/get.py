@@ -33,17 +33,13 @@ if CONTENT_TYPE in ["all", "users"]:
 if CONTENT_TYPE in ["all", "schemes"]:
     if ALL:
         print ("Schemes:")
-    schemes = []
-    for scheme in fcw.get_code_scheme_ids(DATASET_ID):
-        schemes.append(fcw.get_code_scheme(DATASET_ID, scheme))
+    schemes = fcw.get_all_code_schemes(DATASET_ID)
     print (json.dumps(schemes, indent=2))
 
 if CONTENT_TYPE in ["all", "messages"]:
     if ALL:
         print ("Messages:")
-    messages = []
-    for message in fcw.get_all_messages(DATASET_ID):
-        messages.append(message)
+    messages = fcw.get_all_messages(DATASET_ID)
     messages.sort(key=lambda msg: msg["SequenceNumber"])
     print (json.dumps(messages, indent=2))
 

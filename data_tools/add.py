@@ -34,7 +34,6 @@ if CONTENT_TYPE not in  ["messages", "schemes"]:
     exit(1)
 
 json_data = json.loads(open(PATH, 'r').read())
-dataset_ref = fcw.get_dataset_ref(DATASET_ID)
 
 
 if CONTENT_TYPE == "users":
@@ -59,7 +58,7 @@ elif CONTENT_TYPE == "schemes":
             skipped_existing += 1
             continue
 
-        fcw.get_code_scheme_ref(DATASET_ID, id).set(scheme)
+        fcw.set_code_scheme(DATASET_ID, scheme)
         print ("Written: {}".format(id))
         added += 1
     
