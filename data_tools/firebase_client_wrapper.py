@@ -31,8 +31,10 @@ def get_segment_ids():
 
 def get_dataset_ids():
     # Get the dataset ids by retrieving all the segment ids then removing those that are not the first segment.
-    dataset_ids = set(get_segment_ids())
+    segment_ids = get_segment_ids()
+    assert len(segment_ids) == len(set(segment_ids)), "Segment ids not unique"
 
+    dataset_ids = set(segment_ids)
     for dataset_id in get_segmented_dataset_ids():
         segment_count = get_segment_count(dataset_id)
         if segment_count is not None and segment_count > 1:
@@ -42,12 +44,12 @@ def get_dataset_ids():
     return dataset_ids
 
 
-def get_segment(segment_id):
-    return client.document(u'datasets/{}'.format(segment_id)).get()
-
-
 def get_segment_ref(segment_id):
     return client.document(u'datasets/{}'.format(segment_id))
+
+
+def get_segment(segment_id):
+    return get_segment_ref(segment_id).get()
 
 
 def get_segment_user_ids(segment_id):
@@ -262,17 +264,17 @@ def delete_segment(segment_id):
     # Delete code schemes
     segment_code_schemes_path = f"datasets/{segment_id}/code_schemes"
     print(f"Deleting {segment_code_schemes_path}...")
-    _delete_collection(client.collection(segment_code_schemes_path), 10)
+    _delete_collection(client.collection(segment_code_schemes_path), 500)
 
     # Delete messages
     segment_messages_path = f"datasets/{segment_id}/messages"
     print(f"Deleting {segment_messages_path}...")
-    _delete_collection(client.collection(segment_messages_path), 10)
+    _delete_collection(client.collection(segment_messages_path), 500)
 
     # Delete metrics
     segment_metrics_path = f"datasets/{segment_id}/metrics"
     print(f"Deleting {segment_metrics_path}...")
-    _delete_collection(client.collection(segment_metrics_path), 10)
+    _delete_collection(client.collection(segment_metrics_path), 500)
 
     # Delete segment
     get_segment_ref(segment_id).delete()
