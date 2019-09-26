@@ -46,12 +46,12 @@ def get_dataset_ids():
     return dataset_ids
 
 
-def get_segment(segment_id):
-    return client.document(u'datasets/{}'.format(segment_id)).get()
-
-
 def get_segment_ref(segment_id):
     return client.document(u'datasets/{}'.format(segment_id))
+
+
+def get_segment(segment_id):
+    return get_segment_ref(segment_id).get()
 
 
 def get_segment_user_ids(segment_id):
