@@ -33,8 +33,10 @@ def get_segment_ids():
 
 def get_dataset_ids():
     # Get the dataset ids by retrieving all the segment ids then removing those that are not the first segment.
-    dataset_ids = set(get_segment_ids())
+    segment_ids = get_segment_ids()
+    assert len(segment_ids) == len(set(segment_ids)), "Segment ids not unique"
 
+    dataset_ids = set(segment_ids)
     for dataset_id in get_segmented_dataset_ids():
         segment_count = get_segment_count(dataset_id)
         if segment_count is not None and segment_count > 1:
