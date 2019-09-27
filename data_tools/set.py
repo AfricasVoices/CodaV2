@@ -50,5 +50,5 @@ elif CONTENT_TYPE == "messages":
         validate_message_structure.verify_message(message)
     
     messages = json_data
-    fcw.set_dataset_messages_content_batch(DATASET_ID, messages)
+    fcw.add_and_update_dataset_messages_content_batch(DATASET_ID, messages)
     print ("Updated messages")

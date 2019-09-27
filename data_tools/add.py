@@ -98,7 +98,7 @@ elif CONTENT_TYPE == "messages":
         added += 1
     
     print ("About to batch add: {}".format(added, skipped_existing))
-    fcw.set_dataset_messages_content_batch(DATASET_ID, messages_to_write)
+    fcw.add_and_update_dataset_messages_content_batch(DATASET_ID, messages_to_write)
     print ("Batch add complete: {}, Skipped: {}".format(added, skipped_existing))
     
     print('Updating metrics for dataset: {}'.format(DATASET_ID))
