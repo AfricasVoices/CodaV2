@@ -24,11 +24,17 @@ if len(existing_ids) > 0:
     print ("")
     exit (1)
 
-for dataset_id in data.keys():
-    print ("Starting to restore {}".format(dataset_id))
-    fcw.set_user_ids(dataset_id, data[dataset_id]["users"])
-    for scheme in data[dataset_id]["schemes"]:
-        fcw.set_code_scheme(dataset_id, scheme)
-    fcw.add_and_update_dataset_messages_content_batch(dataset_id, data[dataset_id]["messages"])
-    print ("Restore complete: {}".format(dataset_id))
+for segment_id in data["segments"].keys():
+    print(f"Starting to restore segment/{segment_id}")
+    segment = data["segments"][segment_id]
+    fcw.set_user_ids(segment_id, segment["users"])
+    for scheme in segment["schemes"]:
+        fcw.set_code_scheme(segment_id, scheme)
+    fcw.add_and_update_dataset_messages_content_batch(segment_id, segment["messages"])
+    print(f"Restore complete: segment/{segment_id}")
 
+for dataset_id in data["segment_counts"]:
+    print(f"Starting to restore segment_counts/{dataset_id}")
+    segment_count = data["segment_counts"][dataset_id]
+    fcw.set_segment_count(dataset_id, segment_count)
+    print(f"Restore complete: segment_counts/{dataset_id}")
