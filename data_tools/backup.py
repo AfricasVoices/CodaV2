@@ -16,7 +16,9 @@ if len(sys.argv) == 3:
     id = sys.argv[2]
     if id not in ids:
         sys.exit("Dataset: {} not found".format(id))
-    ids = [fcw.id_for_segment(id, segment_index) for segment_index in range(0, fcw.get_segment_count(id))]
+    ids = []
+    for segment_index in range(0, fcw.get_segment_count(id)):
+        ids.append(fcw.id_for_segment(id, segment_index))
 
 data = {
     "segments": {},
