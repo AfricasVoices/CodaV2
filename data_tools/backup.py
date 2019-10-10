@@ -29,11 +29,10 @@ for segment_id in ids:
     data["segments"][segment_id] = {
         "users": fcw.get_user_ids(segment_id),
         "schemes": fcw.get_all_code_schemes(segment_id),
-        "messages": fcw.get_all_messages(segment_id)
+        "messages": fcw.get_segment_messages(segment_id)
     }
 
 for dataset_id in fcw.get_segmented_dataset_ids():
     data["segment_counts"][dataset_id] = fcw.get_segment_count(dataset_id)
 
 print(json.dumps(data, indent=2, sort_keys=True))
-
