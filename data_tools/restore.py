@@ -15,6 +15,14 @@ project_id = json.load(open(CRYPTO_TOKEN_PATH, 'r'))["project_id"]
 
 data = json.load(open(BACKUP_PATH, 'r'))
 
+existing_segmented_dataset_ids = fcw.get_segmented_dataset_ids()
+if len(existing_segmented_dataset_ids) > 0:
+    print("Target Firestore still has segment_counts, can't restore. Please delete all existing data first:")
+    print("Run:")
+    print("firebase -P {} firestore:delete -r segment_counts".format(project_id))
+    print("")
+    exit(1)
+
 existing_ids = fcw.get_dataset_ids()
 
 if len(existing_ids) > 0:
