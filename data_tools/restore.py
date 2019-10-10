@@ -38,7 +38,7 @@ for segment_id in data["segments"].keys():
     fcw.set_user_ids(segment_id, segment["users"])
     for scheme in segment["schemes"]:
         fcw.set_code_scheme(segment_id, scheme)
-    fcw.add_and_update_dataset_messages_content_batch(segment_id, segment["messages"])
+    fcw.add_and_update_segment_messages_content_batch(segment_id, segment["messages"])
     print(f"Restore complete: segment {segment_id}")
 
 for dataset_id in data["segment_counts"]:
