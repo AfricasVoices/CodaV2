@@ -71,6 +71,10 @@ def ensure_user_ids_consistent(dataset_id):
             f"Segment {segment_id} has different users to the first segment {dataset_id}"
 
 
+def get_segment_user_ids(segment_id):
+    return get_segment(segment_id).get("users")
+
+
 def get_user_ids(dataset_id):
     ensure_user_ids_consistent(dataset_id)
 
@@ -107,6 +111,13 @@ def ensure_code_schemes_consistent(dataset_id):
         for x, y in zip(first_segment_schemes, current_segment_schemes):
             assert json.dumps(x, sort_keys=True) == json.dumps(y, sort_keys=True), \
                 f"Segment {segment_id} has different schemes to the first segment {dataset_id}"
+
+
+def get_segment_code_schemes(segment_id):
+    schemes = []
+    for scheme in client.collection(u'datasets/{}/code_schemes'.format(segment_id)).get():
+        schemes.append(scheme.to_dict())
+    return schemes
 
 
 def get_all_code_schemes(dataset_id):

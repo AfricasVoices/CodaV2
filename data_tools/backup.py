@@ -27,8 +27,8 @@ data = {
 
 for segment_id in ids:
     data["segments"][segment_id] = {
-        "users": fcw.get_user_ids(segment_id),
-        "schemes": fcw.get_all_code_schemes(segment_id),
+        "users": fcw.get_segment_user_ids(segment_id),
+        "schemes": fcw.get_segment_code_schemes(segment_id),
         "messages": fcw.get_segment_messages(segment_id)
     }
 
