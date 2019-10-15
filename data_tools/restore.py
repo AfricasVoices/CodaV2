@@ -1,4 +1,5 @@
 import firebase_client_wrapper as fcw
+import compute_coding_progress as cp
 
 import json
 import sys
@@ -24,7 +25,6 @@ if len(existing_segmented_dataset_ids) > 0:
     exit(1)
 
 existing_ids = fcw.get_dataset_ids()
-
 if len(existing_ids) > 0:
     print ("Target Firestore still has datasets, can't restore. Please delete all existing data first:")
     print ("Run:")
@@ -39,6 +39,7 @@ for segment_id in data["segments"].keys():
     for scheme in segment["schemes"]:
         fcw.set_code_scheme(segment_id, scheme)
     fcw.add_and_update_segment_messages_content_batch(segment_id, segment["messages"])
+    fcw.set_segment_metrics(segment_id, segment["metrics"])
     print(f"Restore complete: segment {segment_id}")
 
 for dataset_id in data["segment_counts"]:

@@ -29,7 +29,8 @@ for segment_id in ids:
     data["segments"][segment_id] = {
         "users": fcw.get_segment_user_ids(segment_id),
         "schemes": fcw.get_segment_code_schemes(segment_id),
-        "messages": fcw.get_segment_messages(segment_id)
+        "messages": fcw.get_segment_messages(segment_id),
+        "metrics": fcw.get_segment_metrics(segment_id)
     }
 
 for dataset_id in fcw.get_segmented_dataset_ids():
