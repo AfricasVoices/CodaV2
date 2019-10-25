@@ -56,17 +56,27 @@ def get_segment_user_ids(segment_id):
     return get_segment(segment_id).get("users")
 
 
-def get_user_ids(dataset_id):
-    users = get_segment(dataset_id).get("users")
-
+def ensure_user_ids_consistent(dataset_id):
     # Perform a consistency check on the other segments if they exist
     segment_count = get_segment_count(dataset_id)
-    if segment_count is not None and segment_count > 1:
-        for segment_index in range(2, segment_count + 1):
-            segment_id = id_for_segment(dataset_id, segment_index)
-            assert set(get_segment_user_ids(segment_id)) == set(users), \
-                f"Segment {segment_id} has different users to the first segment {dataset_id}"
+    if segment_count is None or segment_count == 1:
+        return
 
+    first_segment_users = get_segment(dataset_id).get("users")
+    for segment_index in range(2, segment_count + 1):
+        segment_id = id_for_segment(dataset_id, segment_index)
+        assert set(get_segment_user_ids(segment_id)) == set(first_segment_users), \
+            f"Segment {segment_id} has different users to the first segment {dataset_id}"
+
+
+def get_segment_user_ids(segment_id):
+    return get_segment(segment_id).get("users")
+
+
+def get_user_ids(dataset_id):
+    ensure_user_ids_consistent(dataset_id)
+
+    users = get_segment(dataset_id).get("users")
     return users
 
 
@@ -74,46 +84,53 @@ def get_code_scheme_ids(dataset_id):
     return [scheme["SchemeID"] for scheme in get_all_code_schemes(dataset_id)]
 
 
+def ensure_code_schemes_consistent(dataset_id):
+    # Checks that the code schemes are the same in all segments
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        return
+
+    first_segment_schemes = []
+    for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
+        first_segment_schemes.append(scheme.to_dict())
+
+    for segment_index in range(2, segment_count + 1):
+        segment_id = id_for_segment(dataset_id, segment_index)
+
+        current_segment_schemes = []
+        for scheme in client.collection(u'datasets/{}/code_schemes'.format(segment_id)).get():
+            current_segment_schemes.append(scheme.to_dict())
+
+        assert len(first_segment_schemes) == len(current_segment_schemes), \
+            f"Segment {segment_id} has a different number of schemes to the first segment {dataset_id}"
+
+        first_segment_schemes.sort(key=lambda s: s["SchemeID"])
+        current_segment_schemes.sort(key=lambda s: s["SchemeID"])
+        for x, y in zip(first_segment_schemes, current_segment_schemes):
+            assert json.dumps(x, sort_keys=True) == json.dumps(y, sort_keys=True), \
+                f"Segment {segment_id} has different schemes to the first segment {dataset_id}"
+
+
+def get_segment_code_schemes(segment_id):
+    schemes = []
+    for scheme in client.collection(u'datasets/{}/code_schemes'.format(segment_id)).get():
+        schemes.append(scheme.to_dict())
+    return schemes
+
+
 def get_all_code_schemes(dataset_id):
+    ensure_code_schemes_consistent(dataset_id)
+
     schemes = []
     for scheme in client.collection(u'datasets/{}/code_schemes'.format(dataset_id)).get():
         schemes.append(scheme.to_dict())
-
-    # Perform a consistency check on the other segments if they exist
-    segment_count = get_segment_count(dataset_id)
-    if segment_count is not None and segment_count > 1:
-        for segment_index in range(2, segment_count + 1):
-            segment_id = id_for_segment(dataset_id, segment_index)
-
-            segment_schemes = []
-            for scheme in client.collection(u'datasets/{}/code_schemes'.format(segment_id)).get():
-                segment_schemes.append(scheme.to_dict())
-
-            assert len(schemes) == len(segment_schemes), \
-                f"Segment {segment_id} has a different number of schemes to the first segment {dataset_id}"
-
-            schemes.sort(key=lambda s: s["SchemeID"])
-            segment_schemes.sort(key=lambda s: s["SchemeID"])
-            for x, y in zip(schemes, segment_schemes):
-                assert json.dumps(x, sort_keys=True) == json.dumps(y, sort_keys=True), \
-                    f"Segment {segment_id} has different schemes to the first segment {dataset_id}"
-
     return schemes
 
 
 def get_code_scheme(dataset_id, scheme_id):
-    scheme = client.document(u'datasets/{}/code_schemes/{}'.format(dataset_id, scheme_id)).get().to_dict()
+    ensure_code_schemes_consistent(dataset_id)
 
-    # Perform a consistency check on the other segments if they exist
-    segment_count = get_segment_count(dataset_id)
-    if segment_count is not None and segment_count > 1:
-        for segment_index in range(2, segment_count + 1):
-            segment_id = id_for_segment(dataset_id, segment_index)
-            segment_scheme = client.document(u'datasets/{}/code_schemes/{}'.format(segment_id, scheme_id)).get().to_dict()
-
-            assert json.dumps(scheme, sort_keys=True) == json.dumps(segment_scheme, sort_keys=True), \
-                f"Segment {segment_id} has a different scheme {scheme['SchemeID']} to the first segment {dataset_id}"
-
+    scheme = get_segment_code_scheme_ref(dataset_id, scheme_id).get().to_dict()
     return scheme
 
 
@@ -179,8 +196,8 @@ def get_segment_metrics(segment_id):
     return client.document(u'datasets/{}/metrics/messages'.format(segment_id)).get().to_dict()
 
 
-def set_segment_metrics(dataset_id, metrics_map):
-    message_metrics_ref = client.document(u'datasets/{}/metrics/messages'.format(dataset_id))
+def set_segment_metrics(segment_id, metrics_map):
+    message_metrics_ref = client.document(u'datasets/{}/metrics/messages'.format(segment_id))
     message_metrics_ref.set(metrics_map)
 
 
