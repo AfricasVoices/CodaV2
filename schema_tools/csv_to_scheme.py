@@ -177,6 +177,24 @@ SPECIAL_CODES = [
         "VisibleInCoda": True,
         "CodeType": "Meta",
         "MetaCode": "opt_in"
+    },
+    {
+        "CodeID": "code-SC-a3a065bc",
+        "DisplayText": "similar content",
+        "NumericValue": -100050,
+        "StringValue": "similar_content",
+        "VisibleInCoda": True,
+        "CodeType": "Meta",
+        "MetaCode": "similar_content"
+    },
+    {
+        "CodeID": "code-PI-83b90d32",
+        "DisplayText": "participation incentive",
+        "NumericValue": -100060,
+        "StringValue": "participation_incentive",
+        "VisibleInCoda": True,
+        "CodeType": "Meta",
+        "MetaCode": "participation_incentive"
     }
 ]
 
