@@ -10,30 +10,37 @@ if (len(sys.argv) < 2 or len(sys.argv) > 3):
 CRYPTO_TOKEN_PATH = sys.argv[1]
 fcw.init_client(CRYPTO_TOKEN_PATH)
 
-ids = fcw.get_segment_ids()
+dataset_ids = fcw.get_dataset_ids()
 
 if len(sys.argv) == 3:
     id = sys.argv[2]
-    if id not in ids:
+    if id not in dataset_ids:
         sys.exit("Dataset: {} not found".format(id))
-    ids = []
-    for segment_index in range(0, fcw.get_segment_count(id)):
-        ids.append(fcw.id_for_segment(id, segment_index))
+    dataset_ids = [id]
 
-data = {
-    "segments": {},
-    "segment_counts": {}
-}
-
-for segment_id in ids:
-    data["segments"][segment_id] = {
-        "users": fcw.get_segment_user_ids(segment_id),
-        "schemes": fcw.get_segment_code_schemes(segment_id),
-        "messages": fcw.get_segment_messages(segment_id),
-        "metrics": fcw.get_segment_metrics(segment_id)
+for dataset_id in dataset_ids:
+    dataset = {
+        "dataset_id": dataset_id,
+        "segments": {}
     }
 
-for dataset_id in fcw.get_segmented_dataset_ids():
-    data["segment_counts"][dataset_id] = fcw.get_segment_count(dataset_id)
+    segment_count = fcw.get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        segment_id = dataset_id
+        dataset["segments"][segment_id] = {
+            "users": fcw.get_segment_user_ids(dataset_id),
+            "schemes": fcw.get_segment_code_schemes(segment_id),
+            "messages": fcw.get_segment_messages(segment_id),
+            "metrics": fcw.get_segment_metrics(segment_id)
+        }
+    else:
+        for segment_index in range(1, segment_count + 1):
+            segment_id = fcw.id_for_segment(dataset_id, segment_index)
+            dataset["segments"][segment_id] = {
+                "users": fcw.get_segment_user_ids(dataset_id),
+                "schemes": fcw.get_segment_code_schemes(segment_id),
+                "messages": fcw.get_segment_messages(segment_id),
+                "metrics": fcw.get_segment_metrics(segment_id)
+            }
 
-print(json.dumps(data, indent=2, sort_keys=True))
+    print(json.dumps(dataset, sort_keys=True))
