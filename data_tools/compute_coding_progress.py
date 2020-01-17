@@ -9,8 +9,6 @@ def compute_segment_coding_progress(segment_id, force_recount=False):
     """Compute and return the progress metrics for a given dataset.
     This method will initialise the counts in Firestore if they do
     not already exist."""
-    print(f"Updating metrics for segment {segment_id}...")
-
     messages = []
     messages_with_labels = 0
     wrong_scheme_messages = 0
@@ -21,6 +19,7 @@ def compute_segment_coding_progress(segment_id, force_recount=False):
     if not force_recount and metrics is not None:
         return metrics
 
+    print(f"Performing a full recount of the metrics for segment {segment_id}...")
     metrics = {}
 
     schemes = {scheme["SchemeID"]: scheme for scheme in fcw.get_all_code_schemes(segment_id)}
@@ -89,18 +88,18 @@ def compute_coding_progress(dataset_id, force_recount=False):
 
 
 if __name__ == "__main__":
-    if (len(sys.argv) != 2):
-        print ("Usage python compute_coding_progress.py coda_crypto_token")
+    if len(sys.argv) != 2:
+        print("Usage python compute_coding_progress.py coda_crypto_token")
         exit(1)
 
     CODA_CRYPTO_TOKEN_PATH = sys.argv[1]
     fcw.init_client(CODA_CRYPTO_TOKEN_PATH)
 
     data = {}
-    ids = fcw.get_dataset_ids()
+    ids = fcw.get_segment_ids()
     data['coding_progress'] = {}
-    for dataset_id in ids:
-        data['coding_progress'][dataset_id] = compute_coding_progress(dataset_id)
+    for segment_id in ids:
+        data['coding_progress'][segment_id] = compute_segment_coding_progress(segment_id)
 
     data["last_update"] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    print (json.dumps(data, indent=2))
+    print(json.dumps(data, indent=2))
