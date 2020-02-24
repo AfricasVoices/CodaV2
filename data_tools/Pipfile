@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+CoreDataModules = {editable = true,git = "https://www.github.com/AfricasVoices/CoreDataModules",ref = "v0.13.0"}
 firebase_admin = "*"
 google-cloud-firestore = "*"
 
