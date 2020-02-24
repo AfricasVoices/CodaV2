@@ -1,4 +1,5 @@
 import json
+import sys
 import time
 
 import firebase_admin
@@ -6,9 +7,6 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 client = None
-
-# TODO: Set from a program argument
-MAX_SEGMENT_SIZE = 2500
 
 
 def init_client(crypto_token_path):
@@ -261,12 +259,12 @@ def add_and_update_segment_messages_content_batch(dataset_id, messages, segment_
     print("Written {} messages".format(i))
 
 
-def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
+def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_size=500, max_segment_size=sys.maxsize):
     next_batch_to_write = []
     latest_segment_index = get_segment_count(dataset_id)
     latest_segment_size = len(get_segment_messages(id_for_segment(dataset_id, latest_segment_index)))
     for message in messages:
-        if latest_segment_size >= MAX_SEGMENT_SIZE:
+        if latest_segment_size >= max_segment_size:
             add_and_update_segment_messages_content_batch(
                 dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
             next_batch_to_write = []

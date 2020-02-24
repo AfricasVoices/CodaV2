@@ -1,5 +1,4 @@
 import firebase_client_wrapper as fcw
-import compute_coding_progress as cp
 
 import json
 import sys
