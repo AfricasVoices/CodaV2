@@ -1,3 +1,4 @@
+import compute_coding_progress as cp
 import firebase_client_wrapper as fcw
 
 import json
@@ -51,4 +52,8 @@ elif CONTENT_TYPE == "messages":
     
     messages = json_data
     fcw.add_and_update_dataset_messages_content_batch(DATASET_ID, messages)
-    print ("Updated messages")
+    print("Updated messages")
+
+    print('Updating metrics for dataset: {}'.format(DATASET_ID))
+    cp.compute_coding_progress(DATASET_ID, force_recount=True)
+    print('Done')
