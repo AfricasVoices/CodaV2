@@ -1,5 +1,4 @@
 import firebase_client_wrapper as fcw
-import compute_coding_progress as cp
 
 import json
 import sys
@@ -13,8 +12,6 @@ BACKUP_PATH = sys.argv[2]
 
 fcw.init_client(CRYPTO_TOKEN_PATH)
 project_id = json.load(open(CRYPTO_TOKEN_PATH, 'r'))["project_id"]
-
-data = json.load(open(BACKUP_PATH, 'r'))
 
 existing_segmented_dataset_ids = fcw.get_segmented_dataset_ids()
 if len(existing_segmented_dataset_ids) > 0:
@@ -32,18 +29,24 @@ if len(existing_ids) > 0:
     print ("")
     exit (1)
 
-for segment_id in data["segments"].keys():
-    print(f"Starting to restore segment {segment_id}")
-    segment = data["segments"][segment_id]
-    fcw.set_user_ids(segment_id, segment["users"])
-    for scheme in segment["schemes"]:
-        fcw.set_code_scheme(segment_id, scheme)
-    fcw.add_and_update_segment_messages_content_batch(segment_id, segment["messages"])
-    fcw.set_segment_metrics(segment_id, segment["metrics"])
-    print(f"Restore complete: segment {segment_id}")
+with open(BACKUP_PATH, 'r') as f:
+    for line in f:
+        dataset = json.loads(line)
+        dataset_id = dataset["dataset_id"]
+        print(f"Restoring dataset {dataset_id}")
 
-for dataset_id in data["segment_counts"]:
-    print(f"Starting to restore segment_counts for dataset {dataset_id}")
-    segment_count = data["segment_counts"][dataset_id]
-    fcw.set_segment_count(dataset_id, segment_count)
-    print(f"Restore complete: segment_counts for dataset {dataset_id}")
+        for segment_id, segment in dataset["segments"].items():
+            print(f"Starting to restore segment {segment_id}")
+            fcw.set_user_ids(segment_id, segment["users"])
+            for scheme in segment["schemes"]:
+                fcw.set_code_scheme(segment_id, scheme)
+            fcw.add_and_update_segment_messages_content_batch(segment_id, segment["messages"])
+            fcw.set_segment_metrics(segment_id, segment["metrics"])
+            print(f"Restore complete: segment {segment_id}")
+
+        print(f"Starting to restore segment_counts for dataset {dataset_id}")
+        segment_count = len(dataset["segments"])
+        if segment_count > 1:
+            fcw.set_segment_count(dataset_id, segment_count)
+        print(f"Restore complete: segment_counts for dataset {dataset_id}")
+        print(f"Restored dataset {dataset_id}")
