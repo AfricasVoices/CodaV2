@@ -40,6 +40,7 @@ for msg in messages:
             continue
 
         processed_scheme_ids.add(label.scheme_id)
+
         if label.code_id in source_code_ids:
             msg.labels.insert(
                 0,
