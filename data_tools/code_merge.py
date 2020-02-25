@@ -36,9 +36,9 @@ merged_count = 0  # A count of the number of labels that were remapped to the me
 for msg in messages:
     processed_scheme_ids = set()
     for label in list(msg.labels):
+        # Skip labels that are not the latest assignment under each scheme
         if label.scheme_id in processed_scheme_ids:
             continue
-
         processed_scheme_ids.add(label.scheme_id)
 
         if label.code_id in code_ids_to_merge:
