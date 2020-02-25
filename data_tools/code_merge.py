@@ -12,7 +12,7 @@ log = Logger(__name__)
 parser = argparse.ArgumentParser(description="Performs a code merge on a local dataset. "
                                              "To use with Coda, use get.py, code_merge.py, then set.py")
 parser.add_argument("messages_input_file_path", metavar="messages-input-file-path",
-                    help="Path to the Coda messages file to perform the code merge on")
+                    help="Path to the file to read the Coda messages to be code-merged from")
 parser.add_argument("code_ids_to_merge", metavar="code-ids-to-merge", nargs="+",
                     help="Ids of the codes to merge")
 parser.add_argument("merged_code_id", metavar="merged-code-id",
