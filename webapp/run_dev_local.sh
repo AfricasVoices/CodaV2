@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 # cd to script directory if not already there
 SCRIPT_PATH=${0%/*}
