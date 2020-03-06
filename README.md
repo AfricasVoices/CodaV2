@@ -20,10 +20,11 @@ Before the first run and if any new packages are added, the Dart package manager
 CodaV2/webapp$ pub get
 ```
 
-You can now run the `CodaV2/webapp/` project with `webdev serve`:
+You can now run the `CodaV2/webapp/` project with `run_dev_local.sh`. This copies the developer firebase constants into 
+the `web/assets` directory, then starts a development server via `webdev serve`:
 
 ```
-CodaV2/webapp$ webdev serve
+CodaV2/webapp$ ./run_dev_local.sh
 ```
 
 When you're ready for deployment, the code needs to be converted from Dart to JavaScript:
