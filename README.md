@@ -41,13 +41,8 @@ You can run the tests with the following command:
 CodaV2/webapp$ pub run test -p chrome
 ```
 
-There are two scripts that run the build steps and deploy to the right place on Firebase serving. For development deployment:
+To deploy the web app to Firebase run the `deploy.sh` script contained in the `deployment/` folder. This will build the webapp and then deploy it to Firebase for serving. The deploy script requires access to a firebase constants config file which should be passed as a command line argument as follows:
 
 ```
-CodaV2/deploy_dev.sh
-```
-
-and for production use
-```
-CodaV2/deploy_prod.sh
+CodaV2/deployment$ ./deploy.sh path/to/firebase/deployment/constants.json
 ```
