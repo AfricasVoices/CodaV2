@@ -1,0 +1,11 @@
+{
+  "apiKey": "AIzaSyAL_tpy0tsJpCIPe-eFmLSZxVqImc4xoyU",
+  "authDomain": "coda-staging-229611.firebaseapp.com",
+  "databaseURL": "https://coda-staging-229611.firebaseio.com",
+  "projectId": "coda-staging-229611",
+  "storageBucket": "coda-staging-229611.appspot.com",
+  "messagingSenderId": "329672882311",
+  "appId": "1:897630341783:web:6effcbe0d3c093e1a0f7d2",
+  "logUrl": "https://us-central1-coda-staging-229611.cloudfunctions.net/Log",
+  "publishUrl": "https://us-central1-coda-staging-229611.cloudfunctions.net/Publish"
+}
