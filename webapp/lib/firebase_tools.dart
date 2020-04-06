@@ -62,7 +62,7 @@ updateDatasetStatus(Dataset dataset) {
   log.trace("updateDatasetStatus", "${dataset.id}");
 
   int messagesCount = dataset.messages.length;
-  int messagesWithLabel = dataset.messages.where((m) => m.labels.length > 0).length;
+  int messagesWithLabel = 0;
   int messagesWithWS = 0;
   int messagesWithNC = 0;
 
@@ -91,16 +91,48 @@ updateDatasetStatus(Dataset dataset) {
   }
 
   for (Message m in dataset.messages) {
+    // Get the latest label from each scheme
+    var latest_labels = Map<String, Label>();
     for (Label l in m.labels) {
+      latest_labels.putIfAbsent(l.schemeId, () => l);
+    }
+    
+    // Test if the message currently has a label (that isn't MANUALLY_UNCODED), and
+    // if any of the latest labels are either WS or NC
+    var messageHasLabel = false;
+    var messageHasWS = false;
+    var messageHasNC = false;
+    for (Label l in latest_labels.values) {
+      if (l.codeId == Label.MANUALLY_UNCODED) {
+        continue;
+      }
+
+      if (!l.checked) {
+        continue;
+      }
+
+      messageHasLabel = true;
+
       String schemeId = l.schemeId;
       String codeId = l.codeId;
 
       if (schemesIdtoWScodeIds[schemeId].contains(codeId)) {
-        messagesWithWS++;
+        messageHasWS = true;
       }
       if (schemesIdtoNCcodeIds[schemeId].contains(codeId)) {
-        messagesWithNC++;
+        messageHasNC = true;
       }
+    }
+
+    // Update counts appropriately
+    if (messageHasLabel) {
+      messagesWithLabel += 1;
+    }
+    if (messageHasWS) {
+      messagesWithWS += 1;
+    }
+    if (messageHasNC) {
+      messagesWithNC += 1;
     }
   }
   
