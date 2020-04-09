@@ -262,21 +262,90 @@ def add_and_update_segment_messages_content_batch(dataset_id, messages, segment_
 
 
 def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_size=500):
-    next_batch_to_write = []
-    latest_segment_index = get_segment_count(dataset_id)
-    latest_segment_size = len(get_segment_messages(id_for_segment(dataset_id, latest_segment_index)))
-    for message in messages:
-        if latest_segment_size >= MAX_SEGMENT_SIZE:
-            add_and_update_segment_messages_content_batch(
-                dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
-            next_batch_to_write = []
-            create_next_segment(dataset_id)
-            latest_segment_size = 0
-        next_batch_to_write.append(message)
-        latest_segment_size += 1
+    # Get existing messages by segment, so we then find:
+    #   - The location and sequence number of existing messages.
+    #   - The highest existing sequence number, for tagging new messages that don't have sequence numbers.
+    existing_segment_messages = dict()  # of segment id -> list of Message
+    segment_count = get_segment_count(dataset_id)
+    if segment_count is None or segment_count == 1:
+        existing_segment_messages[dataset_id] = get_segment_messages(dataset_id)
+    else:
+        for segment_index in range(1, segment_count + 1):
+            segment_id = id_for_segment(dataset_id, segment_index)
+            existing_segment_messages[segment_id] = get_segment_messages(segment_id)
+            
+    # Search the existing messages for the highest seen sequence number, and create a dictionary of
+    # message id -> segment for existing messages.
+    highest_seq_no = -1
+    message_id_to_segment_id = dict()
+    message_id_to_sequence_number = dict()
+    for segment_id, segment_messages in existing_segment_messages.items():
+        for msg in segment_messages:
+            message_id_to_segment_id[msg["MessageID"]] = segment_id
+            message_id_to_sequence_number[msg["MessageID"]] = msg["SequenceNumber"]
+            if msg["SequenceNumber"] > highest_seq_no:
+                highest_seq_no = msg["SequenceNumber"]
+    print(f"Existing Ids: {len(message_id_to_segment_id)}")
+    print(f"Highest seen sequence number: {highest_seq_no}")
 
-    add_and_update_segment_messages_content_batch(
-        dataset_id, next_batch_to_write, segment_index=get_segment_count(dataset_id), batch_size=batch_size)
+    # Categorise the changed messages into updated and new messages.
+    updated_messages = []
+    new_messages = []
+    for msg in messages:
+        if msg["MessageID"] in message_id_to_segment_id:
+            updated_messages.append(msg)
+        else:
+            new_messages.append(msg)
+    print(f"Updating {len(updated_messages)} existing messages; adding {len(new_messages)} new messages...")
+
+    # Commit the updated messages.
+    batch = client.batch()
+    batch_counter = 0
+    for i, msg in enumerate(updated_messages):
+        if "SequenceNumber" not in msg:
+            msg["SequenceNumber"] = message_id_to_sequence_number[msg["MessageID"]]
+        assert msg["SequenceNumber"] == message_id_to_sequence_number[msg["MessageID"]]
+
+        batch.set(get_message_ref(message_id_to_segment_id[msg["MessageID"]], msg["MessageID"]), msg)
+
+        batch_counter += 1
+        if batch_counter >= batch_size:
+            batch.commit()
+            print(f"Batch of {batch_counter} updated messages committed, progress: {i + 1} / {len(updated_messages)}")
+            batch_counter = 0
+            batch = client.batch()
+    if batch_counter > 0:
+        batch.commit()
+        print(f"Final batch of {batch_counter} updated messages committed")
+
+    # Commit the new messages.
+    batch = client.batch()
+    batch_counter = 0
+    next_seq_no = highest_seq_no + 1
+    latest_segment_index = segment_count
+    latest_segment_size = len(existing_segment_messages[id_for_segment(dataset_id, latest_segment_index)])
+    for i, msg in enumerate(new_messages):
+        if latest_segment_size >= MAX_SEGMENT_SIZE:
+            create_next_segment(dataset_id)
+            latest_segment_index = get_segment_count(dataset_id)
+            latest_segment_size = 0
+
+        if "SequenceNumber" not in msg:
+            msg["SequenceNumber"] = next_seq_no
+            next_seq_no += 1
+
+        batch.set(get_message_ref(id_for_segment(dataset_id, latest_segment_index), msg["MessageID"]), msg)
+        latest_segment_size +=1
+
+        batch_counter += 1
+        if batch_counter >= batch_size:
+            batch.commit()
+            print(f"Batch of {batch_counter} new messages committed, progress: {i + 1} / {len(new_messages)}")
+            batch_counter = 0
+            batch = client.batch()
+    if batch_counter > 0:
+        batch.commit()
+        print(f"Final batch of {batch_counter} new messages committed")
 
 
 def delete_segment(segment_id):
