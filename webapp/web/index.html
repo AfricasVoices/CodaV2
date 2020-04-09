@@ -48,17 +48,25 @@
 
           <li>
             <div>
-              <label for="jump-to-next-uncoded">Jump to next uncoded</label>
+              <label for="jump-to-next-uncoded">Jump to next uncoded cell</label>
               <input id="jump-to-next-uncoded" type="checkbox" name="jump-to-next-uncoded">
             </div>
           </li>
 
           <li>
             <div>
+              <button id="next-uncoded-message" type="button" data-toggle="tooltip" data-placement="bottom" title="Next uncoded message">
+                Next uncoded message
+              </button>
+            </div>
+          </li>
+
+          <li>
+            <label>
               <button id="autocode" type="button" data-toggle="tooltip" data-placement="bottom" title="Auto code" hidden="false">
                 Auto Code
               </button>
-              <label id="autocode_progress" for="autocode" hidden="true"> ( 0% ) </div>
+              <label id="autocode_progress" for="autocode" hidden="true"> ( 0% ) </label>
             </div>
           </li>
 

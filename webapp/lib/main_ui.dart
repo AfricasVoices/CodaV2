@@ -39,6 +39,8 @@ class CodaUI {
   static InputElement jumpToNextUncodedCheckbox = querySelector('#jump-to-next-uncoded');
   static bool get jumpToNextUncoded => jumpToNextUncodedCheckbox.checked;
 
+  static ButtonElement nextUncodedMessageButton = querySelector('#next-uncoded-message');
+
   static ButtonElement autoCodeButton = querySelector('#autocode');
 
   Dataset dataset;
@@ -76,6 +78,14 @@ class CodaUI {
       if (continuousSorting) {
         sortTableView();
       }
+    });
+
+    nextUncodedMessageButton.onClick.listen((event) {
+      CodeSelector activeCodeSelector = CodeSelector.activeCodeSelector;
+      TableRowElement row = getAncestors(CodeSelector.activeCodeSelector.viewElement).firstWhere((e) => e.classes.contains('message-row'));
+      String messageId = row.attributes['message-id'];
+      
+      selectNextUncodedMessage(messageId, activeCodeSelector.scheme.id);
     });
 
     autoCodeButton.onClick.listen((event) {
@@ -463,6 +473,49 @@ class CodaUI {
         selectNextCodeSelectorVertical(messageList.messages[messageIndex + 1].message.id, CodeSelector.activeCodeSelector.scheme.id);
       }
     } // else, it's the last message, stop
+  }
+
+  bool isMessageCoded(String messageID) {
+    Message message = messageList.messageMap[messageID].message;
+
+    // Get the latest label from each scheme
+    var latest_labels = Map<String, Label>();
+    for (Label l in message.labels) {
+      latest_labels.putIfAbsent(l.schemeId, () => l);
+    }
+
+    // This message is coded if it contains a label that is checked.
+    for (Label l in latest_labels.values) {
+      if (l.checked) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  void selectNextUncodedMessage(String messageID, String schemeID) {
+    MessageViewModel message = messageList.messageMap[messageID];
+    int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
+    int messageIndex = messageList.messages.indexOf(message);
+
+    // Search for an uncoded row below the current one.
+    for (int i = messageIndex + 1; i < messageList.messages.length; i++) {
+      if (!isMessageCoded(messageList.messages[i].message.id)) {
+        CodeSelector.activeCodeSelector = messageList.messages[i].codeSelectors[codeSelectorIndex];
+        return;
+      }
+    }
+
+    // Couldn't find an uncoded row below the current one, continue the search from the top of this dataset.
+    for (int i = 0; i <= messageIndex; i++) {
+      if (!isMessageCoded(messageList.messages[i].message.id)) {
+        CodeSelector.activeCodeSelector = messageList.messages[i].codeSelectors[codeSelectorIndex];
+        return;
+      }
+    }
+
+    // Couldn't find any uncoded rows.
+    window.alert("Dataset is fully labelled");
   }
 
   void clearMessageCodingTable() {
