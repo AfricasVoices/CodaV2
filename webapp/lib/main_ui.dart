@@ -475,7 +475,7 @@ class CodaUI {
     } // else, it's the last message, stop
   }
 
-  messageCoded(String messageID) {
+  isMessageCoded(String messageID) {
     Message message = messageList.messageMap[messageID].message;
 
     // Get the latest label from each scheme
@@ -500,7 +500,7 @@ class CodaUI {
 
     // Search for an uncoded row below the current one.
     for (int i = messageIndex + 1; i < messageList.messages.length; i++) {
-      if (!messageCoded(messageList.messages[i].message.id)) {
+      if (!isMessageCoded(messageList.messages[i].message.id)) {
         CodeSelector.activeCodeSelector = messageList.messages[i].codeSelectors[codeSelectorIndex];
         return;
       }
@@ -508,7 +508,7 @@ class CodaUI {
 
     // Couldn't find an uncoded row below the current one, continue the search from the top of this dataset.
     for (int i = 0; i <= messageIndex; i++) {
-      if (!messageCoded(messageList.messages[i].message.id)) {
+      if (!isMessageCoded(messageList.messages[i].message.id)) {
         CodeSelector.activeCodeSelector = messageList.messages[i].codeSelectors[codeSelectorIndex];
         return;
       }
