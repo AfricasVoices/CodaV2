@@ -475,7 +475,7 @@ class CodaUI {
     } // else, it's the last message, stop
   }
 
-  isMessageCoded(String messageID) {
+  bool isMessageCoded(String messageID) {
     Message message = messageList.messageMap[messageID].message;
 
     // Get the latest label from each scheme
@@ -493,7 +493,7 @@ class CodaUI {
     return false;
   }
   
-  selectNextUncodedMessage(String messageID, String schemeID) {
+  void selectNextUncodedMessage(String messageID, String schemeID) {
     MessageViewModel message = messageList.messageMap[messageID];
     int codeSelectorIndex = message.codeSelectors.indexWhere((codeSelector) => codeSelector.scheme.id == schemeID);
     int messageIndex = messageList.messages.indexOf(message);
