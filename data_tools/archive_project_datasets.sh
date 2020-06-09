@@ -11,7 +11,7 @@ CRYPTO_TOKEN=$1
 ARCHIVE_FOLDER=$2
 PROJECT_FILTER=$3
 
-PROJECT_IDS=$(pipenv run python get_dataset_ids.py "$CRYPTO_TOKEN" | grep "$PROJECT_FILTER")
+PROJECT_IDS=$(pipenv run python get_dataset_ids.py "$CRYPTO_TOKEN" | grep -E "$PROJECT_FILTER")
 
 for DATASET_ID in $PROJECT_IDS
 do

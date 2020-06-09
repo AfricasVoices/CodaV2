@@ -14,5 +14,6 @@ fcw.init_client(CRYPTO_TOKEN_PATH)
 existing_dataset_ids = fcw.get_dataset_ids()
 
 print("Existing dataset ids:")
+print("")
 for dataset_id in existing_dataset_ids:
-    print(u'\t{}'.format(dataset_id))
+    print(u'{}'.format(dataset_id))
