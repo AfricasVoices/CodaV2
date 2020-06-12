@@ -235,6 +235,7 @@ class CodaUI {
   }
 
   void addMessagesToView(List<Message> newMessages) {
+    if (newMessages.length == 0) return;
     TableSectionElement body = messageCodingTable.tBodies.first;
 
     newMessages.forEach((message) {
