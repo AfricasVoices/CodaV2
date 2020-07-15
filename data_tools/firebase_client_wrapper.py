@@ -165,7 +165,11 @@ def get_message_ids(dataset_id):
 def get_segment_messages(segment_id):
     messages = []
     for message in client.collection(u'datasets/{}/messages'.format(segment_id)).get():
-        messages.append(message.to_dict())
+        msg = message.to_dict()
+        if "LastUpdated" in msg:
+            msg["LastUpdated"] = msg["LastUpdated"].isoformat(timespec="microseconds")
+        messages.append(msg)
+
     return messages
 
 
