@@ -6,6 +6,8 @@ import 'dart:html';
 
 import 'package:test/test.dart';
 
+import 'package:firebase/firestore.dart' as firestore;
+
 import 'package:CodaV2/data_model.dart';
 import 'package:CodaV2/main_ui.dart';
 import 'package:CodaV2/config.dart' as config;
@@ -173,8 +175,11 @@ void main() {
       select.dispatchEvent(new Event('change'));
       await new Future.delayed(const Duration(milliseconds: 200));
 
+      var expectedContent = message.message.toFirebaseMap();
+      expectedContent["LastUpdated"] = firestore.FieldValue.serverTimestamp();
+
       expect(log.firestoreCallLog.last['callType'], 'updateMessage');
-      expect(log.firestoreCallLog.last['content'], message.message.toFirebaseMap());
+      expect(log.firestoreCallLog.last['content'], expectedContent);
       expect(message.codeSelectors[0].selectedOption, "code 2");
     });
 
@@ -194,8 +199,11 @@ void main() {
       select.dispatchEvent(new Event('change'));
       await new Future.delayed(const Duration(milliseconds: 200));
 
+      var expectedContent = message.message.toFirebaseMap();
+      expectedContent["LastUpdated"] = firestore.FieldValue.serverTimestamp();
+
       expect(log.firestoreCallLog.last['callType'], 'updateMessage');
-      expect(log.firestoreCallLog.last['content'], message.message.toFirebaseMap());
+      expect(log.firestoreCallLog.last['content'], expectedContent);
       expect(message.codeSelectors[1].selectedOption, "code 2");
       expect(message.codeSelectors[1].warning.classes.contains('hidden'), true);
     });
