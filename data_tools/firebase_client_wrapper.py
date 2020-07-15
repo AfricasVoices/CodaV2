@@ -240,7 +240,8 @@ def add_and_update_code_schemes(dataset_id, schemes):
         set_code_scheme(dataset_id, scheme)
 
 
-def add_and_update_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
+def restore_segment_messages_content_batch(dataset_id, messages, segment_index=None, batch_size=500):
+    # Note: restore uploads its inputs unchanged, so does not update the 'LastUpdated' field.
     dataset_id = id_for_segment(dataset_id, segment_index)
 
     total_messages_count = len(messages)
@@ -306,9 +307,11 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
     batch = client.batch()
     batch_counter = 0
     for i, msg in enumerate(updated_messages):
+        msg = msg.copy()
         if "SequenceNumber" not in msg:
             msg["SequenceNumber"] = message_id_to_sequence_number[msg["MessageID"]]
         assert msg["SequenceNumber"] == message_id_to_sequence_number[msg["MessageID"]]
+        msg["LastUpdated"] = firestore.firestore.SERVER_TIMESTAMP
 
         batch.set(get_message_ref(message_id_to_segment_id[msg["MessageID"]], msg["MessageID"]), msg)
 
@@ -329,6 +332,9 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
     latest_segment_index = segment_count
     latest_segment_size = len(existing_segment_messages[id_for_segment(dataset_id, latest_segment_index)])
     for i, msg in enumerate(new_messages):
+        msg = msg.copy()
+        msg["LastUpdated"] = firestore.firestore.SERVER_TIMESTAMP
+
         if latest_segment_size >= MAX_SEGMENT_SIZE:
             create_next_segment(dataset_id)
             latest_segment_index = get_segment_count(dataset_id)
