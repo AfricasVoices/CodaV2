@@ -44,13 +44,15 @@ updateMessage(Dataset dataset, Message msg) {
   log.trace("updateMessage", "$msg");
 
   var docPath = "datasets/${dataset.id}/messages/${msg.id}";
+  var doc = msg.toFirebaseMap();
+  doc["LastUpdated"] = firestore.FieldValue.serverTimestamp();
 
   if (TEST_MODE) {
-    log.logFirestoreCall('updateMessage', '$docPath', msg.toFirebaseMap());
+    log.logFirestoreCall('updateMessage', '$docPath', doc);
     return;
   }
 
-  _firestoreInstance.doc(docPath).set(msg.toFirebaseMap()).then((_) {
+  _firestoreInstance.doc(docPath).set(doc).then((_) {
     log.trace("updateMessage", "Complete: ${msg.id}");
     log.perf("updateMessage", sw.elapsedMilliseconds);
     updateDatasetStatus(dataset);

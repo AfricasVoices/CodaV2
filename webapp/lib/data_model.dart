@@ -33,11 +33,14 @@ class Message {
   DateTime creationDateTime;
   List<Label> labels;
   Map<String, dynamic> otherData;
+  DateTime lastUpdated;
 
   Message(this.id, this.sequenceNumber, this.text, this.creationDateTime) {
     labels = [];
     otherData = {};
+    lastUpdated = null;
   }
+
   Message.fromFirebaseMap(Map message) {
     otherData = {};
     
@@ -62,6 +65,9 @@ class Message {
             labels.add(new Label.fromFirebaseMap(labelMap));
           }
           break;
+        case 'LastUpdated':
+          lastUpdated = value;
+          break;
         default:
           otherData[property] = value;
       }
@@ -75,7 +81,7 @@ class Message {
       "CreationDateTimeUTC" : creationDateTime.toIso8601String(),
       "Labels" : labels.map((f) => f.toFirebaseMap()).toList()
     };
-    // Write back the sequence nuber only if it's been explicitly set, either in the UI or from Firebase
+    // Write back the sequence number only if it's been explicitly set, either in the UI or from Firebase
     if (sequenceNumber != null) {
       result["SequenceNumber"] = sequenceNumber;
     }
