@@ -162,9 +162,17 @@ def get_message_ids(dataset_id):
 
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
-def get_segment_messages(segment_id):
+def get_segment_messages(segment_id, last_updated_after=None):
+    if last_updated_after is None:
+        raw_messages = client.collection(f"datasets/{segment_id}/messages").get()
+    else:
+        raw_messages = client.collection(f"datasets/{segment_id}/messages") \
+            .where("LastUpdated", ">", last_updated_after) \
+            .order_by("LastUpdated") \
+            .get()
+
     messages = []
-    for message in client.collection(u'datasets/{}/messages'.format(segment_id)).get():
+    for message in raw_messages:
         msg = message.to_dict()
         if "LastUpdated" in msg:
             msg["LastUpdated"] = msg["LastUpdated"].isoformat(timespec="microseconds")
@@ -173,14 +181,14 @@ def get_segment_messages(segment_id):
     return messages
 
 
-def get_all_messages(dataset_id):
+def get_all_messages(dataset_id, last_updated_after=None):
     segment_count = get_segment_count(dataset_id)
     if segment_count is None or segment_count == 1:
-        return get_segment_messages(dataset_id)
+        return get_segment_messages(dataset_id, last_updated_after)
     else:
         messages = []
         for segment_index in range(1, segment_count + 1):
-            messages.extend(get_segment_messages(id_for_segment(dataset_id, segment_index)))
+            messages.extend(get_segment_messages(id_for_segment(dataset_id, segment_index), last_updated_after))
 
         message_ids = set()
         for message in messages:
