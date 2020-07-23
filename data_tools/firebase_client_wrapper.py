@@ -324,7 +324,7 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
         batch.set(get_message_ref(message_id_to_segment_id[msg["MessageID"]], msg["MessageID"]), msg)
 
         batch_counter += 1
-        if batch_counter >= batch_size:
+        if batch_counter >= batch_size / 2:  # Each document costs 2 writes due to the additional write needed by the server to set LastUpdated
             batch.commit()
             print(f"Batch of {batch_counter} updated messages committed, progress: {i + 1} / {len(updated_messages)}")
             batch_counter = 0
@@ -353,10 +353,10 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
             next_seq_no += 1
 
         batch.set(get_message_ref(id_for_segment(dataset_id, latest_segment_index), msg["MessageID"]), msg)
-        latest_segment_size +=1
+        latest_segment_size += 1
 
         batch_counter += 1
-        if batch_counter >= batch_size:
+        if batch_counter >= batch_size / 2:  # Each document costs 2 writes due to the additional write needed by the server to set LastUpdated
             batch.commit()
             print(f"Batch of {batch_counter} new messages committed, progress: {i + 1} / {len(new_messages)}")
             batch_counter = 0
