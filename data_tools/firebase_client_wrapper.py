@@ -170,7 +170,7 @@ def get_segment_messages(segment_id, last_updated_after=None, last_updated_befor
     If filtering by when the messages where last updated, only message objects which contain a LastUpdated field
     will be returned.
 
-    :param segment_id: Id of segment to download messages from
+    :param segment_id: Id of segment to download messages from.
     :type segment_id: str
     :param last_updated_after: If specified, filters the downloaded messages to only include messages with a LastUpdated
                                field and where the LastUpdated field is later than last_updated_after.
@@ -179,7 +179,7 @@ def get_segment_messages(segment_id, last_updated_after=None, last_updated_befor
                                 field and where the LastUpdated field is earlier than, or the same time as,
                                 last_updated_before.
     :type last_updated_before: datetime | None
-    :return: Messages in this segment, filtered by 'LastUpdated' timestamp if requested
+    :return: Messages in this segment, filtered by 'LastUpdated' timestamp if requested.
     :rtype: list of dict
     """
     query = client.collection(f"datasets/{segment_id}/messages")
@@ -200,6 +200,20 @@ def get_segment_messages(segment_id, last_updated_after=None, last_updated_befor
 
 
 def get_all_messages(dataset_id, last_updated_after=None):
+    """
+    Downloads messages from the requested dataset, optionally filtering by when the messages were last updated.
+
+    If filtering by when the messages where last updated, only message objects which contain a LastUpdated field
+    will be returned.
+
+    :param dataset_id: Id of dataset to download messages from.
+    :type dataset_id: str
+    :param last_updated_after: If specified, filters the downloaded messages to only include messages with a LastUpdated
+                               field and where the LastUpdated field is later than last_updated_after.
+    :type last_updated_after: datetime | None
+    :return: Messages in this dataset, filtered by 'LastUpdated' timestamp if requested.
+    :rtype: list of dict
+    """
     segment_count = get_segment_count(dataset_id)
     if segment_count is None or segment_count == 1:
         return get_segment_messages(dataset_id, last_updated_after)
