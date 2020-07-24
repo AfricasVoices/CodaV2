@@ -224,24 +224,32 @@ def get_all_messages(dataset_id, last_updated_after=None):
             segment_id = id_for_segment(dataset_id, segment_index)
             messages_by_segment[segment_id] = get_segment_messages(segment_id, last_updated_after)
 
-        # Search the fetched segments for the most recently updated message across all the segments
+        # Search the fetched segments for the most and least recently updated timestamps in all the segments downloaded
+        # above.
+        dataset_first_updated = None
         dataset_last_updated = None
         for segment_messages in messages_by_segment.values():
             for msg in segment_messages:
                 if "LastUpdated" in msg:
                     if dataset_last_updated is None or msg["LastUpdated"] > dataset_last_updated:
                         dataset_last_updated = msg["LastUpdated"]
+                    if dataset_first_updated is None or msg["LastUpdated"] < dataset_first_updated:
+                        dataset_first_updated = msg["LastUpdated"]
 
         # Check all the segments for any messages between the latest one we fetched above and the most recently updated
-        # message seen in any segment. This is to ensure we don't miss any messages that were being labelled while
-        # we were pulling the separate segments, and is needed to maintain the consistency guarantees we need for
-        # incremental fetch.
+        # message seen in any segment. If we didn't fetch any new messages for a segment, use the oldest timestamp
+        # across all segments (dataset_first_updated) instead. This is to ensure we don't miss any messages that were
+        # being labelled while we were pulling the separate segments, and is needed to maintain the consistency
+        # guarantees we need for incremental fetch.
         for segment_id, segment_messages in messages_by_segment.items():
             segment_last_updated = None
             for msg in segment_messages:
                 if "LastUpdated" in msg:
                     if segment_last_updated is None or msg["LastUpdated"] > segment_last_updated:
                         segment_last_updated = msg["LastUpdated"]
+
+            if segment_last_updated is None:
+                segment_last_updated = dataset_first_updated
 
             if segment_last_updated is not None:
                 messages_by_segment[segment_id].extend(get_segment_messages(segment_id, segment_last_updated, dataset_last_updated))
