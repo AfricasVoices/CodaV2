@@ -452,6 +452,38 @@ def compute_coding_progress(dataset_id, force_recount=False):
             compute_segment_coding_progress(segment_id, force_recount=force_recount)
 
 
+def add_messages_content_batch(dataset_id, messages, batch_size=500):
+    for msg in messages:
+        assert "SequenceNumber" in msg
+
+    batch = client.batch()
+    batch_counter = 0
+    latest_segment_index = get_segment_count(dataset_id)
+    # TODO: Remove this call to Firestore for all documents in this segment, if possible
+    latest_segment_size = len(get_segment_messages(id_for_segment(dataset_id, latest_segment_index)))
+    for i, msg in enumerate(messages):
+        msg = msg.copy()
+        msg["LastUpdated"] = firestore.firestore.SERVER_TIMESTAMP
+
+        if latest_segment_size >= MAX_SEGMENT_SIZE:
+            create_next_segment(dataset_id)
+            latest_segment_index = get_segment_count(dataset_id)
+            latest_segment_size = 0
+
+        batch.set(get_message_ref(id_for_segment(dataset_id, latest_segment_index), msg["MessageID"]), msg)
+        latest_segment_size += 1
+
+        batch_counter += 1
+        if batch_counter >= batch_size / 2:  # Each document costs 2 writes due to the additional write needed by the server to set LastUpdated
+            batch.commit()
+            print(f"Batch of {batch_counter} new messages committed, progress: {i + 1} / {len(messages)}")
+            batch_counter = 0
+            batch = client.batch()
+    if batch_counter > 0:
+        batch.commit()
+        print(f"Final batch of {batch_counter} new messages committed")
+
+
 def delete_segment(segment_id):
     # Delete code schemes
     segment_code_schemes_path = f"datasets/{segment_id}/code_schemes"
