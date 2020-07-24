@@ -5,88 +5,6 @@ import sys
 from time import gmtime, strftime
 
 
-def compute_segment_coding_progress(segment_id, force_recount=False):
-    """Compute and return the progress metrics for a given dataset.
-    This method will initialise the counts in Firestore if they do
-    not already exist."""
-    messages = []
-    messages_with_labels = 0
-    wrong_scheme_messages = 0
-    not_coded_messages = 0
-
-    # New scheme
-    metrics = fcw.get_segment_metrics(segment_id)
-    if not force_recount and metrics is not None:
-        return metrics
-
-    print(f"Performing a full recount of the metrics for segment {segment_id}...")
-    metrics = {}
-
-    schemes = {scheme["SchemeID"]: scheme for scheme in fcw.get_all_code_schemes(segment_id)}
-
-    for message in fcw.get_segment_messages(segment_id):
-        messages.append(message)
-
-        # Get the latest label from each scheme
-        latest_labels = dict()  # of scheme id -> label
-        for label in message["Labels"]:
-            if label["SchemeID"] not in latest_labels:
-                latest_labels[label["SchemeID"]] = label
-
-        # Test if the message has a label (that isn't SPECIAL-MANUALLY_UNCODED), and
-        # if any of the latest labels are either WS or NC
-        message_has_label = False
-        message_has_ws = False
-        message_has_nc = False
-        for label in latest_labels.values():
-            if label["CodeID"] == "SPECIAL-MANUALLY_UNCODED":
-                continue
-
-            if not label["Checked"]:
-                continue
-
-            message_has_label = True
-            scheme_for_label = schemes[label["SchemeID"]]
-            code_for_label = None
-            for code in scheme_for_label["Codes"]:
-                if label["CodeID"] == code["CodeID"]:
-                    code_for_label = code
-            assert code_for_label is not None
-
-            if code_for_label["CodeType"] == "Control":
-                if code_for_label["ControlCode"] == "WS":
-                    message_has_ws = True
-                if code_for_label["ControlCode"] == "NC":
-                    message_has_nc = True
-
-        # Update counts appropriately
-        if message_has_label:
-            messages_with_labels += 1
-        if message_has_ws:
-            wrong_scheme_messages += 1
-        if message_has_nc:
-            not_coded_messages += 1
-
-    metrics['messages_count'] = len(messages)
-    metrics['messages_with_label'] = messages_with_labels
-    metrics['wrong_scheme_messages'] = wrong_scheme_messages
-    metrics['not_coded_messages'] = not_coded_messages
-
-    # Write the metrics back if they weren't stored
-    fcw.set_segment_metrics(segment_id, metrics)
-    return metrics
-
-
-def compute_coding_progress(dataset_id, force_recount=False):
-    segment_count = fcw.get_segment_count(dataset_id)
-    if segment_count is None or segment_count == 1:
-        compute_segment_coding_progress(dataset_id, force_recount=force_recount)
-    else:
-        for segment_index in range(1, segment_count + 1):
-            segment_id = fcw.id_for_segment(dataset_id, segment_index)
-            compute_segment_coding_progress(segment_id, force_recount=force_recount)
-
-
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage python compute_coding_progress.py coda_crypto_token")
@@ -99,7 +17,7 @@ if __name__ == "__main__":
     ids = fcw.get_segment_ids()
     data['coding_progress'] = {}
     for segment_id in ids:
-        data['coding_progress'][segment_id] = compute_segment_coding_progress(segment_id)
+        data['coding_progress'][segment_id] = fcw.compute_segment_coding_progress(segment_id)
 
     data["last_update"] = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     print(json.dumps(data, indent=2))
