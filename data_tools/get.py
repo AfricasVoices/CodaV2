@@ -1,7 +1,6 @@
 import argparse
-from datetime import datetime
+import warnings
 
-import pytz
 from dateutil.parser import isoparse
 
 import firebase_client_wrapper as fcw
@@ -47,16 +46,17 @@ if content_type in ["all", "messages"]:
     if content_type == "all":
         print("Messages:")
 
-    if previous_export_file_path is None:
-        previous_export = []
-        last_updated = None
-    else:
+    previous_export = []
+    last_updated = None
+    if previous_export_file_path is not None:
         with open(previous_export_file_path) as f:
             previous_export = json.load(f)
-        last_updated = datetime.min.replace(tzinfo=pytz.UTC)
         for msg in previous_export:
-            if "LastUpdated" in msg and isoparse(msg["LastUpdated"]) > last_updated:
+            if "LastUpdated" in msg and (last_updated is None or isoparse(msg["LastUpdated"]) > last_updated):
                 last_updated = isoparse(msg["LastUpdated"])
+        if last_updated is None:
+            warnings.warn(f"Previous export file {previous_export_file_path} does not contain a message with a "
+                          f"'LastUpdated' field; performing a full download of the entire dataset...")
 
     messages_dict = {msg["MessageID"]: msg for msg in previous_export}
     new_messages_dict = {msg["MessageID"]: msg for msg in fcw.get_all_messages(dataset_id, last_updated_after=last_updated)}
