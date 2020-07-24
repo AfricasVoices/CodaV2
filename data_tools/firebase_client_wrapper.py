@@ -165,12 +165,19 @@ def get_message_ids(dataset_id):
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
 def get_segment_messages(segment_id, last_updated_after=None, last_updated_before=None):
     """
+    Downloads messages from the requested segment, optionally filtering by when the messages were last updated.
+
+    If filtering by when the messages where last updated, only message objects which contain a LastUpdated field
+    will be returned.
 
     :param segment_id: Id of segment to download messages from
     :type segment_id: str
-    :param last_updated_after: If specified, filters the downloaded messages to only include
+    :param last_updated_after: If specified, filters the downloaded messages to only include messages with a LastUpdated
+                               field and where the LastUpdated field is later than last_updated_after.
     :type last_updated_after: datetime | None
-    :param last_updated_before:
+    :param last_updated_before: If specified, filters the downloaded messages to only include messages with a LastUpdated
+                                field and where the LastUpdated field is earlier than, or the same time as,
+                                last_updated_before.
     :type last_updated_before: datetime | None
     :return: Messages in this segment, filtered by 'LastUpdated' timestamp if requested
     :rtype: list of dict
