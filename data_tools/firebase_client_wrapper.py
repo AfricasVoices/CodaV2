@@ -270,22 +270,22 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
     # Get existing messages by segment, so we then find:
     #   - The location and sequence number of existing messages.
     #   - The highest existing sequence number, for tagging new messages that don't have sequence numbers.
-    existing_segment_messages = dict()  # of segment id -> list of Message
+    existing_segment_messages = dict()  # of segment id -> (dict of message id -> Message)
     segment_count = get_segment_count(dataset_id)
     if segment_count is None or segment_count == 1:
-        existing_segment_messages[dataset_id] = get_segment_messages(dataset_id)
+        existing_segment_messages[dataset_id] = {msg["MessageID"]: msg for msg in get_segment_messages(dataset_id)}
     else:
         for segment_index in range(1, segment_count + 1):
             segment_id = id_for_segment(dataset_id, segment_index)
-            existing_segment_messages[segment_id] = get_segment_messages(segment_id)
+            existing_segment_messages[segment_id] = {msg["MessageID"]: msg for msg in get_segment_messages(segment_id)}
             
     # Search the existing messages for the highest seen sequence number, and create a dictionary of
     # message id -> segment for existing messages.
     highest_seq_no = -1
     message_id_to_segment_id = dict()
     message_id_to_sequence_number = dict()
-    for segment_id, segment_messages in existing_segment_messages.items():
-        for msg in segment_messages:
+    for segment_id, segment_message_lut in existing_segment_messages.items():
+        for msg in segment_message_lut.values():
             message_id_to_segment_id[msg["MessageID"]] = segment_id
             message_id_to_sequence_number[msg["MessageID"]] = msg["SequenceNumber"]
             if msg["SequenceNumber"] > highest_seq_no:
@@ -339,7 +339,7 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
             create_next_segment(dataset_id)
             latest_segment_index = get_segment_count(dataset_id)
             latest_segment_size = 0
-            existing_segment_messages[id_for_segment(dataset_id, latest_segment_index)] = []
+            existing_segment_messages[id_for_segment(dataset_id, latest_segment_index)] = {}
 
         if "SequenceNumber" not in msg:
             msg["SequenceNumber"] = next_seq_no
@@ -347,7 +347,7 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
 
         segment_id = id_for_segment(dataset_id, latest_segment_index)
         batch.set(get_message_ref(segment_id, msg["MessageID"]), msg)
-        existing_segment_messages[segment_id].append(msg)
+        existing_segment_messages[segment_id][msg["MessageID"]] = msg
         latest_segment_size += 1
 
         batch_counter += 1
@@ -362,11 +362,11 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
 
     segment_count = latest_segment_index
     if segment_count is None or segment_count == 1:
-        compute_segment_coding_progress(dataset_id, existing_segment_messages[dataset_id], True)
+        compute_segment_coding_progress(dataset_id, existing_segment_messages[dataset_id].values(), True)
     else:
         for segment_index in range(1, segment_count + 1):
             segment_id = id_for_segment(dataset_id, segment_index)
-            compute_segment_coding_progress(segment_id, existing_segment_messages[segment_id], True)
+            compute_segment_coding_progress(segment_id, existing_segment_messages[segment_id].values(), True)
 
 
 def compute_segment_coding_progress(segment_id, messages=None, force_recount=False):
