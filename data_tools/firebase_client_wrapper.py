@@ -360,6 +360,7 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
         batch.commit()
         print(f"Final batch of {batch_counter} new messages committed")
 
+    segment_count = latest_segment_index
     if segment_count is None or segment_count == 1:
         compute_segment_coding_progress(dataset_id, existing_segment_messages[dataset_id], True)
     else:
