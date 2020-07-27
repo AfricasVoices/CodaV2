@@ -386,9 +386,7 @@ def compute_segment_coding_progress(segment_id, messages=None, force_recount=Fal
 
     schemes = {scheme["SchemeID"]: scheme for scheme in get_all_code_schemes(segment_id)}
 
-    for message in get_segment_messages(segment_id):
-        messages.append(message)
-
+    for message in messages:
         # Get the latest label from each scheme
         latest_labels = dict()  # of scheme id -> label
         for label in message["Labels"]:
