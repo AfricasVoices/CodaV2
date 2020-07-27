@@ -357,6 +357,8 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
         batch.commit()
         print(f"Final batch of {batch_counter} new messages committed")
 
+    compute_coding_progress(dataset_id, force_recount=True)
+
 
 def compute_segment_coding_progress(segment_id, messages=None, force_recount=False):
     """Compute and return the progress metrics for a given dataset.

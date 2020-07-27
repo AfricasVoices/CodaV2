@@ -84,4 +84,3 @@ elif CONTENT_TYPE == "messages":
         added += 1
     
     fcw.add_and_update_dataset_messages_content_batch(DATASET_ID, messages_to_write)
-    cp.compute_coding_progress(DATASET_ID, force_recount=True)
