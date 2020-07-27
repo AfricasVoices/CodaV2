@@ -313,7 +313,9 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
         assert msg["SequenceNumber"] == message_id_to_sequence_number[msg["MessageID"]]
         msg["LastUpdated"] = firestore.firestore.SERVER_TIMESTAMP
 
-        batch.set(get_message_ref(message_id_to_segment_id[msg["MessageID"]], msg["MessageID"]), msg)
+        segment_id = message_id_to_segment_id[msg["MessageID"]]
+        batch.set(get_message_ref(segment_id, msg["MessageID"]), msg)
+        existing_segment_messages[segment_id][msg["MessageID"]] = msg
 
         batch_counter += 1
         if batch_counter >= batch_size / 2:  # Each document costs 2 writes due to the additional write needed by the server to set LastUpdated
