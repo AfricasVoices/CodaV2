@@ -339,12 +339,15 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
             create_next_segment(dataset_id)
             latest_segment_index = get_segment_count(dataset_id)
             latest_segment_size = 0
+            existing_segment_messages[id_for_segment(dataset_id, latest_segment_index)] = []
 
         if "SequenceNumber" not in msg:
             msg["SequenceNumber"] = next_seq_no
             next_seq_no += 1
 
-        batch.set(get_message_ref(id_for_segment(dataset_id, latest_segment_index), msg["MessageID"]), msg)
+        segment_id = id_for_segment(dataset_id, latest_segment_index)
+        batch.set(get_message_ref(segment_id, msg["MessageID"]), msg)
+        existing_segment_messages[segment_id].append(msg)
         latest_segment_size += 1
 
         batch_counter += 1
@@ -357,7 +360,12 @@ def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_si
         batch.commit()
         print(f"Final batch of {batch_counter} new messages committed")
 
-    compute_coding_progress(dataset_id, force_recount=True)
+    if segment_count is None or segment_count == 1:
+        compute_segment_coding_progress(dataset_id, existing_segment_messages[dataset_id], True)
+    else:
+        for segment_index in range(1, segment_count + 1):
+            segment_id = id_for_segment(dataset_id, segment_index)
+            compute_segment_coding_progress(segment_id, existing_segment_messages[segment_id], True)
 
 
 def compute_segment_coding_progress(segment_id, messages=None, force_recount=False):
