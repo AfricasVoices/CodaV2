@@ -267,14 +267,37 @@ def restore_segment_messages_content_batch(dataset_id, messages, segment_index=N
 
 
 def add_messages_content_batch(dataset_id, messages, batch_size=500):
+    """
+    Adds messages to a dataset.
+
+    Note: This method does not validate the messages to upload for presence in Firestore, so if a message already exists
+    with the given id it will be overwritten or duplicated. If you need to filter messages for those which haven't
+    been added yet, use `add_or_update_messages_content_batch` instead.
+
+    :param dataset_id: Id of dataset to add messages to.
+    :type dataset_id: str
+    :param messages: Messages to add to the dataset.
+    :type messages: list of dict
+    :param batch_size: Number of writes to perform per batch when writing to Firestore. Each message costs 2 writes.
+    :type batch_size: int
+    """
     for msg in messages:
         assert "SequenceNumber" in msg
 
+    if len(messages) == 0:
+        # Save time and read costs by not reading anything from Firestore when there's nothing to upload.
+        print("add_messages_content_batch called with 0 messages; returning immediately without touching Firestore")
+        return
+
+    existing_segment_messages = dict()  # of segment id -> (dict of message id -> Message)
+    latest_segment_index = get_segment_count(dataset_id)
+    latest_segment_id = id_for_segment(dataset_id, latest_segment_index)
+    # Note: We need to read the latest segment so we know how big it is, but there's no need to check previous segments.
+    existing_segment_messages[latest_segment_id] = get_segment_messages(id_for_segment(latest_segment_id))
+    latest_segment_size = len(existing_segment_messages[latest_segment_id])
+
     batch = client.batch()
     batch_counter = 0
-    latest_segment_index = get_segment_count(dataset_id)
-    # TODO: Remove this call to Firestore for all documents in this segment, if possible
-    latest_segment_size = len(get_segment_messages(id_for_segment(dataset_id, latest_segment_index)))
     for i, msg in enumerate(messages):
         msg = msg.copy()
         msg["LastUpdated"] = firestore.firestore.SERVER_TIMESTAMP
@@ -283,8 +306,11 @@ def add_messages_content_batch(dataset_id, messages, batch_size=500):
             create_next_segment(dataset_id)
             latest_segment_index = get_segment_count(dataset_id)
             latest_segment_size = 0
+            existing_segment_messages[id_for_segment(dataset_id, latest_segment_index)] = []
 
-        batch.set(get_message_ref(id_for_segment(dataset_id, latest_segment_index), msg["MessageID"]), msg)
+        segment_id = id_for_segment(dataset_id, latest_segment_index)
+        batch.set(get_message_ref(segment_id, msg["MessageID"]), msg)
+        existing_segment_messages[segment_id].append(msg)
         latest_segment_size += 1
 
         batch_counter += 1
@@ -296,6 +322,9 @@ def add_messages_content_batch(dataset_id, messages, batch_size=500):
     if batch_counter > 0:
         batch.commit()
         print(f"Final batch of {batch_counter} new messages committed")
+
+    for segment_id, segment_messages in existing_segment_messages.items():
+        compute_segment_coding_progress(segment_id, segment_messages, True)
 
 
 def add_and_update_dataset_messages_content_batch(dataset_id, messages, batch_size=500):

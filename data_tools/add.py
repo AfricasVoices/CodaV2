@@ -1,7 +1,6 @@
 import json
 import sys
 
-import compute_coding_progress as cp
 import firebase_client_wrapper as fcw
 import validate_code_scheme
 import validate_message_structure
@@ -83,4 +82,4 @@ elif CONTENT_TYPE == "messages":
         messages_to_write.append(message)
         added += 1
     
-    fcw.add_and_update_dataset_messages_content_batch(DATASET_ID, messages_to_write)
+    fcw.add_messages_content_batch(DATASET_ID, messages_to_write)
