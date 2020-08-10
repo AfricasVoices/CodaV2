@@ -82,4 +82,6 @@ elif CONTENT_TYPE == "messages":
         messages_to_write.append(message)
         added += 1
     
+    print ("To add: {}, Skipping: {}".format(added, skipped_existing))
+
     fcw.add_messages_content_batch(DATASET_ID, messages_to_write)
