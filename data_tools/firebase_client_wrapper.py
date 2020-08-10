@@ -1,5 +1,6 @@
 import json
 import time
+from datetime import datetime
 
 import firebase_admin
 from firebase_admin import credentials
@@ -162,9 +163,34 @@ def get_message_ids(dataset_id):
 
 
 # This is a much faster way of reading an entire dataset rather than repeated get_message calls
-def get_segment_messages(segment_id):
+def get_segment_messages(segment_id, last_updated_after=None, last_updated_before=None):
+    """
+    Downloads messages from the requested segment, optionally filtering by when the messages were last updated.
+
+    If filtering by when the messages where last updated, only message objects which contain a LastUpdated field
+    will be returned.
+
+    :param segment_id: Id of segment to download messages from.
+    :type segment_id: str
+    :param last_updated_after: If specified, filters the downloaded messages to only include messages with a LastUpdated
+                               field and where the LastUpdated field is later than last_updated_after.
+    :type last_updated_after: datetime | None
+    :param last_updated_before: If specified, filters the downloaded messages to only include messages with a LastUpdated
+                                field and where the LastUpdated field is earlier than, or the same time as,
+                                last_updated_before.
+    :type last_updated_before: datetime | None
+    :return: Messages in this segment, filtered by 'LastUpdated' timestamp if requested.
+    :rtype: list of dict
+    """
+    query = client.collection(f"datasets/{segment_id}/messages")
+    if last_updated_after is not None:
+        query = query.where("LastUpdated", ">", last_updated_after)
+    if last_updated_before is not None:
+        query = query.where("LastUpdated", "<=", last_updated_before)
+    raw_messages = query.get()
+
     messages = []
-    for message in client.collection(u'datasets/{}/messages'.format(segment_id)).get():
+    for message in raw_messages:
         msg = message.to_dict()
         if "LastUpdated" in msg:
             msg["LastUpdated"] = msg["LastUpdated"].isoformat(timespec="microseconds")
@@ -173,15 +199,67 @@ def get_segment_messages(segment_id):
     return messages
 
 
-def get_all_messages(dataset_id):
+def get_all_messages(dataset_id, last_updated_after=None):
+    """
+    Downloads messages from the requested dataset, optionally filtering by when the messages were last updated.
+
+    If filtering by when the messages where last updated, only message objects which contain a LastUpdated field
+    will be returned.
+
+    :param dataset_id: Id of dataset to download messages from.
+    :type dataset_id: str
+    :param last_updated_after: If specified, filters the downloaded messages to only include messages with a LastUpdated
+                               field and where the LastUpdated field is later than last_updated_after.
+    :type last_updated_after: datetime | None
+    :return: Messages in this dataset, filtered by 'LastUpdated' timestamp if requested.
+    :rtype: list of dict
+    """
     segment_count = get_segment_count(dataset_id)
     if segment_count is None or segment_count == 1:
-        return get_segment_messages(dataset_id)
+        return get_segment_messages(dataset_id, last_updated_after)
     else:
-        messages = []
+        # Get the messages for each segment
+        messages_by_segment = dict()  # of segment id -> list of message
         for segment_index in range(1, segment_count + 1):
-            messages.extend(get_segment_messages(id_for_segment(dataset_id, segment_index)))
+            segment_id = id_for_segment(dataset_id, segment_index)
+            messages_by_segment[segment_id] = get_segment_messages(segment_id, last_updated_after)
 
+        # Search the fetched segments for the most and least recently updated timestamps in all the segments downloaded
+        # above.
+        dataset_first_updated = None
+        dataset_last_updated = None
+        for segment_messages in messages_by_segment.values():
+            for msg in segment_messages:
+                if "LastUpdated" in msg:
+                    if dataset_last_updated is None or msg["LastUpdated"] > dataset_last_updated:
+                        dataset_last_updated = msg["LastUpdated"]
+                    if dataset_first_updated is None or msg["LastUpdated"] < dataset_first_updated:
+                        dataset_first_updated = msg["LastUpdated"]
+
+        # Check all the segments for any messages between the latest one we fetched above and the most recently updated
+        # message seen in any segment. If we didn't fetch any new messages for a segment, use the oldest timestamp
+        # across all segments (dataset_first_updated) instead. This is to ensure we don't miss any messages that were
+        # being labelled while we were pulling the separate segments, and is needed to maintain the consistency
+        # guarantees we need for incremental fetch.
+        for segment_id, segment_messages in messages_by_segment.items():
+            segment_last_updated = None
+            for msg in segment_messages:
+                if "LastUpdated" in msg:
+                    if segment_last_updated is None or msg["LastUpdated"] > segment_last_updated:
+                        segment_last_updated = msg["LastUpdated"]
+
+            if segment_last_updated is None:
+                segment_last_updated = dataset_first_updated
+
+            if segment_last_updated is not None:
+                messages_by_segment[segment_id].extend(get_segment_messages(segment_id, segment_last_updated, dataset_last_updated))
+
+        # Combine all the messages downloaded from each segment.
+        messages = []
+        for segment_messages in messages_by_segment.values():
+            messages.extend(segment_messages)
+
+        # Check that there are no duplicate message ids.
         message_ids = set()
         for message in messages:
             assert message["MessageID"] not in message_ids, "Duplicate message found"
