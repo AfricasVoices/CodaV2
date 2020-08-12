@@ -272,7 +272,7 @@ def add_messages_content_batch(dataset_id, messages, batch_size=500):
 
     Note: This method does not validate the messages to upload for presence in Firestore, so if a message already exists
     with the given id it will be overwritten or duplicated. If you need to filter messages for those which haven't
-    been added yet, use `add_or_update_messages_content_batch` instead.
+    been added yet, use `add_and_update_messages_content_batch` instead.
 
     :param dataset_id: Id of dataset to add messages to.
     :type dataset_id: str
