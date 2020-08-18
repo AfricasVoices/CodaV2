@@ -8,7 +8,7 @@ import validate_message_structure
 parser = argparse.ArgumentParser(description="Adds data items that don't currently exist, by id. "
                                              "Existing data items are untouched, even if they differ in content.")
 
-parser.add_argument("crypto_token_path", metavar="crypto-token-path",
+parser.add_argument("firestore_credentials_file_path", metavar="firestore-credentials-file-path",
                     help="Path to the Firestore credentials file")
 parser.add_argument("dataset_id", metavar="dataset-id", help="Id of dataset to add data to")
 parser.add_argument("content_type", choices=["schemes", "messages"], help="Type of data to add")
@@ -16,12 +16,12 @@ parser.add_argument("path", help="Path to a JSON file containing the data to add
 
 args = parser.parse_args()
 
-crypto_token_path = args.crypto_token_path
+firestore_credentials_file_path = args.firestore_credentials_file_path
 dataset_id = args.dataset_id
 content_type = args.content_type
 path = args.path
 
-fcw.init_client(crypto_token_path)
+fcw.init_client(firestore_credentials_file_path)
 
 dataset_ids = fcw.get_dataset_ids()
 
