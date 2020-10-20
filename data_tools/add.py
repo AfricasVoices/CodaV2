@@ -79,4 +79,4 @@ elif content_type == "messages":
     
     print(f"To add: {added}, Skipping: {skipped_existing}")
 
-    fcw.add_and_update_dataset_messages_content_batch(dataset_id, messages_to_write)
+    fcw.add_messages_content_batch(dataset_id, messages_to_write)
