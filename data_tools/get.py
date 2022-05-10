@@ -59,7 +59,9 @@ if content_type in ["all", "messages"]:
                           f"'LastUpdated' field; performing a full download of the entire dataset...")
 
     messages_dict = {msg["MessageID"]: msg for msg in previous_export}
-    new_messages_dict = {msg["MessageID"]: msg for msg in fcw.get_all_messages(dataset_id, last_updated_after=last_updated)}
+    new_messages_dict = {msg["MessageID"]: msg for msg in fcw.get_all_messages(
+        dataset_id, last_updated_after=last_updated) if "LastUpdated" not in msg}
+
     messages_dict.update(new_messages_dict)
 
     messages = list(messages_dict.values())

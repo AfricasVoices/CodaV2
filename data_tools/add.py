@@ -62,23 +62,15 @@ elif content_type == "messages":
     skipped_existing = 0
     all_messages = fcw.get_all_messages(dataset_id)
 
-    existing_ids = set()
-    highest_seq_no = -1
-    for message in all_messages:
-        existing_ids.add(message["MessageID"])
-        if message["SequenceNumber"] > highest_seq_no:
-            highest_seq_no = message["SequenceNumber"]
-
     messages_to_write = []
     for message in json_data:
         validate_message_structure.verify_message(message)
-        id = message["MessageID"]
-        if id in existing_ids:
+
+        if "LastUpdated" in message:
             skipped_existing += 1
             continue
-        if "SequenceNumber" not in message:
-            highest_seq_no += 1
-            message["SequenceNumber"] = highest_seq_no
+
+        assert "SequenceNumber" in message
 
         messages_to_write.append(message)
         added += 1
