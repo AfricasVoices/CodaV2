@@ -22,6 +22,6 @@ done < "$DATASET_IDS_TXT_FILE_PATH"
 for FILE_PATH in "$DATA_DIR/*.json";
 do
   filename=`basename $FILE_PATH .json`
-  echo "Uploading dataset: $filename in $DATA_DIR"
+  echo "Uploading messages for dataset: $filename in $DATA_DIR"
   pipenv run python add.py "$FIRESTORE_CREDENTIALS_FILE_PATH" "$filename" messages "$FILE_PATH"
 done
