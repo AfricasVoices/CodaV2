@@ -16,7 +16,7 @@ DATA_DIR=$3
 while IFS= read -r line
 do
   echo "Downloading messages for dataset: $line to: $DATA_DIR"
-  pipenv run python get.py "$FIRESTORE_CREDENTIALS_FILE_PATH" "$line" messages > "$DATA_DIR"
+  pipenv run python get.py "$FIRESTORE_CREDENTIALS_FILE_PATH" "$line" messages > "$DATA_DIR/$line.json"
 done < "$DATASET_IDS_TXT_FILE_PATH"
 
 for FILE_PATH in "$DATA_DIR/*.json";
