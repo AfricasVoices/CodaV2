@@ -11,7 +11,7 @@ fi
 # Assign the program arguments to bash variables.
 FIRESTORE_CREDENTIALS_FILE_PATH=$1
 DATASET_IDS_TXT_FILE_PATH=$2
-DATA_DIR=$3
+DATA_DIR=${3%/} # remove trailing slash if it exists.
 
 while IFS= read -r line
 do
