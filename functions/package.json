@@ -2,8 +2,8 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "dependencies": {
-    "firebase-admin": "~7.1.1",
-    "firebase-functions": "^2.2.1",
+    "firebase-admin": "~11.4.1",
+    "firebase-functions": "^4.1.1",
     "cors": "^2.8.5",
     "@google-cloud/pubsub": "^0.22.2",
     "@types/google-cloud__pubsub": "^0.18.1"
