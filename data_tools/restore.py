@@ -43,7 +43,8 @@ with open(BACKUP_PATH, 'r') as f:
             for scheme in segment["schemes"]:
                 fcw.set_code_scheme(segment_id, scheme)
             for msg in segment["messages"]:
-                msg["LastUpdated"] = datetime.fromisoformat(msg["LastUpdated"])
+                if "LastUpdated" in msg:
+                    msg["LastUpdated"] = datetime.fromisoformat(msg["LastUpdated"])
             fcw.restore_segment_messages_content_batch(segment_id, segment["messages"])
             fcw.set_segment_metrics(segment_id, segment["metrics"])
             print(f"Restore complete: segment {segment_id}")
