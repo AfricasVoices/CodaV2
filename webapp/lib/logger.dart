@@ -56,6 +56,10 @@ _writeMap(Map m) {
 }
 
 _logToServer(Map m) async {
+  if (TEST_MODE) {
+    return;
+  }
+
   var client = new BrowserClient();
   await firebase_constants.init();
   client.post(firebase_constants.logUrl, body: json.encode(m));
