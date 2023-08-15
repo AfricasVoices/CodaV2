@@ -2,12 +2,13 @@ const functions = require('firebase-functions');
 const cors = require('cors')({origin: true});
 const {PubSub} = require('@google-cloud/pubsub');
 const pubsub = new PubSub();
+const {log, error} = require("firebase-functions/logger");
 
 const Buffer = require('safe-buffer').Buffer;
 
 exports.Log = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        logData = 
+        logData =
         {
             "body" : request.body,
             "query" : request.query,
@@ -18,19 +19,19 @@ exports.Log = functions.https.onRequest((request, response) => {
             "raw_headers" : request.rawHeaders,
         }
 
-        console.log(logData);
+        log(logData);
         response.send("Ack");
     });
 });
 
 exports.Publish = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    console.log(`Execution of publish starting`);
-    console.log(`Request body ${req.body}`);
+    log(`Execution of publish starting`);
+    log(`Request body ${req.body}`);
     data = JSON.parse(req.body);
 
     if (!data.topic) {
-        console.log(`Topic not provided`);
+        log(`Topic not provided`);
 
       res
         .status(500)
@@ -41,7 +42,7 @@ exports.Publish = functions.https.onRequest((req, res) => {
         );
       return;
     } else if (!data.message) {
-        console.log(`Message not provided`);
+        log(`Message not provided`);
       res
         .status(500)
         .send(
@@ -60,16 +61,16 @@ exports.Publish = functions.https.onRequest((req, res) => {
       },
     };
 
-    console.log(`Publishing Topic: ${topic} Message: ${message}`);
+    log(`Publishing Topic: ${topic} Message: ${message}`);
 
     publisher = topic.publisher();
-  
+
     // Publishes a message
     publisher
       .publish(Buffer.from(JSON.stringify(message)))
       .then(() => res.status(200).send('Message published.'))
       .catch(err => {
-        console.error(err);
+        error(err);
         res.status(500).send(err);
         return Promise.reject(err);
       });
