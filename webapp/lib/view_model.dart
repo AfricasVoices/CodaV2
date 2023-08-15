@@ -350,6 +350,8 @@ class CodeSelector {
   set origin(String text) => originElement.text = text;
 
   focus() {
+    // Run blur then focus to ensure the focus event always fires on the dropdown
+    dropdown.blur();
     dropdown.focus();
   }
 }
