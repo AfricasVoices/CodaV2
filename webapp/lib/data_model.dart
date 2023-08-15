@@ -177,7 +177,7 @@ class Scheme {
   }
 
   Code getCodeWithCodeId(String codeId) {
-    return this.codes.firstWhere((code) => code.id == codeId);
+    return this.codes.firstWhere((code) => code.id == codeId, orElse: () => null);
   }
 
   Scheme.fromFirebaseMap(Map scheme) {

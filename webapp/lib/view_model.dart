@@ -266,6 +266,8 @@ class CodeSelector {
     viewElement.append(originElement);
   }
 
+  showWarning() => warning.classes.toggle('hidden', false);
+
   /// When an option from the list has been selected manually, the warning message should be hidden if it's not already.
   hideWarning() => warning.classes.toggle('hidden', true);
 
@@ -287,6 +289,10 @@ class CodeSelector {
     if (selectedCodeId == EMPTY_CODE_VALUE) return;
 
     Code code = this.scheme.getCodeWithCodeId(selectedCodeId);
+    if (code == null) {
+      this.showWarning();
+      return;
+    }
     if (!code.visibleInCoda) return;
 
     OptionElement option = createOptionForCode(code);
