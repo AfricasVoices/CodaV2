@@ -193,6 +193,7 @@ void main() {
 
       TableRowElement row = querySelector('tbody').children[5];
       SelectElement select = row.querySelector('.input-group[scheme-id="scheme 2"] select');
+      select.focus();
       OptionElement option = select.querySelector('option[valueid="code 2"]');
 
       option.selected = true;
