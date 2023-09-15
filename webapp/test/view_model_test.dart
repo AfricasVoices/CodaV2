@@ -51,7 +51,7 @@ void main() {
 
         expect(message.codeSelectors.length, 1);
         expect(message.message.id, "msg 0");
-        expect(message.codeSelectors[0].selectedOption, "unassign");
+        expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
       });
 
       test("one code", () {
@@ -67,7 +67,7 @@ void main() {
 
         expect(message.codeSelectors.length, 1);
         expect(message.message.id, "msg 2");
-        expect(message.codeSelectors[0].selectedOption, "unassign");
+        expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
         expect(message.codeSelectors[0].warning.classes.contains('hidden'), false);
       });
 
@@ -95,8 +95,8 @@ void main() {
 
         expect(message.codeSelectors.length, 2);
         expect(message.message.id, "msg 0");
-        expect(message.codeSelectors[0].selectedOption, "unassign");
-        expect(message.codeSelectors[1].selectedOption, "unassign");
+        expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
+        expect(message.codeSelectors[1].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
       });
 
       test("one code in the first scheme", () {
@@ -105,7 +105,7 @@ void main() {
         expect(message.codeSelectors.length, 2);
         expect(message.message.id, "msg 1");
         expect(message.codeSelectors[0].selectedOption, "code 1");
-        expect(message.codeSelectors[1].selectedOption, "unassign");
+        expect(message.codeSelectors[1].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
       });
 
       test("one code in the second scheme", () {
@@ -113,7 +113,7 @@ void main() {
 
         expect(message.codeSelectors.length, 2);
         expect(message.message.id, "msg 2");
-        expect(message.codeSelectors[0].selectedOption, "unassign");
+        expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
         expect(message.codeSelectors[1].selectedOption, "code 2");
       });
 
@@ -131,7 +131,7 @@ void main() {
 
         expect(message.codeSelectors.length, 2);
         expect(message.message.id, "msg 4");
-        expect(message.codeSelectors[0].selectedOption, "unassign");
+        expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
         expect(message.codeSelectors[1].selectedOption, "code 1");
       });
 
@@ -140,8 +140,8 @@ void main() {
 
         expect(message.codeSelectors.length, 2);
         expect(message.message.id, "msg 5");
-        expect(message.codeSelectors[0].selectedOption, "unassign");
-        expect(message.codeSelectors[1].selectedOption, "unassign");
+        expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
+        expect(message.codeSelectors[1].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
         expect(message.codeSelectors[1].warning.classes.contains('hidden'), false);
       });
     });
@@ -165,7 +165,7 @@ void main() {
 
       expect(message.codeSelectors.length, 2);
       expect(message.message.id, "msg 0");
-      expect(message.codeSelectors[0].selectedOption, "unassign");
+      expect(message.codeSelectors[0].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
 
       TableRowElement row = querySelector('tbody').firstChild;
       SelectElement select = row.querySelector('.input-group[scheme-id="scheme 1"] select');
@@ -188,11 +188,12 @@ void main() {
 
       expect(message.codeSelectors.length, 2);
       expect(message.message.id, "msg 5");
-      expect(message.codeSelectors[1].selectedOption, "unassign");
+      expect(message.codeSelectors[1].selectedOption, CodeSelector.EMPTY_CODE_VALUE);
       expect(message.codeSelectors[1].warning.classes.contains('hidden'), false);
 
       TableRowElement row = querySelector('tbody').children[5];
       SelectElement select = row.querySelector('.input-group[scheme-id="scheme 2"] select');
+      select.focus();
       OptionElement option = select.querySelector('option[valueid="code 2"]');
 
       option.selected = true;

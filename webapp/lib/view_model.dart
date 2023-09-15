@@ -225,7 +225,7 @@ class CodeSelector {
       Element messageElement = getAncestors(_activeCodeSelector.viewElement).firstWhere((a) => a.classes.contains('message-row'));
       messageElement.classes.toggle('active', true);
     }
-    _activeCodeSelector.dropdown.focus();
+    _activeCodeSelector.focus();
   }
 
   static const EMPTY_CODE_VALUE = 'unassign';
@@ -246,23 +246,9 @@ class CodeSelector {
 
     dropdown = new SelectElement();
     dropdown.classes.add('code-selector');
-    // An empty code used to unlabel the message
-    OptionElement option = new OptionElement();
-    option
-      ..attributes['schemeid'] = scheme.id
-      ..attributes['valueid'] = EMPTY_CODE_VALUE
-      ..selected = true;
-    dropdown.append(option);
-    scheme.codes.forEach((code) {
-      if (!code.visibleInCoda) return;
-      String shortcutDisplayText = code.shortcut == null ? '' : '(${code.shortcut})';
-      OptionElement option = new OptionElement();
-      option
-        ..attributes['schemeid'] = scheme.id
-        ..attributes['valueid'] = code.id
-        ..text = "${code.displayText} $shortcutDisplayText";
-      dropdown.append(option);
-    });
+    dropdown.append(createEmptyCodeValueOption()..selected = true);
+    dropdown.addEventListener("focus", (event) => showAllOptionsInDropdown());
+    dropdown.addEventListener("blur", (event) => showSingleOptionInDropdown(selectedOption));
     viewElement.append(dropdown);
 
     warning = new SpanElement();
@@ -280,22 +266,61 @@ class CodeSelector {
     viewElement.append(originElement);
   }
 
+  showWarning() => warning.classes.toggle('hidden', false);
+
   /// When an option from the list has been selected manually, the warning message should be hidden if it's not already.
   hideWarning() => warning.classes.toggle('hidden', true);
 
   set checked(bool checked) => checkbox.checked = checked;
   bool get checked => checkbox.checked;
 
-  set selectedOption(String codeId) {
-    OptionElement option = dropdown.querySelector('option[valueid="$codeId"]');
-    // When the option set programmatically doesn't exist in the scheme, show the warning sign.
-    if (option == null) {
-      warning
-        ..classes.remove('hidden')
-        ..attributes['title'] = 'The message is pre-labelled with the code "$codeId" that doesn\'t exist in the scheme';
-    } else {
-      option.selected = true;
+  void showAllOptionsInDropdown() {
+    String selectedCodeId = selectedOption;
+
+    dropdown.innerHtml = "";
+
+    dropdown.append(createEmptyCodeValueOption());
+    for (Code code in this.scheme.codes) {
+      dropdown.append(createOptionForCode(code)..selected = code.id == selectedCodeId);
     }
+  }
+
+  void showSingleOptionInDropdown(String selectedCodeId) {
+    if (selectedCodeId == EMPTY_CODE_VALUE) return;
+
+    Code code = this.scheme.getCodeWithCodeId(selectedCodeId);
+    if (code == null) {
+      this.showWarning();
+      return;
+    }
+    if (!code.visibleInCoda) return;
+
+    OptionElement option = createOptionForCode(code);
+
+    dropdown.innerHtml = "";
+    dropdown.append(option);
+  }
+
+  OptionElement createEmptyCodeValueOption() {
+    OptionElement option = new OptionElement();
+    option
+      ..attributes['schemeid'] = scheme.id
+      ..attributes['valueid'] = EMPTY_CODE_VALUE;
+    return option;
+  }
+
+  OptionElement createOptionForCode(Code code) {
+    String shortcutDisplayText = code.shortcut == null ? '' : '(${code.shortcut})';
+    OptionElement option = new OptionElement();
+    option
+      ..attributes['schemeid'] = scheme.id
+      ..attributes['valueid'] = code.id
+      ..text = "${code.displayText} $shortcutDisplayText";
+    return option;
+  }
+
+  set selectedOption(String codeId) {
+    showSingleOptionInDropdown(codeId);
   }
 
   set isManualLabel(bool isManualLabel) {
